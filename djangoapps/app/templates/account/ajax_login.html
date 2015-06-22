@@ -1,11 +1,17 @@
 {% load i18n %}
 {% load account %}
-
-<div class="login-form animated" ng-class="{
-    'slideInLeft-2' : !meta.is_login_close,
-    'slideOutLeft-2' : meta.is_login_close
-}">
-
+<div style="    position: fixed;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.3;
+    z-index:1;
+"></div>
+  <div class="login-form animated flipInX" style="z-index: 10;
+    position: relative;">
+    <div class="right" style="margin-right: -10px;"><a href="/">Закрыть</a></div>
     <a ng-click="notAuthGoTo('course')" class="icon icon-close-2 pull-right"></a>
 
     <h1>{% trans "Sign In" %}</h1>

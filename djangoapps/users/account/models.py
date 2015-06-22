@@ -74,7 +74,8 @@ class EmailConfirmation(models.Model):
     def send(self, request, signup=False, **kwargs):
         # current_site = kwargs["site"] if "site" in kwargs \
         #    else Site.objects.get_current()
-        activate_url = reverse("account_confirm_email", args=[self.key])
+        # activate_url = reverse("account_confirm_email", args=[self.key])
+        activate_url = "/accounts/confirm-email/" + self.key + "/"
         activate_url = build_absolute_uri(request,
                                           activate_url,
                                           protocol=app_settings.DEFAULT_HTTP_PROTOCOL)
@@ -159,8 +160,15 @@ AbstractUser._meta.get_field('email')._unique = True
 AbstractUser._meta.get_field('email').blank = False
 AbstractUser._meta.get_field('email').null = False
 
+TEACHER, PUPIL = 1, 2
+ACCOUNT_TYPES = (
+    (TEACHER, 'Учитель'),
+    (PUPIL, 'Ученик'),
+)
+
 
 class Account(AbstractUser):
+
     middle_name = models.CharField('отчество', max_length=50, blank=True)
     avatar = models.ImageField('аватар', upload_to=avatar_uploader, max_length=1024, blank=True)
 
@@ -175,6 +183,7 @@ class Account(AbstractUser):
     verified = models.BooleanField(verbose_name=_('verified'), default=False)
 
     number_of_pupil = models.IntegerField('кол-во учеников', default=0)
+    account_type = models.IntegerField('тип аккаунта', default=1, choices=ACCOUNT_TYPES)
 
     objects = AccountManager()
 

@@ -1,6 +1,6 @@
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import (HttpResponseRedirect, Http404,
-                         HttpResponsePermanentRedirect)
+                         HttpResponsePermanentRedirect, JsonResponse)
 from django.views.generic.base import TemplateResponseMixin, View, TemplateView
 from django.views.generic.edit import FormView
 from django.contrib import messages
@@ -32,6 +32,8 @@ from . import app_settings
 
 from .adapter import get_adapter
 
+from .serializers import EmailConfirmationSerializer
+
 try:
     from django.contrib.auth import update_session_auth_hash
 except ImportError:
@@ -40,6 +42,30 @@ except ImportError:
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters('password', 'password1', 'password2'))
+
+
+class JSONResponseMixin(object):
+    """
+    A mixin that can be used to render a JSON response.
+    """
+    def render_to_json_response(self, context, **response_kwargs):
+        """
+        Returns a JSON response, transforming 'context' to make the payload.
+        """
+        return JsonResponse(
+            self.get_data(context),
+            **response_kwargs
+        )
+
+    def get_data(self, context):
+        """
+        Returns an object that will be serialized as JSON by json.dumps().
+        """
+        # Note: This is *EXTREMELY* naive; in reality, you'll need
+        # to do much more complex handling to ensure that arbitrary
+        # objects -- such as Django model instances or querysets
+        # -- can be serialized as JSON.
+        return context
 
 
 def _ajax_response(request, response, form=None):
@@ -123,7 +149,7 @@ class LoginView(RedirectAuthenticatedUserMixin,
     def get_context_data(self, **kwargs):
         ret = super(LoginView, self).get_context_data(**kwargs)
         signup_url = passthrough_next_redirect_url(self.request,
-                                                    "/",
+                                                    "/accounts/signup/",
                                                    # reverse("account_signup"),
                                                    self.redirect_field_name)
         redirect_field_value = get_request_param(self.request,
@@ -226,7 +252,7 @@ class AjaxSignupView(SignupView):
 ajax_signup = AjaxSignupView.as_view()
 
 
-class ConfirmEmailView(TemplateResponseMixin, View):
+class ConfirmEmailView(JSONResponseMixin, TemplateResponseMixin, View):
 
     def get_template_names(self):
         if self.request.method == 'POST':
@@ -242,15 +268,16 @@ class ConfirmEmailView(TemplateResponseMixin, View):
         except Http404:
             self.object = None
         ctx = self.get_context_data()
-        return self.render_to_response(ctx)
+        # return self.render_to_response(ctx)
+        return self.render_to_json_response(EmailConfirmationSerializer(ctx).data)
 
     def post(self, *args, **kwargs):
         self.object = confirmation = self.get_object()
         confirmation.confirm(self.request)
-        get_adapter().add_message(self.request,
-                                  messages.SUCCESS,
-                                  'account/messages/email_confirmed.txt',
-                                  {'email': confirmation.user.email})
+        # get_adapter().add_message(self.request,
+        #                          messages.SUCCESS,
+        #                          'account/messages/email_confirmed.txt',
+        #                          {'email': confirmation.user.email})
         if app_settings.LOGIN_ON_EMAIL_CONFIRMATION:
             resp = self.login_on_confirm(confirmation)
             if resp is not None:
@@ -314,14 +341,26 @@ class ConfirmEmailView(TemplateResponseMixin, View):
         return qs
 
     def get_context_data(self, **kwargs):
-        ctx = kwargs
-        ctx["confirmation"] = self.object
-        return ctx
+        # ctx = kwargs
+        # ctx["confirmation"] = self.object
+        return self.object
 
     def get_redirect_url(self):
         return get_adapter().get_email_confirmation_redirect_url(self.request)
 
-confirm_email = ConfirmEmailView.as_view()
+# confirm_email = ConfirmEmailView.as_view()
+
+
+class AjaxConfirmEmailViewKey(ConfirmEmailView):
+    template_name = "account/ajax_confirm_email.html"
+
+ajax_confirm_email_key = AjaxConfirmEmailViewKey.as_view()
+
+
+class AjaxConfirmEmailView(TemplateView):
+    template_name = "account/ajax_confirm_email.html"
+
+ajax_confirm_email = AjaxConfirmEmailView.as_view()
 
 """
 class EmailView(AjaxCapableProcessFormViewMixin, FormView):
@@ -702,4 +741,10 @@ account_inactive = AccountInactiveView.as_view()
 class EmailVerificationSentView(TemplateView):
     template_name = 'account/verification_sent.html'
 
-email_verification_sent = EmailVerificationSentView.as_view()
+# email_verification_sent = EmailVerificationSentView.as_view()
+
+
+class AjaxEmailVerificationSentView(EmailVerificationSentView):
+    template_name = "account/ajax_verification_sent.html"
+
+ajax_email_verification_sent = AjaxEmailVerificationSentView.as_view()

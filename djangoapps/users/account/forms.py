@@ -18,7 +18,7 @@ from ..utils import (email_address_exists,
                      get_username_max_length,
                      get_current_site)
 
-# from .models import EmailAddress
+from .models import ACCOUNT_TYPES
 # from .utils import (perform_login, setup_user_email, url_str_to_user_pk,
 # user_username, user_pk_to_url_str, filter_users_by_email,
 from .utils import (perform_login, url_str_to_user_pk,
@@ -292,6 +292,8 @@ class SignupForm(BaseSignupForm):
     confirmation_key = forms.CharField(max_length=40,
                                        required=False,
                                        widget=forms.HiddenInput())
+
+    account_type = forms.IntegerField(label=_(u'Тип аккаунта'), widget=forms.RadioSelect(choices=ACCOUNT_TYPES))
 
     def __init__(self, *args, **kwargs):
         super(SignupForm, self).__init__(*args, **kwargs)

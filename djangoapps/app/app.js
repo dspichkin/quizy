@@ -15,10 +15,7 @@ require('angular-bootstrap');
 require('angular-ui-router');
 
 require('jquery');
-
-//require('pickerjs');
-//require('hammerjs');
-//require('materialize');
+require('jquery.easing');
 
 require('bootstrap');
 require('sortable');

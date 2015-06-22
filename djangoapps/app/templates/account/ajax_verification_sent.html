@@ -1,0 +1,32 @@
+{% load i18n %}
+
+<div style="position: fixed;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.3;
+    z-index:1;
+"></div>
+
+{% verbatim %}
+<div class="signup-form animated flipInX"  style="z-index: 10;
+    position: relative;">
+    <div class="right close-login-form" style="margin-right: -10px;"><a href="/">Закрыть</a></div>
+
+    <h1 style="margin: 0;color:black;">Подтвердите ваш email</h1>
+
+
+    <p>Мы отправили e-mail на указанный вами адрес для верификации. Follow the link provided to finalize the signup process. Please contact us if you do not receive it within a few minutes.</p>
+
+
+    <br>
+    <br>
+    <button type="button" class="btn btn-default" 
+        ng-click="close_modal('/')" style="padding: 0px 0px 0px 3px;">Закрыть</button>
+
+</div>	
+{% endverbatim %}
+
+    

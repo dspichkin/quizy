@@ -1,0 +1,75 @@
+{% load i18n %}
+{% load account %}
+<div style="position: fixed;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0.3;
+    z-index:1;
+"></div>
+<div class="signup-form animated flipInX"  style="z-index: 10;
+    position: relative;">
+    <div id="loading" ng-if="model.show_loading">
+        <div style="width: 100%;
+            height: 100%;
+            position: absolute;
+            background-color: black;
+            top: 0;
+            left: 0;
+            opacity: 0.3;"></div>
+        <div style="
+            width: 100%;
+            height: 100%;
+            background-image: url('/assets/img/loading.gif');
+            position: absolute;
+            background-repeat: no-repeat;
+            top: 40%;
+            left: 37%;"></div>
+    </div>
+
+    
+    <div class="right close-login-form" style="margin-right: -10px;"><a href="/">Закрыть</a></div>
+
+    <p style="margin: 20px;
+        color: black;
+        font-size: 20px;">Подтверждение E-mail адреса</p>
+
+    <br>
+    {% verbatim %}
+    <div ng-if="model.correct">
+
+		<p>Пожайлуста подтвердите что <a href="mailto:{{ email }}">{{model.user.email}}</a> принадлежит вам </p>
+        <br>
+        <br>
+        <button type="buttoon" class="btn" style="padding: 0 0 0 0;" ng-click="submit()">Подтверждаю</button>
+		<!--
+        <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+		{% csrf_token %}
+		    <button type="submit">{% trans 'Confirm' %}</button>
+		</form>
+    -->
+    </div>
+    <div ng-if="!model.correct">
+		<p>Ссылка некорректна или срок ее действия истек. Пожалуйста пройдите 
+            <a href="{{ email_url }}"></a>.</p>
+         <button type="submit" class="btn btn-default" 
+        ng-click="close_modal('/')" style="padding: 0px 0px 0px 3px;">Закрыть</button>
+    </div>
+    {% endverbatim %}
+    <br>
+    <br>
+
+   
+
+</div>	
+
+
+    
+
+
+
+
+
+

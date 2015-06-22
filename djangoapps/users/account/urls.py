@@ -21,14 +21,16 @@ urlpatterns = patterns(
 
     # E-mail
     # url(r"^email/$", views.email, name="account_email"),
-    url(r"^confirm-email/$", views.email_verification_sent,
+    url(r"^ajax-confirm-email-send/$", views.ajax_email_verification_sent,
         name="account_email_verification_sent"),
-    url(r"^confirm-email/(?P<key>\w+)/$", views.confirm_email,
+    url(r"^ajax-confirm-email/$", views.ajax_confirm_email,
+        name="account_confirm_email"),
+    url(r"^ajax-confirm-email/(?P<key>\w+)/$", views.ajax_confirm_email_key,
         name="account_confirm_email"),
     # Handle old redirects
-    url(r"^confirm_email/(?P<key>\w+)/$",
-        RedirectView.as_view(url='/accounts/confirm-email/%(key)s/',
-                             permanent=True)),
+    #url(r"^ajax-confirm_email/(?P<key>\w+)/$",
+    #    RedirectView.as_view(url='/accounts/confirm-email/%(key)s/',
+    #                         permanent=True)),
 
     # password reset
     url(r"^password/reset/$", views.password_reset,

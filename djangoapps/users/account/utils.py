@@ -84,7 +84,8 @@ def user_field(user, field, *args):
             v = args[0]
             if v:
                 User = get_user_model()
-                v = v[0:User._meta.get_field(field).max_length]
+                if type(v) is not int:
+                    v = v[0:User._meta.get_field(field).max_length]
             setattr(user, field, v)
         else:
             # Getter

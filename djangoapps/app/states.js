@@ -9,13 +9,39 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
     $stateProvider
         .state('signup', {
             url: "/accounts/signup/",
-            templateUrl: "/accounts/ajax-signup/",
-            controller: 'SignupCtrl'
+            views: {
+                "signup": {
+                    templateUrl: "/accounts/ajax-signup/",
+                    controller: 'SignupCtrl'
+                }
+            }
+        })
+        .state('confirm-email-send', {
+            url: "/accounts/confirm-email/",
+            views: {
+                "confirm-email-send": {
+                    templateUrl: "/accounts/ajax-confirm-email-send/",
+                    controller: 'SignupCtrl'
+                }
+            }
+        })
+        .state('confirm-email', {
+            url: "/accounts/confirm-email/:key/",
+            views: {
+                "confirm-email": {
+                    templateUrl: "/accounts/ajax-confirm-email/",
+                    controller: 'SignupConfirmCtrl'
+                }
+            }
         })
         .state('login', {
             url: "/accounts/login/",
-            templateUrl: "/accounts/ajax-login/",
-            controller: 'LoginCtrl'
+            views: {
+                "login": {
+                    templateUrl: "/accounts/ajax-login/",
+                    controller: 'LoginCtrl'
+                }
+            }
         })
         .state('profile', {
             url: "/accounts/profile/",
@@ -24,8 +50,12 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
         })
         .state('lessons', {
             url: "/lessons/",
-            templateUrl: "/assets/partials/lessons.html",
-            controller: 'LessonsCtrl'
+            views: {
+                "lessons": {
+                    templateUrl: "/assets/partials/lessons.html",
+                    controller: 'LessonsCtrl'
+                }
+            }
         })
         .state('editor', {
             url: "/editor/:lesson_id?",
@@ -68,7 +98,7 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
 
 var DJANGO_ACCOUNT_URLS = [
     'password/change', 'pasword/set',
-    'inactive', 'email', 'confirm-email', 'password/reset',
+    'inactive', 'email', 'password/reset',
     'social/signup', 'social/connections', 'social/login/error',
     'twitter/login', 'vk/login', 'facebook/login'
 ];

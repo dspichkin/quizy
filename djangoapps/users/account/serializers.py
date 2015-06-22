@@ -2,8 +2,10 @@
 from __future__ import unicode_literals, print_function, division
 
 # from .models import User, Organization, EmailAddress
-from .models import User, Organization
+from .models import User, Organization, EmailConfirmation
 from rest_framework import serializers
+
+
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
@@ -48,6 +50,13 @@ class UserSerializer(serializers.ModelSerializer):
             'last_login',
             'date_joined'
         )
+
+
+class EmailConfirmationSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = EmailConfirmation
 
 
 class AdminSerializer(serializers.ModelSerializer):

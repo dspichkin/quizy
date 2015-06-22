@@ -19,6 +19,7 @@
   },
   "browser": {
     "jquery": "./djangoapps/app/vendor/jquery.min.js",
+    "jquery.easing": "./djangoapps/app/vendor/jquery.easing.min.js",
     
 
     "sortable": "./djangoapps/app/vendor/angular-sortable-view.min.js",

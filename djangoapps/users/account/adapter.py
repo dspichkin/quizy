@@ -193,6 +193,7 @@ class DefaultAccountAdapter(object):
         middle_name = data.get('middle_name')
         email = data.get('email')
         username = data.get('username')
+        account_type = data.get('account_type')
         user_email(user, email)
         user_username(user, username)
         if first_name:
@@ -201,6 +202,13 @@ class DefaultAccountAdapter(object):
             user_field(user, 'last_name', last_name)
         if middle_name:
             user_field(user, 'middle_name', middle_name)
+        if account_type and account_type == 1:
+            user_field(user, 'account_type', account_type)
+        elif account_type and account_type == 2:
+            user_field(user, 'account_type', account_type)
+        else:
+            user_field(user, 'account_type', 1)
+
         if 'password1' in data:
             user.set_password(data["password1"])
         else:
