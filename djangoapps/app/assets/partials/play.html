@@ -1,0 +1,67 @@
+<div class="container-fluid editor" ng-controller="PlayCtrl">
+    <div ng-if="model.current_page_index < model.lesson.pages.length">
+        <div>Название урока: {{model.lesson.name}}</div>
+        
+        <div>Описание урока: {{model.lesson.description}}</div>
+        <br>
+        <br>
+        <div>
+            Вопрос: 
+            <div ng-bind-html="model.lesson.pages[model.current_page_index].text"></div>
+        </div>
+
+        <div ng-if="model.lesson.pages[model.current_page_index].type == 'radiobox'" class="variant_radiobox">
+            <ul class="radio_variants">
+                <li ng-repeat="item in model.lesson.pages[model.current_page_index].variants" class="variant">
+                    
+                    <input class="variant_text_radio" type="radio"
+                        ng-model="item.answer"
+                        name="radiobox"
+                        ng-value="true"
+                        ng-change="answer_ready(item.id)"
+                        >
+                    {{item.text}}
+                </li>
+            </ul>
+        </div>
+
+
+        <div ng-if="model.lesson.pages[model.current_page_index].type == 'checkbox'" class="variant_checkbox">
+            <ul class="checkbox_variants">
+                <li ng-repeat="item in model.lesson.pages[model.current_page_index].variants" class="variant">
+                    <input class="variant_text_checkbox" type="checkbox" 
+                        name="checkbox"
+                        ng-model="item.answer"
+                        ng-change="answer_ready(item.id)"
+                        >
+                    {{item.text}}
+                </li>
+            </ul>
+        </div>
+
+        <br>
+        <br>
+        <button type="button" class="btn btn-success" ng-disabled="!model.next_question"
+            ng-click="next_question()">Далее</button>
+    </div>
+
+    <div ng-if="model.current_page_index == model.lesson.pages.length">
+        Номер попытки: {{model.result.number_of_attempt}}<br>
+        Результат: 
+        <span ng-if="model.success == false">Не успешно</span>
+        <span ng-if="model.success == true">Успешно</span>
+
+        <ul>
+            <li ng-repeat="page in model.lesson.pages">
+                {{page.number}}
+                <span>
+                    {{page.text | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}
+                </span>
+                <span ng-if="get_answer_result(page.id)==false">Неверно</span>
+                <span ng-if="get_answer_result(page.id)==true">Верно</span>
+            </li>
+        </ul>
+
+        <a href="/lessons/">Вернуться</a>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+{% load i18n %}
+{% load account %}
+
+<div class="login-form animated" ng-class="{
+    'slideInLeft-2' : !meta.is_login_close,
+    'slideOutLeft-2' : meta.is_login_close
+}">
+
+    <a ng-click="notAuthGoTo('course')" class="icon icon-close-2 pull-right"></a>
+
+    <h1>{% trans "Sign In" %}</h1>
+
+
+    <form class="login" method="POST" action="{% url 'account_ajax_login' %}">
+      {% csrf_token %}
+
+      <p>
+          <input id="id_login" ng-class="{'input-error':form_errors.login.length}" autocomplete="off" name="login" placeholder="Имя пользователя или e-mail" type="text">
+      </p>
+        {% verbatim %}
+        <ul class="errorlist">
+            <li ng-repeat="error in form_errors.login">{{error}}</li>
+        </ul>
+        {% endverbatim %}
+
+      <p>
+          <input id="id_password" ng-class="{'input-error':form_errors.password.length}" autocomplete="off" name="password" placeholder="Пароль" type="password">
+      </p>
+        {% verbatim %}
+        <ul class="errorlist">
+            <li ng-repeat="error in form_errors.password">{{error}}</li>
+        </ul>
+        {% endverbatim %}
+
+
+        {% verbatim %}
+        <ul class="errorlist nonfield" ng-if="form_errors">
+            <li ng-repeat="error in form_errors.__all__">{{error}}</li>
+        </ul>
+        {% endverbatim %}
+
+      {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      {% endif %}
+
+        <br/>
+
+      <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+
+      <button class="primaryAction btn btn-default" type="submit" ng-click="submit($event)">{% trans "Sign In" %}</button>
+
+        <br/>
+        <br/>
+        <div>Войдите через социальные сети</div>
+        <br/>
+
+        <div class="socialaccount_ballot">
+
+            <ul class="socialaccount_providers">
+                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+            </ul>
+
+            <!--<div class="login-or">{% trans 'or' %}</div>-->
+
+        </div>
+
+    </form>
+</div>

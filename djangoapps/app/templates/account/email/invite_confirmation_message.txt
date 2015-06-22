@@ -1,0 +1,9 @@
+{% load account %}{% user_display user as user_display %}{% user_display owner as owner_display %}{% load i18n %}{% autoescape off %}{% with site_name=current_site.name site_domain=current_site.domain %}Добрый день!
+
+Вы получили это сообщение, потому что {{ owner_display }}
+пригласил вас участвовать в обучении на сайте {{ site_domain }}
+
+Для подтверждения передите на {{ activate_url }}
+{% endwith %}{% endautoescape %}
+{% with site_name=current_site.name site_domain=current_site.domain %}Спасибо!
+{{ site_domain }}{% endwith %}

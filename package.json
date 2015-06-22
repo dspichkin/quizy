@@ -1,0 +1,59 @@
+{
+  "name": "quizy",
+  "version": "0.1.0",
+  "description": "",
+  "main": "djangoapps/app/app.js",
+  "scripts": {
+    "build": "browserify djangoapps/app/app.js -o > djangoapps/app/assets/app.js",
+    "watch": "watchify djangoapps/app/app.js -o djangoapps/app/assets/app.js --debug --verbose",
+    "build_for_compile": "browserify djangoapps/app/app.js -d -p [minifyify --map app.map.json --output app.map.json] > djangoapps/app/compiled/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "browserify": {
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browser": {
+    "jquery": "./djangoapps/app/vendor/jquery.min.js",
+    
+
+    "sortable": "./djangoapps/app/vendor/angular-sortable-view.min.js",
+    "rangy": "./djangoapps/app/vendor/textAngular-rangy.min.js",
+    "textAngular-sanitize": "./djangoapps/app/vendor/textAngular-sanitize.min.js",
+    "textAngular": "./djangoapps/app/vendor/textAngular.min.js",
+
+    "angularMaterialize": "./djangoapps/app/vendor/angular-materialize.js"
+  },
+  "browserify-shim": {
+    "jquery": "$",
+    "angular": {
+      "depends": "jquery:jQuery",
+      "exports": "angular"
+    },
+    "textAngular": {
+      "depends": ["rangy:rangy"]
+    }
+  },
+  "author": "Denis Y.Spichkin",
+  "license": "Commercial",
+  "dependencies": {
+    "angular": "1.2",
+    "angular-bootstrap": "0.12",
+    "angular-cookies": "1.2",
+    "angular-sanitize": "1.2",
+    "angular-ui-router": "0.2",
+    "browserify": "^8.1.3",
+    "browserify-shim": "^3.8.2",
+    "jquery": "^2.1.3",
+    "bootstrap": "^3",
+    "lodash-node": "^3.1.0",
+    "minifyify": "",
+    "archiver": ""
+  },
+  "devDependencies": {
+  }
+}

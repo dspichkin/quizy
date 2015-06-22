@@ -1,0 +1,106 @@
+
+
+<script type="text/ng-template" id="modalContentLessonEnroll.html">
+    <div class="modal-header">
+        <h3 class="modal-title" ng-if="model.show_user">Назначение урока на ученика</h3>
+        <h3 class="modal-title" ng-if="model.show_invite">Приглашение ученика зарегистрироваться</h3>
+        <h3 class="modal-title" ng-if="model.show_error">Ошибка</h3>
+    </div>
+
+    <div class="modal-body">
+        <div ng-if="model.show_user">
+            <h4>Введите email ученика:</h4>
+            <input type="text" ng-model="model.inputed_address">
+        </div>
+        <div ng-if="model.show_invite">
+            <p>Указаный вами email {{model.inputed_address}} не найден среди зарегистрированных пользователей.</p>
+            <p>Хотите ввести email заново?</p>
+        </div>
+        <div ng-if="model.show_error">
+            <p>{{model.error_message}}</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
+
+
+
+
+
+</br>
+<div ng-if="user.is_authenticated">
+    <h1>Страница мои уроки</h1>
+
+    <div class="content-panel" ng-if="!user.is_authenticated && user.loaded">
+        <a ui-sref="signup" class="btn btn-primary">Зарегистрироваться</a>
+        <a ui-sref="login" class="btn btn-primary">Войти</a>
+    </div>
+
+
+    <a href="/editor/"><button class="btn btn-info">Создать новый урок</button></a>
+    <br>
+    <br>
+    <div ng-if="model.lessons.length > 0">
+        <h4>Созданные мною уроки</h4>
+        <ul>
+            <li ng-repeat="lesson in model.lessons" style="margin:5px;">
+                <div ng-if="lesson.name">{{lesson.name}}</div>
+                <div ng-if="!lesson.name">Урок без имени</div>
+                <button class="btn" ng-click="lesson_enroll(lesson.id)">Назначить на ученика</button>
+                <button class="btn" ng-click="edit_lesson(lesson.id)">Редактировать урок</button>
+                <button class="btn" ng-click="play_lesson(lesson.id)">Запустить для тестирования</button>
+                <button class="btn" ng-click="delete_lesson(lesson.id)">Удалить урок</button>
+                <div ng-if="lesson.enrolls.length > 0">
+                    Назначен на:
+                    <ul>
+                        <li ng-repeat="enroll in lesson.enrolls">
+                            <ul>
+                                <li>
+                                    {{enroll.learner.email}}
+                                    <button class="btn" ng-click="remove_enroll(enroll.id)">Снять назначение</button>
+                                </li>
+                            </ul>
+                        </li>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- <code>{{my_lessons}}</code> -->
+    <div ng-if="model.lessons_for_me.length > 0">
+        <h4>Назначенные на меня уроки</h4>
+        <ul>
+            <li ng-repeat="lesson in model.lessons_for_me" style="margin:5px;">
+                {{$index + 1}}. {{lesson.name}} <br>
+                {{lesson.description}} <br>
+                страниц в уроке: {{lesson.pages.length}}<br>
+                Номер последней попытки: {{lesson.enrolls[0].number_of_attempt}}<br>
+                Результат прохождения: 
+                    <span ng-if="lesson.enrolls[0].success == true">Пройденно</span>
+                    <span ng-if="lesson.enrolls[0].success && lesson.enrolls[0].success==false">Непройдено</span>
+                <br>
+                <button class="btn" ng-click="play_lesson(lesson.id)">Старт</button>
+                <button class="btn" ng-click="move_to_archive(lesson.id)"
+                ng-if="lesson.enrolls[0].success==true">В архив</button>
+            </li>
+        </ul>
+    </div>
+
+    <div ng-if="model.archive.length > 0">
+        <br><br>
+        <h4>Уроки в архиве:</h4>
+         <ul>
+            <li ng-repeat="l in model.archive" style="margin:5px;">
+                {{$index + 1}}. {{l.lesson.name}} <br>
+                {{l.lesson.description}} <br>
+                кол-во попыток: {{l.number_of_attempt}}<br>
+                Результат прохождения: 
+                    <span ng-if="l.success == true">Пройденно</span>
+                    <span ng-if="l.success && lesson.enrolls[0].success==false">Непройдено</span>
+                <br>
+            </li>
+        </ul>
+    </div>
+</div>
