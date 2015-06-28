@@ -8,7 +8,7 @@ var SignupCtrl = function($scope, $location, $log) {
         show_loading: false,
         input_name: false,
         account_type: "Регистрировать как",
-        account_type_choice: ["Учитель", "Ученик"]
+        account_type_choice: ["Преподователь", "Студент"]
 
     };
 
@@ -21,7 +21,7 @@ var SignupCtrl = function($scope, $location, $log) {
         // console.log(form[0].csrfmiddlewaretoken.value, $cookies['csrftoken'], $http.defaults.headers.post['X-CSRFToken'] )
         // form[0].csrfmiddlewaretoken.value = $http.defaults.headers.post['X-CSRFToken'];
         var _at;
-        if ($scope.model.account_type == "Учитель") {
+        if ($scope.model.account_type == "Преподователь") {
             _at = 1;
         } else {
             _at = 2;

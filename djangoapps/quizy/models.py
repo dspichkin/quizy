@@ -1,11 +1,27 @@
 # -*- coding: utf-8 -*-
 
+from uuid import uuid1
+
 from django.utils import timezone
 from django.db import models
 
 from json_field import JSONField
 
 # from users.account.models import Account
+
+
+class BaseModel(models.Model):
+    uuid = models.CharField(max_length=36, unique=True, db_index=True, editable=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if self.id or not self.uuid:
+            u = uuid1()
+            self.uuid = str(u)
+
+        super(BaseModel, self).save(*args, **kwargs)
 
 
 class LessonEnroll(models.Model):
@@ -49,15 +65,12 @@ class LessonEnroll(models.Model):
 
 
 class Lesson(models.Model):
+
     is_active = models.BooleanField('активен?', default=True)
-    # learners = models.ManyToManyField('account.Account', through=LessonEnroll)
 
     name = models.CharField('название урока', max_length=140, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    # pub_date = models.DateTimeField('дата публикации', default=timezone.now)
-    # path = models.CharField('путь к контенту', default='main', max_length=140)
 
     number = models.IntegerField('порядок следования', default=0)
     description = models.TextField('описание', blank=True)
@@ -186,7 +199,7 @@ class Variant(models.Model):
 
     right_answer = models.BooleanField(default=False)
 
-    question = models.ForeignKey(Page, related_name="variants")
+    page = models.ForeignKey(Page, related_name="variants")
     number = models.IntegerField('Порядок', default=1)
 
     is_correct = models.BooleanField('правильность заполнения вопроса', default=True)

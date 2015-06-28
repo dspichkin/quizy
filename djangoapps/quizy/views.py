@@ -240,61 +240,70 @@ def validateEmail(email):
         return False
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'DELETE'])
 @permission_classes((AllowAny,))
-def set_enroll_user(request, user_pk=None):
+def enroll_user(request, enroll_pk=None):
     """
     Назначить пользователя на курс
     """
-    lesson_id = request.data.get('lesson_id')
-    user_email = request.data.get('email')
-    force = request.data.get('force', False)
+    if request.method == 'POST':
+        lesson_id = request.data.get('lesson_id')
+        user_email = request.data.get('email')
+        force = request.data.get('force', False)
 
-    if not lesson_id or not user_email:
-        res = {"code": 400, "message": "Incorrect request"}
-        return Response(res, status=status.HTTP_400_BAD_REQUEST)
-    if validateEmail(user_email) is False:
-        res = {"code": 300, "message": "Incorrect email"}
-        return Response(res, status=status.HTTP_200_OK)
-    # Проверяем lesson_id
-    lessons = Lesson.objects.filter(pk=lesson_id, created_by=request.user)
-    lesson = None
-    if not lessons:
-        res = {"code": 400, "message": "Incorrect lesson_id"}
-        return Response(res, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        lesson = lessons[0]
-    # Проверяем наличие пользователя
-    user_obj = None
-    try:
-        user_obj = Account.objects.get(email=user_email)
-    except Account.DoesNotExist:
-        if force is False:
-            res = {"code": 200, "message": u"Пользователь с указанным Email не найден", "signal": "invite"}
+        if not lesson_id or not user_email:
+            res = {"code": 400, "message": "Incorrect request"}
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
+        if validateEmail(user_email) is False:
+            res = {"code": 300, "message": "Incorrect email"}
             return Response(res, status=status.HTTP_200_OK)
+        # Проверяем lesson_id
+        lessons = Lesson.objects.filter(pk=lesson_id, created_by=request.user)
+        lesson = None
+        if not lessons:
+            res = {"code": 400, "message": "Incorrect lesson_id"}
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            lesson = lessons[0]
+        # Проверяем наличие пользователя
+        user_obj = None
+        try:
+            user_obj = Account.objects.get(email=user_email)
+        except Account.DoesNotExist:
+            if force is False:
+                res = {"code": 200, "message": u"Пользователь с указанным Email не найден", "signal": "invite"}
+                return Response(res, status=status.HTTP_200_OK)
 
-    # проверяем было ли ранее такое назначение
-    lessonEnrolls = LessonEnroll.objects.filter(
-        learner=user_obj,
-        lesson=lesson)
-    if not lessonEnrolls:
-        LessonEnroll.objects.create(
+        # проверяем было ли ранее такое назначение
+        lessonEnrolls = LessonEnroll.objects.filter(
             learner=user_obj,
-            lesson=lesson,
-            is_active=True)
+            lesson=lesson)
+        if not lessonEnrolls:
+            LessonEnroll.objects.create(
+                learner=user_obj,
+                lesson=lesson,
+                is_active=True)
 
-    bodies = {
-        'html': 'Вам назначен урок %s' % (lesson)
-    }
-    msg = EmailMessage("Сообщение от Quizy",
-                    bodies['html'],
-                    settings.DEFAULT_FROM_EMAIL,
-                    [user_obj.email])
+        bodies = {
+            'html': 'Вам назначен урок %s' % (lesson)
+        }
+        msg = EmailMessage("Сообщение от Quizy",
+                        bodies['html'],
+                        settings.DEFAULT_FROM_EMAIL,
+                        [user_obj.email])
 
-    msg.content_subtype = 'html'
-    msg.send()
+        msg.content_subtype = 'html'
+        msg.send()
 
-    return Response({"code": 200, "message": u"Пользователь успешно назначен на урок", "signal": "success"}, status=status.HTTP_200_OK)
+        return Response({"code": 200, "message": u"Пользователь успешно назначен на урок", "signal": "success"}, status=status.HTTP_200_OK)
+
+    if request.method == 'DELETE':
+        try:
+            enroll = LessonEnroll.objects.get(pk=enroll_pk, lesson__created_by=request.user)
+            enroll.delete()
+        except LessonEnroll.DoesNotExist:
+            return Response("", status=status.HTTP_400_BAD_REQUEST)
+        return Response("", status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])

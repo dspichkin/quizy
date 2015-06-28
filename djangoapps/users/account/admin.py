@@ -31,7 +31,7 @@ class EmailConfirmationAdmin(admin.ModelAdmin):
 
 
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('username', 'number_of_pupil', 'is_active', 'verified', 'is_superuser')
+    list_display = ('username', 'account_type', 'number_of_pupil', 'is_active', 'verified', 'is_superuser')
 
 
 admin.site.register(EmailConfirmation, EmailConfirmationAdmin)

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+import json
+
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.http import (HttpResponseRedirect, Http404,
                          HttpResponsePermanentRedirect, JsonResponse)
@@ -6,33 +10,37 @@ from django.views.generic.edit import FormView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.decorators import method_decorator
 
+
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
 
 from ..exceptions import ImmediateHttpResponse
-from ..utils import get_form_class, get_request_param, get_current_site
+from ..utils import get_form_class, get_request_param
 
 from .utils import (get_next_redirect_url, complete_signup,
                     get_login_redirect_url, perform_login,
                     passthrough_next_redirect_url)
-# from .forms import AddEmailForm, 
+
 from .forms import ChangePasswordForm
 from .forms import LoginForm, ResetPasswordKeyForm
 from .forms import ResetPasswordForm, SetPasswordForm, SignupForm, UserTokenForm
 # from .utils import sync_user_email_addresses
 # from .models import EmailAddress, EmailConfirmation
-from .models import EmailConfirmation
+from .models import EmailConfirmation, Account
 
 from . import signals
 from . import app_settings
 
 from .adapter import get_adapter
 
-from .serializers import EmailConfirmationSerializer
+from .serializers import EmailConfirmationSerializer, UserSerializer
 
 try:
     from django.contrib.auth import update_session_auth_hash
@@ -117,14 +125,71 @@ class AjaxCapableProcessFormViewMixin(object):
         return _ajax_response(self.request, response, form=form)
 
 
-class LoginView(RedirectAuthenticatedUserMixin,
-                AjaxCapableProcessFormViewMixin,
-                FormView):
-    form_class = LoginForm
-    template_name = "account/login.html"
-    success_url = None
-    redirect_field_name = "next"
+#class LoginView(TemplateView):
+#form_class = LoginForm
+#template_name = "account/login.html"
+#success_url = None
+#redirect_field_name = "next"
+@api_view(['GET', 'POST'])
+@permission_classes((AllowAny,))
+def ajax_login(request):
+    #def login(self, request, redirect_url=None):
+    #    ret = perform_login(request, self.user,
+    #                        email_verification=app_settings.EMAIL_VERIFICATION,
+    #                        redirect_url=redirect_url)
+    #    remember = app_settings.SESSION_REMEMBER
+    #    if remember is None:
+    #        remember = self.cleaned_data['remember']
+    #    if remember:
+    #        request.session.set_expiry(app_settings.SESSION_COOKIE_AGE)
+    #    else:
+    #        request.session.set_expiry(0)
+    #    return ret
 
+    if request.method == 'POST':
+        # self.object = self.request.user
+        error = {
+            'form_errors': {}
+        }
+        req = json.loads(request.body.decode("utf-8"))
+        email = req.get('email')
+        if not email:
+            error['form_errors'] = {
+                "login": [u"Это поле обязательно."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+        password = req.get('password')
+        if not password:
+            error['form_errors'] = {
+                "password": [u"Это поле обязательно."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+        user_obj = None
+        try:
+            user_obj = Account.objects.get(email=email)
+        except Account.DoesNotExist:
+            error['form_errors'] = {
+                "other": [u"Указанный Email не найден."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+        user = authenticate(username=user_obj, password=password)
+        if not user:
+            error['form_errors'] = {
+                "other": [u"Неверный пароль."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+        if user.is_active:
+            login(request, user)
+        else:
+            error['form_errors'] = {
+                "other": [u"Указанный Email не активен."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+
+        return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+
+
+    """
     @sensitive_post_parameters_m
     def dispatch(self, request, *args, **kwargs):
         return super(LoginView, self).dispatch(request, *args, **kwargs)
@@ -161,14 +226,14 @@ class LoginView(RedirectAuthenticatedUserMixin,
                     "redirect_field_name": self.redirect_field_name,
                     "redirect_field_value": redirect_field_value})
         return ret
+    """
+#login = LoginView.as_view()
 
-login = LoginView.as_view()
 
+#class AjaxLoginView(LoginView):
+#    template_name = "account/ajax_login.html"
 
-class AjaxLoginView(LoginView):
-    template_name = "account/ajax_login.html"
-
-ajax_login = AjaxLoginView.as_view()
+#ajax_login = AjaxLoginView.as_view()
 
 
 class CloseableSignupMixin(object):
@@ -361,6 +426,39 @@ class AjaxConfirmEmailView(TemplateView):
     template_name = "account/ajax_confirm_email.html"
 
 ajax_confirm_email = AjaxConfirmEmailView.as_view()
+
+
+class ProfileView(JSONResponseMixin, View):
+
+    def post(self, *args, **kwargs):
+        self.object = self.request.user
+        req = json.loads(self.request.body.decode("utf-8"))
+        account_type = req.get('account_type')
+        try:
+            if account_type and int(account_type) == 1:
+                if self.object.account_type != account_type:
+                    self.object.account_type = account_type
+                    self.object.save()
+            if account_type and int(account_type) == 2:
+                if self.object.account_type != account_type:
+                    self.object.account_type = account_type
+                    self.object.save()
+        except Exception:
+            pass
+
+        password = req.get('password')
+        if password:
+            self.object.set_password(password)
+            self.object.save()
+
+        return self.render_to_json_response(UserSerializer(self.request.user).data)
+
+ajax_profile = ProfileView.as_view()
+
+
+
+
+
 
 """
 class EmailView(AjaxCapableProcessFormViewMixin, FormView):

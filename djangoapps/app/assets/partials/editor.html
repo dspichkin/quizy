@@ -1,25 +1,35 @@
-<div class="container-fluid editor" ng-controller="EditCtrl">
+<div class="container-fluid editor" ng-controller="EditCtrl" style="padding: 30px;">
     <div>
-        <div>Название урока</div>
-        <input class="lesson_name" type="text" 
-                ng-model="model.current_lesson.name"
-                ng-change="make_dirty_data()"
-                ng-model-onblur ng-blur="finish_changed_lesson()">
-        <div>Описание урока</div>
-        <input class="lesson_description" type="text" 
-                ng-model="model.current_lesson.description"
-                ng-change="make_dirty_data()"
-                ng-model-onblur ng-blur="finish_changed_lesson()">
-
-        <div>Активность урока</div>
-        <input class="lesson_is_active" type="checkbox" 
-                ng-model="model.current_lesson.is_active"
-                name="checkbox"
-                value="{{model.current_lesson.is_active}}"
-                ng-checked="model.current_lesson.is_active == true"
-                ng-value="true"
-                ng-change="finish_changed_lesson()">
-
+        <md-input-container>
+            <label>Название урока</label>
+            <input class="lesson_name" type="text" 
+                    ng-model="model.current_lesson.name"
+                    ng-change="make_dirty_data()"
+                    ng-model-onblur ng-blur="finish_changed_lesson()">
+        </md-input-container>
+        <md-input-container>
+            <p><label>Описание урока</label></p>
+            <md-content layout-padding>
+                <textarea
+                    class="lesson_description" 
+                    ng-model="model.current_lesson.description"
+                    ng-change="make_dirty_data()"
+                    ng-model-onblur ng-blur="finish_changed_lesson()"
+                    style="width: 100%;">
+                </textarea>
+            </md-content>
+            
+        </md-input-container>
+        <md-input-container>
+            <label>Урока доступен?</label>
+            <input class="lesson_is_active" type="checkbox" 
+                    ng-model="model.current_lesson.is_active"
+                    name="checkbox"
+                    value="{{model.current_lesson.is_active}}"
+                    ng-checked="model.current_lesson.is_active == true"
+                    ng-value="true"
+                    ng-change="finish_changed_lesson()">
+        </md-input-container>
         <div class="activity">
             <div id="loading" style="display:none;">Сохранение...</div>
             <div id="unsaved" style="display:none;">Изменения не сохранены...</div>
@@ -30,7 +40,6 @@
         <div class="pages_panel">
             
             <div class="btn-group">
-
 
                 <button type="button" class="btn btn-danger dropdown-toggle btn_add_page" data-toggle="dropdown">
                     <i class="icon-plus"></i>Добавить страницу
@@ -102,7 +111,7 @@
         <div class="current_page" ng-if="model.pages.length > 0">
             <div class="page_header">
                 <div class="page_number" style="font-size:25px;">
-                Вопрос № {{model.pages[model.current_page_index].number}}</div>
+                Страница № {{model.pages[model.current_page_index].number}}</div>
 
                 <button class="btn pull-right" style="height: 40px; width:40px; padding:0; margin-left: 5px" title="Удалить вопрос" ng-click="remove_page()"> 
                     <i class="glyphicon glyphicon-trash"></i>
@@ -110,7 +119,7 @@
 
                 
             </div>
-            <div class="page_body">
+            <div class="page_body" style="padding: 20px 0;">
                 <text-angular class="page_text_textarea" 
                     ng-model="model.pages[model.current_page_index].text"
                     ng-change="make_dirty_data()"

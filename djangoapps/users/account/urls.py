@@ -32,6 +32,8 @@ urlpatterns = patterns(
     #    RedirectView.as_view(url='/accounts/confirm-email/%(key)s/',
     #                         permanent=True)),
 
+    url(r"^ajax-profile/$", views.ajax_profile,
+        name="ajax_profile/"),
     # password reset
     url(r"^password/reset/$", views.password_reset,
         name="account_reset_password"),

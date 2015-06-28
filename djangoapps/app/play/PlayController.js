@@ -4,6 +4,10 @@ var Page = require('../models/page');
 var Lesson = require('../models/lesson');
 
 var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
+    if (!$scope.user || !$scope.user.is_authenticated) {
+        $location.path('/');
+    }
+
 
     $scope.model = {
         current_page_index: 0,

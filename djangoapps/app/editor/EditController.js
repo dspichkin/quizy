@@ -4,7 +4,9 @@ var Page = require('../models/page');
 var Lesson = require('../models/lesson');
 
 var EditCtrl = function($scope, $stateParams, $log, $data, $location) {
-
+    if (!$scope.user || !$scope.user.is_authenticated) {
+        $location.path('/');
+    }
 
     $scope.model = {
         is_dirty_data: false,

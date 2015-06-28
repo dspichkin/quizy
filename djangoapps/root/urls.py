@@ -26,8 +26,8 @@ from django.shortcuts import render
 from rest_framework.routers import DefaultRouter
 
 from quizy.views import (PageViewSet, user_data,
-    set_enroll_user, MyLessonsViewSet, answers,
-    lessons, new_page, lesson_archive)
+    MyLessonsViewSet, answers,
+    lessons, new_page, lesson_archive, enroll_user)
 # LessonsViewSet,
 
 
@@ -52,7 +52,7 @@ urlpatterns = [
 
     url(r'^api/', include(router.urls), name='api'),
     url(r'^api/user', user_data, name='user'),
-    url(r'^api/set_enroll_user/$', set_enroll_user, name='set_enroll_user'),
+    url(r'^api/enroll_user/(\d+)?/?$', enroll_user, name='enroll_user'),
     url(r'^api/answers/(\d+)/$', answers, name='answers'),
     # url(r'^api/lessons/$', get_lessons, name='get_lessons'),
     url(r'^api/lessons/(\d+)?/?$', lessons, name='get_lessons'),

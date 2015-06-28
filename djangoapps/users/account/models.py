@@ -162,8 +162,8 @@ AbstractUser._meta.get_field('email').null = False
 
 TEACHER, PUPIL = 1, 2
 ACCOUNT_TYPES = (
-    (TEACHER, 'Учитель'),
-    (PUPIL, 'Ученик'),
+    (TEACHER, 'Преподователь'),
+    (PUPIL, 'Студент'),
 )
 
 

@@ -7,6 +7,15 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
     $locationProvider.html5Mode(true).hashPrefix('!');
 
     $stateProvider
+        .state('main', {
+            url: "/",
+            views: {
+                "main1": {
+                    templateUrl: "/assets/partials/main.html",
+                    controller: 'MainCtrl'
+                }
+            }
+        })
         .state('signup', {
             url: "/accounts/signup/",
             views: {
@@ -38,39 +47,54 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/accounts/login/",
             views: {
                 "login": {
-                    templateUrl: "/accounts/ajax-login/",
-                    controller: 'LoginCtrl'
+                    templateUrl: "/accounts/ajax-login/"
                 }
             }
         })
         .state('profile', {
             url: "/accounts/profile/",
-            templateUrl: "/assets/partials/profile.html",
-            controller: 'ProfileCtrl'
+            views: {
+                "profile": {
+                    templateUrl: "/assets/partials/profile.html",
+                    controller: 'ProfileCtrl'
+                }
+            }
         })
         .state('lessons', {
             url: "/lessons/",
             views: {
-                "lessons": {
+                "main": {
                     templateUrl: "/assets/partials/lessons.html",
                     controller: 'LessonsCtrl'
                 }
             }
         })
         .state('editor', {
-            url: "/editor/:lesson_id?",
-            templateUrl: "/assets/partials/editor.html",
-            controller: 'LessonsCtrl'
+            url: "/editor/:lesson_id/",
+            views: {
+                "auth": {
+                    templateUrl: "/assets/partials/editor.html",
+                    controller: 'EditCtrl'
+                }
+            }
         })
-        .state('editor_', {
-            url: "/editor/:lesson_id/?",
-            templateUrl: "/assets/partials/editor.html",
-            controller: 'LessonsCtrl'
+        .state('new_editor', {
+            url: "/editor/",
+            views: {
+                "auth": {
+                    templateUrl: "/assets/partials/editor.html",
+                    controller: 'EditCtrl'
+                }
+            }
         })
         .state('play', {
             url: "/play/:lesson_id/?",
-            templateUrl: "/assets/partials/play.html",
-            controller: 'LessonsCtrl'
+            views: {
+                "auth": {
+                    templateUrl: "/assets/partials/play.html",
+                    controller: 'PlayCtrl'
+                }
+            }
         })
         .state('djangoAccounts', {
             url: "^/accounts/{url:.*}"
@@ -79,8 +103,6 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "^/admin{url:.*}"
         })
         /*
-        
-        
         .state('statistics', {
             url: "/statistics",
             templateUrl: "/assets/partials/statistics.html",
@@ -93,7 +115,7 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
 
     $urlRouterProvider
         .when(/^\/accounts/, '/accounts/profile')
-        .otherwise('/lessons/');
+        .otherwise('/');
 };
 
 var DJANGO_ACCOUNT_URLS = [

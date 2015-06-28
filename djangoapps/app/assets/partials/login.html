@@ -1,0 +1,57 @@
+<md-dialog aria-label="AddClient">
+  <md-content>
+  <div ng-if="model.login.loading">
+      <div style="background-color: black;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            opacity: 0.3;"></div>
+        <md-progress-circular md-mode="indeterminate"
+            style="position: absolute;
+                left: 44%;
+                top: 41%;"></md-progress-circular>
+  </div>
+  <div class="login-form">
+    <h1>Вход</h1>
+    <form id="login">
+        <p>
+            <input id="id_login" ng-class="{'input-error':form_errors.login.length}" autocomplete="off" name="login" placeholder="E-mail" type="text"
+            ng-model="model.login.email">
+        </p>
+
+        <ul class="errorlist" ng-show="model.login.form_errors.login">
+            <li ng-repeat="error in model.login.form_errors.login">{{error}}</li>
+        </ul>
+
+        <p>
+            <input id="id_password" ng-class="{'input-error':form_errors.password.length}" autocomplete="off" name="password" placeholder="Пароль" type="password" ng-model="model.login.password">
+        </p>
+        <ul class="errorlist" ng-how="model.login.form_errors.password">
+            <li ng-repeat="error in model.login.form_errors.password">{{error}}</li>
+        </ul>
+
+        <ul class="errorlist nonfield" ng-show="model.login.form_errors.other" style="display: inline-block;">
+            <li ng-repeat="error in model.login.form_errors.other">{{error}}</li>
+        </ul>
+
+        <br/>
+
+        
+
+        <md-button type="submit" ng-click="submit($event)">Вход</md-button>
+
+        <a class="button secondaryAction" href="{% url 'account_reset_password' %}">Забыли пароль?</a>
+
+        <br/>
+        <br/>
+        <div>Войдите через социальные сети</div>
+        <br/>
+
+        <div class="socialaccount_ballot">
+
+        </div>
+
+    </form>
+</div>
+  </md-content>
+</md-dialog>

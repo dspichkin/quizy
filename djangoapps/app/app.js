@@ -9,37 +9,40 @@ if (!angular.version) {
 
 var states = require('./states');
 
+require('jquery');
+
 require('angular-cookies');
 require('angular-sanitize');
-require('angular-bootstrap');
 require('angular-ui-router');
 
-require('jquery');
-require('jquery.easing');
+require('angular-animate');
+require('angular-aria');
+require('angular-material');
+require('angular-material-icons');
 
-require('bootstrap');
+require('angular-parallax');
+
 require('sortable');
 require('rangy');
 require('textAngular-sanitize');
 require('textAngular');
 
 
-require('angularMaterialize');
-
 require('./editor/filters');
 require('./controllers');
+require('./directives');
 
 angular.module('quizy', [
         'ngSanitize',
-        'ngCookies',
-        'ui.bootstrap',
         'ui.router',
-        'ui.materialize',
-
+        'ngMaterial',
+        'ngMdIcons',
         'angular-sortable-view',
         'textAngular',
+        'angular-parallax',
 
         'quizy.Controllers',
+        'quizy.Directives',
         'quizy.filters'])
     .service('$data', require('./editor/EditDataService.js'))
     .config(['$httpProvider', function($httpProvider) {

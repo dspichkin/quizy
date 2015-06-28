@@ -1,106 +1,159 @@
+<div style="min-height:600px;">
+    <div class="row mylessons" ng-if="user.is_authenticated && user.account_type==1" style="padding: 10px 50px;min-height: 400px;">
+            
+            <md-button ng-click="new_lesson()" class="md-raised pull-right" style="background-color: #FF9E37;">Создать новый урок</md-button>
+            <h3>Созданные мною уроки</h3>
+            <div style="box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);background-color: white;">
+                <div ng-if="model.lesson.lessons.length > 0">
+                    <table class="table">
+                        <thead>
+                            <th>
+                                Действие
+                            </th>
+                            <th>
+                                Название
+                            </th>
+                            <th>
+                                Краткое описание
+                            </th>
+                            <th>
+                                Назначено на
+                            </th>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="lesson in model.lesson.lessons">
+                                <td>
+                                    <div layout="vertical" layout-fill>
+                                    <md-menu>
+                                        <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+                                            <!-- <md-icon md-menu-origin md-svg-icon="menu"></md-icon>-->
+                                            <ng-md-icon icon="menu" size="36"></ng-md-icon> 
+                                        </md-button>
+                                        <md-menu-content>
+                                            <md-menu-item>
+                                                <md-button ng-click="edit_lesson(lesson.id)">
+                                                    <md-icon md-svg-src="/assets/img/icons/twitter.svg"></md-icon>
+                                                    Назначить на ученика
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button ng-click="edit_lesson(lesson.id)">
+                                                    <md-icon md-svg-src="/assets/img/icons/hangout.svg"></md-icon>
+                                                    Редактировать урок
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button ng-click="play_lesson(lesson.id)">
+                                                    <md-icon md-svg-src="/assets/img/icons/hangout.svg"></md-icon>
+                                                   Запустить для тестирования
+                                                </md-button>
+                                            </md-menu-item>
+                                            <md-menu-item>
+                                                <md-button ng-click="delete_lesson(lesson.id)">
+                                                    <md-icon md-svg-src="/assets/img/icons/hangout.svg"></md-icon>
+                                                    Удалить урок
+                                                </md-button>
+                                            </md-menu-item>
+                                        </md-menu-content>
+                                    </md-menu>
+                                    </div>
+                                    <!--
+                                    <md-fab-speed-dial md-open="model.fabAction.isOpen" md-direction="{{model.fabAction.selectedDirection}}"
+                                                 ng-class="model.fabAction.selectedMode">
+                                        <md-fab-trigger>
+                                          <md-button aria-label="menu" class="md-fab md-warn">
+                                            <md-icon md-svg-src="/assets/img/icons/menu.svg"></md-icon>
+                                          </md-button>
+                                        </md-fab-trigger>
+                                        <md-fab-actions>
+                                          <md-button aria-label="twitter" class="md-fab md-raised md-mini">
+                                            <md-icon md-svg-src="/assets/img/icons/twitter.svg"></md-icon>
+                                          </md-button>
+                                          <md-button aria-label="facebook" class="md-fab md-raised md-mini">
+                                            <md-icon md-svg-src="/assets/img/icons/facebook.svg"></md-icon>
+                                          </md-button>
+                                          <md-button aria-label="Google hangout" class="md-fab md-raised md-mini">
+                                            <md-icon md-svg-src="/assets/img/icons/hangout.svg"></md-icon>
+                                          </md-button>
+                                        </md-fab-actions>
+                                      </md-fab-speed-dial>
+                                    -->
+                                </td>
+                                <td>
+                                    <span ng-if="lesson.name">{{lesson.name}}</span>
+                                    <span ng-if="!lesson.name">Урок без имени</span>
+                                </td>
+                                <td>
+                                    <span>{{lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>
+                                </td>
+                                <td>
+                                    <p ng-repeat="enroll in lesson.enrolls">
+                                        {{enroll.learner.email}}
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                            <!--
+                            <md-button  class="md-raised" ng-click="lesson_enroll($event, lesson.id)"  style="background-color: #00887A">Назначить на ученика</md-button>
 
 
-<script type="text/ng-template" id="modalContentLessonEnroll.html">
-    <div class="modal-header">
-        <h3 class="modal-title" ng-if="model.show_user">Назначение урока на ученика</h3>
-        <h3 class="modal-title" ng-if="model.show_invite">Приглашение ученика зарегистрироваться</h3>
-        <h3 class="modal-title" ng-if="model.show_error">Ошибка</h3>
-    </div>
-
-    <div class="modal-body">
-        <div ng-if="model.show_user">
-            <h4>Введите email ученика:</h4>
-            <input type="text" ng-model="model.inputed_address">
-        </div>
-        <div ng-if="model.show_invite">
-            <p>Указаный вами email {{model.inputed_address}} не найден среди зарегистрированных пользователей.</p>
-            <p>Хотите ввести email заново?</p>
-        </div>
-        <div ng-if="model.show_error">
-            <p>{{model.error_message}}</p>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-    </div>
-</script>
-
-
-
-
-
-</br>
-<div ng-if="user.is_authenticated">
-    <h1>Страница мои уроки</h1>
-
-    <div class="content-panel" ng-if="!user.is_authenticated && user.loaded">
-        <a ui-sref="signup" class="btn btn-primary">Зарегистрироваться</a>
-        <a ui-sref="login" class="btn btn-primary">Войти</a>
-    </div>
-
-
-    <a href="/editor/"><button class="btn btn-info">Создать новый урок</button></a>
-    <br>
-    <br>
-    <div ng-if="model.lessons.length > 0">
-        <h4>Созданные мною уроки</h4>
-        <ul>
-            <li ng-repeat="lesson in model.lessons" style="margin:5px;">
-                <div ng-if="lesson.name">{{lesson.name}}</div>
-                <div ng-if="!lesson.name">Урок без имени</div>
-                <button class="btn" ng-click="lesson_enroll(lesson.id)">Назначить на ученика</button>
-                <button class="btn" ng-click="edit_lesson(lesson.id)">Редактировать урок</button>
-                <button class="btn" ng-click="play_lesson(lesson.id)">Запустить для тестирования</button>
-                <button class="btn" ng-click="delete_lesson(lesson.id)">Удалить урок</button>
-                <div ng-if="lesson.enrolls.length > 0">
-                    Назначен на:
-                    <ul>
-                        <li ng-repeat="enroll in lesson.enrolls">
-                            <ul>
-                                <li>
-                                    {{enroll.learner.email}}
-                                    <button class="btn" ng-click="remove_enroll(enroll.id)">Снять назначение</button>
-                                </li>
-                            </ul>
+                            <md-button class="md-raised" style="background-color: #00887A" ng-click="edit_lesson(lesson.id)">Редактировать урок</md-button>
+                            <md-button class="md-raised" style="background-color: #00887A" ng-click="play_lesson(lesson.id)">Запустить для тестирования</md-button>
+                            <md-button class="md-raised" style="background-color: #00887A" ng-click="delete_lesson(lesson.id)">Удалить урок</md-button>
+                            <div ng-if="lesson.enrolls.length > 0">
+                                Назначен на:
+                                <ul>
+                                    <li ng-repeat="enroll in lesson.enrolls">
+                                        <ul>
+                                            <li>
+                                                {{enroll.learner.email}}
+                                                <md-button class="md-raised" style="background-color: #00887A" ng-click="remove_enroll(enroll.id)">Снять назначение</md-button>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                            <hr>
                         </li>
+                    </ul>
+                    -->
                 </div>
-            </li>
-        </ul>
-    </div>
-    <!-- <code>{{my_lessons}}</code> -->
-    <div ng-if="model.lessons_for_me.length > 0">
-        <h4>Назначенные на меня уроки</h4>
-        <ul>
-            <li ng-repeat="lesson in model.lessons_for_me" style="margin:5px;">
-                {{$index + 1}}. {{lesson.name}} <br>
-                {{lesson.description}} <br>
-                страниц в уроке: {{lesson.pages.length}}<br>
-                Номер последней попытки: {{lesson.enrolls[0].number_of_attempt}}<br>
-                Результат прохождения: 
-                    <span ng-if="lesson.enrolls[0].success == true">Пройденно</span>
-                    <span ng-if="lesson.enrolls[0].success && lesson.enrolls[0].success==false">Непройдено</span>
-                <br>
-                <button class="btn" ng-click="play_lesson(lesson.id)">Старт</button>
-                <button class="btn" ng-click="move_to_archive(lesson.id)"
-                ng-if="lesson.enrolls[0].success==true">В архив</button>
-            </li>
-        </ul>
-    </div>
+            </div>
+        </li>
+        <!-- <code>{{my_lessons}}</code> -->
+        <div ng-if="model.lesson.lessons_for_me.length > 0">
+            <h4>Назначенные на меня уроки</h4>
+            <ul>
+                <li ng-repeat="lesson in model.lesson.lessons_for_me" style="margin:5px;">
+                    {{$index + 1}}. {{lesson.name}} <br>
+                    {{lesson.description}} <br>
+                    страниц в уроке: {{lesson.pages.length}}<br>
+                    Номер последней попытки: {{lesson.enrolls[0].number_of_attempt}}<br>
+                    Результат прохождения: 
+                        <span ng-if="lesson.enrolls[0].success == true">Пройденно</span>
+                        <span ng-if="lesson.enrolls[0].success && lesson.enrolls[0].success==false">Непройдено</span>
+                    <br>
+                    <button class="btn" ng-click="play_lesson(lesson.id)">Старт</button>
+                    <button class="btn" ng-click="move_to_archive(lesson.id)"
+                    ng-if="lesson.enrolls[0].success==true">В архив</button>
+                </li>
+            </ul>
 
-    <div ng-if="model.archive.length > 0">
-        <br><br>
-        <h4>Уроки в архиве:</h4>
-         <ul>
-            <li ng-repeat="l in model.archive" style="margin:5px;">
-                {{$index + 1}}. {{l.lesson.name}} <br>
-                {{l.lesson.description}} <br>
-                кол-во попыток: {{l.number_of_attempt}}<br>
-                Результат прохождения: 
-                    <span ng-if="l.success == true">Пройденно</span>
-                    <span ng-if="l.success && lesson.enrolls[0].success==false">Непройдено</span>
-                <br>
-            </li>
-        </ul>
+        <div ng-if="model.lesson.archive.length > 0">
+            <br><br>
+            <h4>Уроки в архиве:</h4>
+             <ul>
+                <li ng-repeat="l in model.lesson.archive" style="margin:5px;">
+                    {{$index + 1}}. {{l.lesson.name}} <br>
+                    {{l.lesson.description}} <br>
+                    кол-во попыток: {{l.number_of_attempt}}<br>
+                    Результат прохождения: 
+                        <span ng-if="l.success == true">Пройденно</span>
+                        <span ng-if="l.success && lesson.enrolls[0].success==false">Непройдено</span>
+                    <br>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

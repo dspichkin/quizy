@@ -48,7 +48,8 @@ class UserSerializer(serializers.ModelSerializer):
             'avatar',
             'role',
             'last_login',
-            'date_joined'
+            'date_joined',
+            'account_type'
         )
 
 
