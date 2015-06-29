@@ -25,10 +25,7 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
     }
 
 
-    $scope.model.current_content_url = null;
-    $scope.model.menu.positionTop = '-252px';
-    $scope.model.menu.positionLoginTop = '252px';
-    window.scrollTo(0, 0);
+    $scope.main.make_lesson_page();
 
 
     $scope.load_lesson = function(callback) {

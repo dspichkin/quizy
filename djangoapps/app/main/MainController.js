@@ -1,39 +1,77 @@
 'use strict';
-var MainCtrl = function($scope, $http, $mdDialog, $location, $timeout, $log) {
+var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $log) {
     $scope.user = {
         username: 'guest',
         is_authenticated: false,
         loaded: false
     };
+
+    // высота окна сообщения
+    var message_height = 48;
+
+    var t = '<button class="md-raised pull-right md-button md-default-theme" ng-transclude="" ng-click="new_lesson()" style="background-color: #FF9E37;    margin: -8px 43px 0 0px;" tabindex="0"><span class="ng-scope">Обработать заявки</span><div class="md-ripple-container"></div></button>';
     $scope.model = {
         selected_menu: null,
         current_content_url: 'assets/partials/main.html',
         menu: {
-            positionTop: 0,
-            positionLoginTop: 0
+            positionTop: '0px',
+            positionLoginTextTop: '0px'
+        },
+        message: {
+            is_active: false,
+            current_message: 0,
+            text: [$sce.trustAsHtml('Message from server <b>ddd</b> ' + t)],
+            next_message: function() {
+                $scope.model.message.current_message += 1;
+                if ($scope.model.message.current_message >= $scope.model.message.text.length) {
+                    $scope.model.message.current_message = 0;
+                }
+            }
         }
     };
+
+
     $scope.main = {};
 
     var reset_menu = function() {
-        $scope.model.menu.positionTop = '0px';
-        $scope.model.menu.positionLoginTop = '0px';
-    }
+        if ($scope.model.message.is_active == true) {
+            $scope.model.menu.positionTop = message_height + 'px';
+        } else {
+            $scope.model.menu.positionTop = '0px';
+        }
+        $scope.model.menu.positionLoginTextTop = '0px';
+    };
+
+    reset_menu();
 
     $scope.main.go_home_page = function() {
         $location.path('/');
         $scope.model.current_content_url = 'assets/partials/main.html';
         reset_menu();
-        $scope.run();
+        $scope.main.run();
+    };
+
+
+    /**
+     * Приготовить страницу уроков
+     * @return {[type]} [description]
+     */
+    $scope.main.make_lesson_page = function() {
+        $scope.model.current_content_url = null;
+
+        if ($scope.model.message.is_active == true) {
+            $scope.model.menu.positionTop = (-252 + message_height) + 'px';
+        } else {
+            $scope.model.menu.positionTop = -252 + 'px';
+        }
+        $scope.model.menu.positionLoginTextTop = 252 + 'px';
+
+        window.scrollTo(0, 0);
     };
 
     $scope.main.go_lesson_page = function() {
         $location.path('/lessons/');
-        $scope.model.current_content_url = null;
-        $scope.model.menu.positionTop = '-252px';
-        $scope.model.menu.positionLoginTop = '252px';
-        window.scrollTo(0, 0);
-       console.log(window.pageYOffset)
+        $scope.main.make_lesson_page();
     };
 
     $scope.main.go_price = function() {
@@ -155,5 +193,5 @@ var MainCtrl = function($scope, $http, $mdDialog, $location, $timeout, $log) {
 };
 
 
-module.exports = ['$scope', '$http', '$mdDialog', '$location', '$timeout', '$log', MainCtrl];
+module.exports = ['$scope', '$sce', '$http', '$mdDialog', '$location', '$timeout', '$log', MainCtrl];
 

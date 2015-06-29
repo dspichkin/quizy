@@ -2,7 +2,7 @@ import django
 from django.contrib import admin
 
 from .models import (Account,
-    EmailConfirmation)
+    EmailConfirmation, SystemMessage)
 from .adapter import get_adapter
 
 """
@@ -34,6 +34,11 @@ class AccountAdmin(admin.ModelAdmin):
     list_display = ('username', 'account_type', 'number_of_pupil', 'is_active', 'verified', 'is_superuser')
 
 
+class SystemMessageAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(EmailConfirmation, EmailConfirmationAdmin)
 # admin.site.register(EmailAddress, EmailAddressAdmin)
 admin.site.register(Account, AccountAdmin)
+admin.site.register(SystemMessage, SystemMessageAdmin)

@@ -213,12 +213,6 @@ class Account(AbstractUser):
             self.username = self.email
         super(Account, self).save(*args, **kwargs)
 
-        # Создадим объекты назначений
-        # enrolls = [CourseEnroll(learner=self, course=course)
-        #     for course in Course.objects.exclude(enroll__learner__pk=self.pk)]
-        # if enrolls:
-        #    CourseEnroll.objects.bulk_create(enrolls)
-
         # Пропишем организацию
         if self.is_org:
             if self.org is None:
@@ -243,11 +237,6 @@ class Account(AbstractUser):
             return self.first_name or self.last_name
         return self.username or self.email
 
-    # def pay_for(self, course, until):
-        # this_enroll = CourseEnroll.objects.get(course=course, learner=self)
-        # this_enroll.paid_until = until
-        # this_enroll.save(update_fields=['paid_until'])
-
     @property
     def role(self):
         return 'trainer' if self.is_org else 'learner'
@@ -270,14 +259,21 @@ class Account(AbstractUser):
         return None
 
 
-# Account._meta.get_field('email')._blank = False
-# Account._meta.get_field('email')._null = False
-# Account._meta.get_field('email')._unique = True
-
-
 class User(Account):
     class Meta(Account.Meta):
         proxy = True
+
+
+class SystemMessage(models.Model):
+    user = models.ForeignKey(Account)
+    text = models.TextField('Текст сообщения')
+
+    class Meta:
+        verbose_name = 'Системное сообщение'
+        verbose_name_plural = 'Системное сообщение'
+
+    def __unicode__(self):
+        return '%s - %s' % (self.user, self.text[:100])
 
 
 class InviteAlreadyUsed(Exception):
