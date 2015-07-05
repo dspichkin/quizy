@@ -10,9 +10,9 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
         .state('main', {
             url: "/",
             views: {
-                "main1": {
+                "main": {
                     templateUrl: "/assets/partials/main.html",
-                    controller: 'MainCtrl'
+                    //controller: 'MainCtrl'
                 }
             }
         })
@@ -69,21 +69,30 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
                 }
             }
         })
-        .state('editor', {
-            url: "/editor/:lesson_id/",
+        .state('price', {
+            url: "/price/",
             views: {
-                "auth": {
-                    templateUrl: "/assets/partials/editor.html",
-                    controller: 'EditCtrl'
+                "main": {
+                    templateUrl: "/assets/partials/price.html",
+                    controller: 'MainCtrl'
                 }
             }
         })
-        .state('new_editor', {
-            url: "/editor/",
+        .state('editor_lesson', {
+            url: "/editor/lesson/:lesson_id/",
             views: {
-                "auth": {
-                    templateUrl: "/assets/partials/editor.html",
-                    controller: 'EditCtrl'
+                "main": {
+                    templateUrl: "/assets/partials/editor_lesson.html",
+                    controller: 'EditLessonCtrl'
+                }
+            }
+        })
+        .state('new_editor_lesson', {
+            url: "/editor/lesson/",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/editor_lesson.html",
+                    controller: 'EditLessonCtrl'
                 }
             }
         })
@@ -100,7 +109,7 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "^/accounts/{url:.*}"
         })
         .state('djangoAdmin', {
-            url: "^/admin{url:.*}"
+            url: "^/admin/{url:.*}"
         })
         /*
         .state('statistics', {
@@ -108,8 +117,6 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             templateUrl: "/assets/partials/statistics.html",
             controller: 'StatisticsController'
         })
-        
-        
         */
 
 
@@ -119,6 +126,7 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
 };
 
 var DJANGO_ACCOUNT_URLS = [
+    'admin',
     'password/change', 'pasword/set',
     'inactive', 'email', 'password/reset',
     'social/signup', 'social/connections', 'social/login/error',

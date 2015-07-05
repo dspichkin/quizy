@@ -1,13 +1,17 @@
 'use strict';
-var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $log) {
+var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $timeout, $log) {
     $scope.user = {
         username: 'guest',
         is_authenticated: false,
         loaded: false
     };
 
+    window.scope = $scope;
+
     // высота окна сообщения
     var message_height = 48;
+    // высота короткой шапки
+    var short_header_height = 150;
 
     var t = '<button class="md-raised pull-right md-button md-default-theme" ng-transclude="" ng-click="new_lesson()" style="background-color: #FF9E37;    margin: -8px 43px 0 0px;" tabindex="0"><span class="ng-scope">Обработать заявки</span><div class="md-ripple-container"></div></button>';
     $scope.model = {
@@ -15,7 +19,12 @@ var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $lo
         current_content_url: 'assets/partials/main.html',
         menu: {
             positionTop: '0px',
-            positionLoginTextTop: '0px'
+            positionLoginTextTop: '0px',
+            positionBodyTop: '0px', // позиция страницы
+            positionMainMenuLeft: '0px', // позиция главного меню
+            positionMainMenuTop: '252px', // позиция главного меню
+            positionTitleLeft: '-4px', // позиция названия
+            positionTitleTop: '68px' // позиция названия
         },
         message: {
             is_active: false,
@@ -31,16 +40,44 @@ var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $lo
     };
 
 
-    $scope.main = {};
+    $scope.main = {
+        active_menu: 'main'
+    };
 
     var reset_menu = function() {
         if ($scope.model.message.is_active == true) {
             $scope.model.menu.positionTop = message_height + 'px';
+            $scope.model.menu.positionBodyTop = (300 + message_height) + 'px';
         } else {
             $scope.model.menu.positionTop = '0px';
+            $scope.model.menu.positionBodyTop = '300px';
+            $scope.model.menu.positionMainMenuLeft = '0px';
+            $scope.model.menu.positionMainMenuTop = '252px';
+            $scope.model.menu.positionTitleLeft = '-4px';
+            $scope.model.menu.positionTitleTop = '68px';
         }
         $scope.model.menu.positionLoginTextTop = '0px';
+
+        $scope.main.active_menu = 'main';
+
     };
+
+    $scope.main.make_short_header = function() {
+        if ($scope.model.message.is_active == true) {
+            $scope.model.menu.positionTop = (-short_header_height + message_height) + 'px';
+            $scope.model.menu.positionBodyTop = (short_header_height + message_height) + 'px';
+        } else {
+            $scope.model.menu.positionTop = -short_header_height + 'px';
+            $scope.model.menu.positionBodyTop = short_header_height + 'px';
+            $scope.model.menu.positionMainMenuTop = '180px';
+            $scope.model.menu.positionTitleLeft = '37%';
+            $scope.model.menu.positionTitleTop = '180px';
+            $scope.model.menu.positionMainMenuLeft = '5%';
+        }
+        $scope.model.menu.positionLoginTextTop = short_header_height + 'px';
+
+        window.scrollTo(0, 0);
+    }
 
     reset_menu();
 
@@ -49,6 +86,8 @@ var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $lo
         $scope.model.current_content_url = 'assets/partials/main.html';
         reset_menu();
         $scope.main.run();
+
+        $scope.main.active_menu = 'main';
     };
 
 
@@ -56,39 +95,47 @@ var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $lo
      * Приготовить страницу уроков
      * @return {[type]} [description]
      */
-    $scope.main.make_lesson_page = function() {
-        $scope.model.current_content_url = null;
+    //$scope.main.make_lesson_page = function() {
+    //    $scope.model.current_content_url = null;
+    //    short_header();
+    //};
 
-        if ($scope.model.message.is_active == true) {
-            $scope.model.menu.positionTop = (-252 + message_height) + 'px';
-        } else {
-            $scope.model.menu.positionTop = -252 + 'px';
-        }
-        $scope.model.menu.positionLoginTextTop = 252 + 'px';
-
-        window.scrollTo(0, 0);
-    };
-
-    $scope.main.go_lesson_page = function() {
+    $scope.main.go_lessons_page = function() {
         $location.path('/lessons/');
-        $scope.main.make_lesson_page();
+        $scope.model.current_content_url = null;
+        $scope.main.make_short_header();
+        $scope.main.active_menu = 'lessons';
     };
+    
 
     $scope.main.go_price = function() {
-        $location.path('/');
-        $scope.model.current_content_url = 'assets/partials/price.html';
         reset_menu();
+        $scope.main.active_menu = 'price';
+        $location.path('/price/');
     };
 
     $scope.main.go_description = function() {
         $location.path('/');
         $scope.model.current_content_url = 'assets/partials/help.html';
+        $scope.main.active_menu = 'description';
         reset_menu();
     };
+
+    $scope.main.go_editor_lesson = function(lesson_id) {
+        if (lesson_id) {
+            $location.path('/editor/lesson/' + lesson_id + '/');
+        } else {
+            $location.path('/editor/lesson/');
+        }
+        $scope.model.current_content_url = null;
+        $scope.main.make_short_header();
+        $scope.main.active_menu = 'lessons';
+    }
 
 
 
     $scope.main.run = function(callback) {
+
         var config = {
             headers: {
                 'Accept': 'application/json; indent=4'
@@ -98,9 +145,6 @@ var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $lo
         var userget = $http.get('/api/user/', config).then(function(data) {
             $scope.user = data.data;
             $scope.user.loaded = true;
-            setTimeout(function() {
-                $scope.$apply();
-            });
 
             if (callback) {
                 callback();
@@ -111,7 +155,7 @@ var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $lo
             }
             $log.error('Ошибка получения данных', error);
         });
-        return userget;
+        //return userget;
 
     };
 
@@ -163,13 +207,12 @@ var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $lo
                                 }
                             }, function(e) {
                                 $scope.user.loaded = true;
-                                $log.error(e)
+                                $log.error(e);
                             }
                         );
                     };
                 }
             });
-        
     };
 
 
@@ -179,11 +222,10 @@ var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $lo
         }
         $scope.user.loaded = false;
         $http.post('/accounts/ajax-logout/').then(function(data) {
-            $location.path('/');
-            $scope.main.run();
+            $scope.main.go_home_page()
         }, function(error) {
             $log.error('Ошибка выхода', error);
-        })
+        });
     };
 
 
@@ -193,5 +235,5 @@ var MainCtrl = function($scope, $sce, $http, $mdDialog, $location, $timeout, $lo
 };
 
 
-module.exports = ['$scope', '$sce', '$http', '$mdDialog', '$location', '$timeout', '$log', MainCtrl];
+module.exports = ['$scope', '$state', '$sce', '$http', '$mdDialog', '$location', '$timeout', '$log', MainCtrl];
 

@@ -28,7 +28,7 @@ _.assign(Lesson.prototype, {
             type: "POST"
         });
     },
-    remove: function() {
+    delete: function() {
         return $.ajax({
             url: "/api/lessons/" + this.id + "/",
             type: "DELETE"

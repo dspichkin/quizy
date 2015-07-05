@@ -1,0 +1,76 @@
+@primary_color: #4988c9;
+@secondary_color: #ff9e37;
+
+
+.lesson {
+    .lesson_panel {
+        background-color: white;
+        height:100%;
+        width: 90%;
+        display: inline-block;
+        margin-top: -50px;
+
+        .mylesson_list {
+            min-height: 400px;
+        }
+
+        .lessons_header {
+            height: 70px;
+            border-bottom: 1px solid #c3c3c3;
+            padding: 8px 0 8px 0;
+
+            .mylesson_title {
+                height: 100%;
+                font-size: 20px;
+                padding: 7px 0 0 11px;
+                border-right: 1px solid #c3c3c3;
+                text-align: left;
+            }
+
+            .search_panel {
+                text-align: left;
+                padding: 7px 0px 0px 10px;
+                cursor:pointer;
+
+                label {
+                    font-weight:300;
+                }
+
+                .md-input-focused label {
+                    color: @secondary_color;
+                }
+                md-input-container .md-input {
+                    border-width: 0;
+                }
+            }
+        }
+
+        .table_th {
+            height: 60px;
+            vertical-align: middle;
+            padding: 0px 0px 0px 12px;
+        }
+    }
+    .fab-add-lesson {
+        background-color: #FF9E37;
+        position: absolute;
+        right: 150px;
+        top: -28px;
+        border: initial;
+        z-index: 20;
+        line-height: 56px;
+        min-width: 0;
+        width: 56px;
+        height: 56px;
+        vertical-align: middle;
+        border-radius: 50%;
+        background-clip: padding-box;
+        overflow: hidden;
+        transition: .2s linear;
+        transition-property: background-color,box-shadow;
+
+        &:active {
+            box-shadow: initial;
+        }
+    }
+}

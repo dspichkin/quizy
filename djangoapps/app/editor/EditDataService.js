@@ -14,8 +14,9 @@ module.exports = ['$http', function($http) {
         return $http.post(url_pages, data);
     };
 
-    var _new_lesson = function() {
-        return $http.post(url_lessons);
+    var _new_lesson = function(data) {
+        console.log(data)
+        return $http.post(url_lessons, data);
     };
 
     //var _remove_lesson = function(id) {

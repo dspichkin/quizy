@@ -5,14 +5,19 @@ from django.db.models import Q
 from django.contrib.auth.models import Group
 
 
-from quizy.models import Lesson, LessonEnroll, Page, Variant
+from quizy.models import Course, Lesson, LessonEnroll, Page, Variant
 # from quizy.forms import LessonForm
 
 
+
+class CourseAdmin(admin.ModelAdmin):
+    pass
+
+
 class EnrollAdmin(admin.ModelAdmin):
-    list_display = ['learner', 'lesson', 'is_active', 'is_archive']
+    list_display = ['learner', 'is_archive']
     # list_editable = ['is_active']
-    list_filter = ['lesson__name', 'is_active']
+    list_filter = ['lesson__name']
     search_fields = ('learner__username', 'learner__first_name', 'learner__last_name', 'learner__email')
     actions = ['lock']
     readonly_fields = ['created_at', 'updated_at']
@@ -24,23 +29,22 @@ class EnrollAdmin(admin.ModelAdmin):
 
 
 class LessonAdmin(admin.ModelAdmin):
-    # form = LessonForm
     search_fields = ['name', 'created_by']
     readonly_fields = ('created_by',)
     fieldsets = (
         (None, {
-            'fields': ('name', 'is_active', 'description', 'created_by')
+            'fields': ('name', 'description', 'is_active', 'created_by')
         }),
     )
 
-    list_display = ['created_by', 'is_active', 'name', 'is_active', 'num_learners',]
+    list_display = ['created_by', 'name', 'is_active', ]
     # list_editable = ['is_active']
 
     # actions = ['delete_selected']
 
-    def num_learners(self, obj):
-        return obj.enrolls.filter(
-            Q(is_active=True)).count()
+    #def num_learners(self, obj):
+    #    return obj.enrolls.filter(
+    #        Q(is_active=True)).count()
 
     def save_model(self, request, obj, form, change):
         if getattr(obj, 'created_by', None) is None:
@@ -57,6 +61,7 @@ class VariantAdmin(admin.ModelAdmin):
 
 
 admin.site.unregister(Group)
+admin.site.register(Course,CourseAdmin)
 admin.site.register(LessonEnroll, EnrollAdmin)
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Page, PageAdmin)

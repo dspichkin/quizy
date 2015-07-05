@@ -9,7 +9,7 @@ if (!angular.version) {
 
 var states = require('./states');
 
-require('jquery');
+window.jQuery = window.$ = require('jquery');
 
 require('angular-cookies');
 require('angular-sanitize');
@@ -23,9 +23,7 @@ require('angular-material-icons');
 require('angular-parallax');
 
 require('sortable');
-require('rangy');
-require('textAngular-sanitize');
-require('textAngular');
+
 
 
 require('./editor/filters');
@@ -38,7 +36,6 @@ angular.module('quizy', [
         'ngMaterial',
         'ngMdIcons',
         'angular-sortable-view',
-        'textAngular',
         'angular-parallax',
 
         'quizy.Controllers',
@@ -50,7 +47,7 @@ angular.module('quizy', [
         $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
     }])
     .config(states.config)
-    .run(states.run)
+    .run(states.run);
 
 
 

@@ -401,9 +401,31 @@ def lessons(request, lesson_pk=None):
 
     # create lesson
     if request.method == 'POST' and request.user.is_authenticated() and not lesson_pk:
-        lesson = Lesson.objects.create()
-        lesson.created_by = request.user
-        lesson.save()
+        raw_data = request.body.decode("utf-8")
+
+        is_dirty = False
+        is_active = None
+        name = None
+        description = None
+
+        if raw_data:
+            req = json.loads(raw_data)
+            is_active = req.get("is_active")
+            name = req.get("name")
+            description = req.get("description")
+
+        lesson = Lesson.objects.create(created_by=request.user)
+        if lesson.is_active != is_active and is_active is not None:
+            lesson.is_active = is_active
+            is_dirty = True
+        if lesson.name != name and name is not None:
+            lesson.name = name
+            is_dirty = True
+        if lesson.description != description and description is not None:
+            lesson.description = description
+            is_dirty = True
+        if is_dirty is True:
+            lesson.save()
         return Response(LessonSerializer(instance=lesson).data, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE' and request.user.is_authenticated() and lesson_pk:

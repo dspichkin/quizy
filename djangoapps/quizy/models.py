@@ -16,6 +16,9 @@ class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        abstract = True
+
     def save(self, *args, **kwargs):
         if self.id or not self.uuid:
             u = uuid1()
@@ -24,19 +27,58 @@ class BaseModel(models.Model):
         super(BaseModel, self).save(*args, **kwargs)
 
 
-class LessonEnroll(models.Model):
+class Course(BaseModel):
+    is_active = models.BooleanField('активен?', default=True)
+    name = models.CharField('название курса', max_length=140, blank=True, null=True)
+    description = models.TextField('описание', blank=True)
+
+    class Meta:
+        verbose_name = 'Курс'
+        verbose_name_plural = 'Курсы'
+        app_label = 'quizy'
+
+    def __unicode__(self):
+        if self.name:
+            return self.name
+        return u"Курс без именени"
+
+
+class Lesson(BaseModel):
+
+    is_active = models.BooleanField('активен?', default=True)
+
+    name = models.CharField('название урока', max_length=140, blank=True, null=True)
+
+    number = models.IntegerField('порядок следования', default=0)
+    description = models.TextField('описание', blank=True)
+
+    created_by = models.ForeignKey('account.Account', related_name='lessons',
+                                 verbose_name='создатель', blank=True, null=True)
+
+    course = models.ForeignKey('Course', verbose_name='курс', blank=True, null=True)
+
+    class Meta:
+        ordering = ('created_by', 'number')
+        verbose_name = 'Урок'
+        verbose_name_plural = 'Уроки'
+        app_label = 'quizy'
+
+    def __unicode__(self):
+        if self.name:
+            return self.name
+        return u"Урок без именени"
+
+
+class LessonEnroll(BaseModel):
     """
     Назначения на курсы индивидульных пользователей
     """
-    created_at = models.DateTimeField('назначено', auto_now_add=True)
-    updated_at = models.DateTimeField('последняя попытка', auto_now=True)
     learner = models.ForeignKey('account.Account', related_name='enrolls',
-                                related_query_name='enroll',
-                                verbose_name='обучаемый', editable=False)
+                                verbose_name='обучаемый')
+    course = models.ForeignKey('Course', related_name='enrolls',
+                            verbose_name='курс', blank=True, null=True)
     lesson = models.ForeignKey('Lesson', related_name='enrolls',
-                            related_query_name='enroll',
-                            verbose_name='курс', editable=False)
-    is_active = models.BooleanField('урок доступен?', default=True)
+                            verbose_name='урок', blank=True, null=True)
     result = JSONField('результат прохождения', default='{}')
     number_of_attempt = models.IntegerField('кол-во попыток', default=0)
     success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
@@ -47,6 +89,7 @@ class LessonEnroll(models.Model):
     class Meta:
         verbose_name = 'Назначение'
         verbose_name_plural = 'Назначения'
+        app_label = 'quizy'
 
     def __unicode__(self):
         return '%s(%s)' % (self.learner, self.lesson.name.lower())
@@ -62,42 +105,6 @@ class LessonEnroll(models.Model):
     @property
     def has_permission(self):
         return self.is_active and bool(self.paid_until) and timezone.now() <= self.paid_until
-
-
-class Lesson(models.Model):
-
-    is_active = models.BooleanField('активен?', default=True)
-
-    name = models.CharField('название урока', max_length=140, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    number = models.IntegerField('порядок следования', default=0)
-    description = models.TextField('описание', blank=True)
-
-    created_by = models.ForeignKey('account.Account', related_name='lessons',
-                                 related_query_name='lesson',
-                                 verbose_name='создатель', blank=True, null=True)
-
-    class Meta:
-        ordering = ('created_by', 'number')
-        verbose_name = 'Урок'
-        verbose_name_plural = 'Уроки'
-
-    def __unicode__(self):
-        if self.name:
-            return self.name
-        return u"Урок без именени"
-
-    # def save(self, *args, **kwargs):
-        # Создадим назначения по необходимости
-        # enrolls = [LessonEnroll(learner=ac, lesson=self)
-        #     for ac in Account.objects.exclude(enroll__lesson__pk=self.pk)]
-        # if enrolls:
-        #    LessonEnroll.objects.bulk_create(enrolls)
-
-    # def url(self):
-    #    return '/assets/lessons/%s/index.json' % self.path
 
 
 class Attempt(models.Model):

@@ -1,11 +1,12 @@
+@primary_color: #4988c9;
+@secondary_color: #ff9e37;
 
 .editor {
-    height: 100%;
 
     .activity {
         position: absolute;
-        right: 10px;
-        top: 0;
+        right: 40px;
+        top: 76px;
     }
 
 
@@ -145,5 +146,138 @@
 
         
     }
+
+    .fab-add-page {
+        background-color: #FF9E37;
+        position: absolute;
+        right: 30px;
+        top: -8px;
+        border: initial;
+        z-index: 20;
+        line-height: 56px;
+        min-width: 0;
+        width: 56px;
+        height: 56px;
+        vertical-align: middle;
+        border-radius: 50%;
+        background-clip: padding-box;
+        overflow: hidden;
+        transition: .2s linear;
+        transition-property: background-color,box-shadow;
+    }
+    .fab-add-page-menu {
+        width: 380px;
+        position: absolute;
+        top: 22px;
+        right: 73px;
+        background-color: white;
+        z-index: 100;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.26);
+        text-align: left;
+    }
+
     
+}
+
+.confirm_delete_lesson {
+    position: relative;
+    .content {
+        width: 400px;
+        height: 200px;
+        text-align: center;
+        padding: 30px;
+
+        .btn_delete_lesson {
+            background-color: @secondary_color;
+            border: initial;
+            padding: 10px 20px 10px 20px;
+            border-radius: 5px;
+
+            bottom: 50px;
+            position: absolute;
+            left: 38%;
+        }
+
+        .cancel {
+            color: #337ab7;
+            text-decoration: none;
+            position: absolute;
+            bottom: 17px;
+            left: 46%;
+        }
+    }
+}
+
+
+.lesson_action {
+    .lesson_action_shadow {
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%
+    }
+    .content {
+        display: block;
+        z-index: 100;
+        position: absolute;
+        width: 300px;
+        height: 237px;
+        background-color: white;
+        cursor: default;
+        .header {
+            background-image: url('/assets/img/action_lesson_bg.png');
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100px;
+            position: relative;
+
+            .header_close {
+                background-image: url('/assets/img/action_lesson_close.png');
+                background-repeat: no-repeat;
+                width: 30px;
+                height: 30px;
+                position: absolute;
+                left: 10px;
+                top: 10px;
+                cursor: pointer;
+            }
+            .header_delete {
+                background-image: url('/assets/img/action_lesson_delete.png');
+                background-repeat: no-repeat;
+                width: 30px;
+                height: 30px;
+                right: 10px;
+                position: absolute;
+                top: 10px;
+                cursor: pointer;
+            }
+            .header_title {
+                color: white;
+                width: 100%;
+                height: 100px;
+                position: absolute;
+                top: 58px;
+                font-size: 25px;
+                left: 35px;
+            }
+        }
+        .action_menu_items {
+            position: absolute;
+            top: 100px;
+            width: 100%;
+            .action_item {
+                width: 100%;
+                height: 46px;
+                padding: 12px 0px 0px 20px;
+                border-bottom: 1px solid #c3c3c3;
+                font-size: 16px;
+                cursor: pointer;
+                &:hover {
+                    background-color: #c3c3c3;
+                }
+            }
+        }
+
+    }
 }

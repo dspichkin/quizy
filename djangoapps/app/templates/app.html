@@ -12,15 +12,16 @@
     
     <link href="{% static "css/font-awesome.min.css" %}" rel="stylesheet">
     <link href="{% static "css/angular-material.min.css" %}" rel="stylesheet">
-   <!--
     <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+
+<!--   
     <link href="{% static "css/textAngular.css" %}" rel="stylesheet">
 -->
     {% block extra_css %}{% endblock %}
     {% block link %}{% endblock %}
     {% block extra_js %}{% endblock %}
 
-    <link href="{% static "css/quizy.css" %}" rel="stylesheet">
+    <link href="{% static "css/style.css" %}" rel="stylesheet">
 
     <style>[ng-cloak] { display:none !important }</style>
     
@@ -45,6 +46,7 @@
 <body ng-app="quizy" ng-cloak ng-controller="MainCtrl">
     {% verbatim %}
 
+
 <div ng-if="model.message.is_active" style="height: 34px;
     background-color: rgb(54, 150, 66);
     padding: 14px 0px 0px 20px;
@@ -54,26 +56,26 @@
     top: 0;
     left: 0;
     z-index: 1;
-     -webkit-transition: margin-top .2s ease-out 0.1s;
-     -moz-transition: margin-top .2s ease-out 0.1s;
-     -o-transition: margin-top .2s ease-out 0.1s;
-     transition: margin-top .2s ease-out 0.1s;
+     -webkit-transition: all .2s ease-out 0.1s;
+     -moz-transition: all .2s ease-out 0.1s;
+     -o-transition: all .2s ease-out 0.1s;
+     transition: all .2s ease-out 0.1s;
      " >
      <button ng-if="model.message.text.length > 1" class="md-raised pull-left md-button md-default-theme" ripple ng-click="model.message.next_message()" style="background-color: #FF9E37;    margin: -8px 43px 0 0px;"><span>Следующее</span></button>
      <span ng-if="model.message.text.length > 1"> {{model.message.current_message + 1}} из {{model.message.text.length}}: </span>
      <span ng-bind-html="model.message.text[model.message.current_message]"></span>
 
      </div>
-<div class="row" style="width:100%;
+<div style="width:100%;
     position: relative;
     color: white;
     height:300px;
     background-repeat: no-repeat;
-    background-image: url('/assets/img/parallax-1.jpg');
-    -webkit-transition: margin-top .2s ease-out 0.1s;
-     -moz-transition: margin-top .2s ease-out 0.1s;
-     -o-transition: margin-top .2s ease-out 0.1s;
-     transition: margin-top .2s ease-out 0.1s;" ng-style="{'margin-top': model.menu.positionTop}" >
+    background-image: url('/assets/img/head_bg.png');
+    -webkit-transition: top .2s ease-out 0.1s;
+     -moz-transition: top .2s ease-out 0.1s;
+     -o-transition: top .2s ease-out 0.1s;
+     transition: top .2s ease-out 0.1s;" ng-style="{'top': model.menu.positionTop}" >
     <div ng-show="user && user.is_authenticated" style="font-size:15px;padding: 10px 0 0 18px;" >Вы зашли под пользователем {{user.email}}</div>
     
     <div style="
@@ -82,9 +84,16 @@
     padding: 0px 0px 0px 17px;
     color: white;
     position: absolute;
-    top: 22%;
-    left: 0;
-    font-size: 40px;">Quizy
+    font-size: 40px;
+    -webkit-transition: top .2s ease-out 0.1s;
+    -moz-transition: top .2s ease-out 0.1s;
+    -o-transition: top .2s ease-out 0.1s;
+    transition: top .2s ease-out 0.1s;
+     "
+    ng-style="{
+        'left': model.menu.positionTitleLeft,
+        'top': model.menu.positionTitleTop}"
+    >Quizy
     </div>
     <div style="position: absolute;
     top: 39%;
@@ -116,117 +125,98 @@
        
     </div>
 
-    <div class="tabs" style="position:absolute;bottom:0;height:48px;">
+    <div class="tabs" style="position:absolute;bottom:0;height:48px;"
+        ng-style="{
+            'left': model.menu.positionMainMenuLeft,
+            'top': model.menu.positionMainMenuTop}">
+
         <div class="tabs-canvas">
             <div class="tabs-wrapper">
                 <div class="tab-item" ripple ng-click="main.go_home_page()">
                     <span>Главная</span>
+                    <div ng-class="{'active_menu': main.active_menu=='main'}"></div>
                 </div>
-                <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_lesson_page()">
+                <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_lessons_page()">
                     <span>Уроки</span>
+                    <div ng-class="{'active_menu': main.active_menu=='lessons'}"></div>
                 </div>
                 <div class="tab-item" ripple ng-click="main.go_price()">
                     <span>Цены</span>
+                    <div ng-class="{'active_menu': main.active_menu=='price'}"></div>
                 </div>
                 <div class="tab-item" ripple ng-click="main.go_description()">
                     <span>Описание</span>
+                    <div ng-class="{'active_menu': main.active_menu=='description'}"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div ng-include="model.current_content_url" style="color:black;"></div>
-<div class="row" ui-view="main" style="height:auto;width:100%;margin:0;padding:0;"></div>
-<!--<div class="row" ui-view="auth" style="display:inline-block;margin: -18px 0 0 0;padding:0;width: 100%;"></div>
--->
-<!--
-<div tabs >
-    <div tab label="Главная" content-include="assets/partials/main.html"></div> 
-    <div tab label="Цены" content-include="assets/partials/price.html"></div>
-    <div tab label="Описание" content-include="assets/partials/help.html"></div>  
-</div>
+<div style="
+    background-color:#f4f5f6;
+    position: absolute;
+    width: 100%;
+    -webkit-transition: top .2s ease-out 0.1s;
+     -moz-transition: top .2s ease-out 0.1s;
+     -o-transition: top .2s ease-out 0.1s;
+     transition: top .2s ease-out 0.1s;" ng-style="{'top': model.menu.positionBodyTop}" >
 
-<div ng-if="user && user.is_authenticated">
-    <div class="row" ui-view="auth" style="width:100%;height:100%;min-height: 900px;padding: 40px 0;"></div>
-</div>
--->
+    <!-- <div ng-include="model.current_content_url" style="color:black;"></div> -->
+    <div ui-view="main" style="height:auto;width:100%;margin:0;padding:0;"></div>
 
     
-
-
-
-
-<!--
-<md-content class="md-padding" style="min-height:400px;">
-    <md-tabs md-center-tabs="false" md-dynamic-height md-border-bottom>
-        <md-tab label="Главная">
-            <md-content class="md-padding" style="color: black;">
-                <div class="row" ui-view="main" style="width:100%;height:100%;min-height: 900px;padding: 40px 0;"></div>
-            </md-content>
-        </md-tab>
-        <md-tab label="Цены" ng-show="!user || !user.is_authenticated">
-            <md-content class="md-padding" style="color: black;">
-                <div class="row" ui-view="main" style="width:100%;height:100%;min-height: 900px;padding: 40px 0;"></div>
-            </md-content>
-        </md-tab>
-        <md-tab label="Описание">
-            <div>
-                <div class="row" ui-view="main" style="width:100%;height:100%;min-height: 900px;padding: 40px;color:black"></div>
-            </div>
-        </md-tab>
-    </md-tabs>
-</md-content>
-
-
-<!--
-<div class="container">
-
-<div class="row" ui-view="auth" style="width:100%;height:100%;min-height: 900px;padding: 40px 0;"></div>
-  
-
-<div ng-if="!user.is_authenticated" class="row">
-
-    <div ui-view="signup" style="width:100%;height:100%;"></div>
-    <div ui-view="confirm-email-send" style="width:100%;height:100%;"></div>
-    <div ui-view="confirm-email" style="width:100%;height:100%;"></div>
-</div>
- </div>    
     
- -->         
-<div class="row" style="background-color:rgb(233, 232, 232);height:60px;"></div>
-<div style="position: relative;height: 230px;background-repeat: no-repeat;background-image: url('/assets/img/bg_footer.jpg');">
-    <footer class="page-footer" style="bottom: 0;
-        color: white;
-        display: block;
-        padding: 10px;
-        position: absolute;">
+    
+    <div style="position: relative;
+        height: 140px;
+        background-color: #e18e47;
+        ">
+        <div style="background-color:rgb(233, 232, 232);height:60px;"></div>
 
-            <div class="row">
-              <div class="col l6 s12">
-                <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
-              </div>
-              <div class="col l4 offset-l2 s12">
-                <h5 class="white-text">Links</h5>
-                <ul>
-                  <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
-                </ul>
-              </div>
+        <footer class="page-footer" style="bottom: 0;
+            color: white;
+            display: block;
+            position: absolute;
+            width: 100%;">
+
+            <div class="row" style="text-align: center;">
+                <div class="tabs" style="height:48px;display: inline-block;width: 384px;">
+                    <div class="tabs-canvas">
+                        <div class="tabs-wrapper">
+                            <div class="tab-item" ripple ng-click="main.go_home_page()">
+                                <span>Главная</span>
+                                <div ng-class="{'active_menu_bottom': main.active_menu=='main'}"></div>
+                            </div>
+                            <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_lessons_page()">
+                                <span>Уроки</span>
+                                <div ng-class="{'active_menu_bottom': main.active_menu=='lessons'}"></div>
+                            </div>
+                            <div class="tab-item" ripple ng-click="main.go_price()">
+                                <span>Цены</span>
+                                <div ng-class="{'active_menu_bottom': main.active_menu=='price'}"></div>
+                            </div>
+                            <div class="tab-item" ripple ng-click="main.go_description()">
+                                <span>Описание</span>
+                                <div ng-class="{'active_menu_bottom': main.active_menu=='description'}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          <div class="footer-copyright">
-            © 2014 Copyright Text
-            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
-          </div>
+            <div class="footer-copyright pull-right" style="margin: 5px 10px;">
+                © 2015 Copyright Text
+            </div>
         </footer>
+    </div>
+
 </div>
 
-    <!--
-    <div class="parallax-container footer-panel" style="height: 300px;">
-        <div parallax><img src="/assets/img/bg_footer.jpg"></div>
-        
-    </div>
-    -->
-{% endverbatim %}
 
+
+
+
+
+{% endverbatim %}
 <script src="{% static 'app.js' %}{% if django.DEBUG %}?v={{ time }}{% endif %}"></script>
     
 </body>
