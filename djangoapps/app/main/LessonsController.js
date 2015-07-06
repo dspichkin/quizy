@@ -21,7 +21,9 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
     };
 
     if (!$scope.user || !$scope.user.is_authenticated) {
+        $scope.main.reset_menu();
         $location.path('/');
+        return;
     }
 
 
@@ -86,7 +88,7 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
     };
 
     $scope.edit_lesson = function(lesson_id) {
-        $location.path('/editor/' + lesson_id + '/');
+        $scope.main.main.go_editor_lesson(lesson_id);
     };
 
     $scope.main.new_lesson = function() {

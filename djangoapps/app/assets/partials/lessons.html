@@ -1,14 +1,13 @@
-<div class="lesson" style="min-height:600px;text-align:center">
+<div class="lesson" style="min-height:450px;text-align:center">
 <div class="shadow lesson_panel">
 
     <div class="mylesson_list" ng-if="user.is_authenticated && user.account_type==1">
-            
-            
-            <div fab ripple fab-class="fab-add-lesson" icon="icon-add">
+                
+            <div fab ripple fab-class="fab-add-lesson" icon="icon-add" fab-class-menu="fab-add-lesson-menu" icon="icon-add" menu-right-x="178" menu-y="0" menu-width="200" menu-height="103">
                 <div><div ng-click="main.new_course()">Создать новый <b>курс</b></div></div>
                 <div><div ng-click="main.new_lesson()">Создать новый <b>урок</b></div></div>
             </div>
-            
+
 
 
 
@@ -54,7 +53,7 @@
             </div>
 
             <div class="col-md-12" style="padding: 0;">
-                <table class="table" style="width:100%;">
+                <table class="table" style="width:100%;margin:0">
                     <thead style="background-color:#e3eaf1;height:60px">
                         <th class="table_th">
                             Действия над уроком
@@ -76,56 +75,23 @@
                     <tbody>
                         <tr ng-repeat="lesson in model.lesson.lessons">
                             <td style="width: 170px;">
-                                <div class="shadow btn-round" ripple style="position: relative;" lesson-action>
+                                <div class="shadow btn-round" ripple style="position: relative;" lesson-action lesson-id="{{lesson.id}}">
                                     <a class="icon-menu"  href="#"></a>
-                                </div>
-
-                                <!--
-                                <md-menu>
-                                    <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu()">
-                                        <ng-md-icon icon="menu" size="36"></ng-md-icon> 
-                                    </md-button>
-                                    <md-menu-content>
-                                        <md-menu-item>
-                                            <md-button ng-click="edit_lesson(lesson.id)">
-                                                <md-icon md-svg-src="/assets/img/icons/twitter.svg"></md-icon>
-                                                Назначить на ученика
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-menu-item>
-                                            <md-button ng-click="edit_lesson(lesson.id)">
-                                                <md-icon md-svg-src="/assets/img/icons/hangout.svg"></md-icon>
-                                                Редактировать урок
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-menu-item>
-                                            <md-button ng-click="play_lesson(lesson.id)">
-                                                <md-icon md-svg-src="/assets/img/icons/hangout.svg"></md-icon>
-                                               Запустить для тестирования
-                                            </md-button>
-                                        </md-menu-item>
-                                        <md-menu-item>
-                                            <md-button ng-click="delete_lesson(lesson.id)">
-                                                <md-icon md-svg-src="/assets/img/icons/hangout.svg"></md-icon>
-                                                Удалить урок
-                                            </md-button>
-                                        </md-menu-item>
-                                    </md-menu-content>
-                                </md-menu>
-                                -->
                                 </div>
                             </td>
                             <td style="width: 200px;text-align:left">
                                 <span ng-if="lesson.name">{{lesson.name}}</span>
                                 <span ng-if="!lesson.name">Урок без имени</span>
                             </td>
-                            <td>
+                            <td style="min-width: 200px;text-align:left">
                                 <span>{{lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>
                             </td>
-                            <td>
+                            <td style="min-width: 100px;text-align:left">
                                 <p ng-repeat="enroll in lesson.enrolls">
                                     {{enroll.learner.email}}
                                 </p>
+                            </td>
+                            <td>
                             </td>
                         </tr>
                     </tbody>

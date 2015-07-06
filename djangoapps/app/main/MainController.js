@@ -44,7 +44,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         active_menu: 'main'
     };
 
-    var reset_menu = function() {
+    $scope.main.reset_menu = function() {
         if ($scope.model.message.is_active == true) {
             $scope.model.menu.positionTop = message_height + 'px';
             $scope.model.menu.positionBodyTop = (300 + message_height) + 'px';
@@ -59,7 +59,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         $scope.model.menu.positionLoginTextTop = '0px';
 
         $scope.main.active_menu = 'main';
-
+        
     };
 
     $scope.main.make_short_header = function() {
@@ -77,14 +77,14 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         $scope.model.menu.positionLoginTextTop = short_header_height + 'px';
 
         window.scrollTo(0, 0);
-    }
+    };
 
-    reset_menu();
+    $scope.main.reset_menu();
 
     $scope.main.go_home_page = function() {
         $location.path('/');
-        $scope.model.current_content_url = 'assets/partials/main.html';
-        reset_menu();
+        //$scope.model.current_content_url = 'assets/partials/main.html';
+        $scope.main.reset_menu();
         $scope.main.run();
 
         $scope.main.active_menu = 'main';
@@ -118,7 +118,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         $location.path('/');
         $scope.model.current_content_url = 'assets/partials/help.html';
         $scope.main.active_menu = 'description';
-        reset_menu();
+        $scope.main.reset_menu();
     };
 
     $scope.main.go_editor_lesson = function(lesson_id) {

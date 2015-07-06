@@ -53,7 +53,7 @@ class LessonAdmin(admin.ModelAdmin):
 
 
 class PageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['lesson', 'type', 'number', ]
 
 
 class VariantAdmin(admin.ModelAdmin):

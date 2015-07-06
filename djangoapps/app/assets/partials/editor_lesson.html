@@ -7,80 +7,107 @@
     <div class="" ng-if="user.is_authenticated">
             
 
-            <div class="shadow col-md-7" style="padding: 0;min-height:600px;background-color:white;    overflow: auto;">
-            
-                <div class="editor_main_panel_title" style="width:100%;height:60px;padding: 22px 0 0 0;">
-                    <div class="col-md-5" style="font-size: 20px;text-align: left;
-                        font-weight: 500;">
-                        <span ng-if="model.editor.new_lesson == true">Новый урок</span>
-                        <span ng-if="model.editor.new_lesson == false" style="font-size:18px;">Редактирование урока</span>
+            <div class=" col-md-7" style="padding: 0;min-height:600px; overflow: auto;">
+                <div class="shadow lesson_editor" style="background-color:white;">
+                    <div class="editor_main_panel_title" style="width:100%;height:60px;padding: 22px 0 0 0;">
+                        <div class="col-md-5" style="font-size: 20px;text-align: left;
+                            font-weight: 500;">
+                            <span ng-if="model.editor.new_lesson == true">Новый урок</span>
+                            <span ng-if="model.editor.new_lesson == false" style="font-size:18px;color:#4988c9;cursor:pointer;text-decoration: underline;">Запустить урок</span>
+                        </div>
+
+                         <div class="col-md-1" style="
+                            cursor: pointer;
+                            margin: 3px 10px 0px 18px;
+                            ">
+                            <md-switch ng-model="data.cb2" aria-label="Switch 2" ng-true-value="'yup'" ng-false-value="'nope'" class="md-warn" style="margin:0">
+                            </md-switch>
+
+                        </div>
+                        <div class="col-md-3" style="font-size: 18px;
+                            font-weight: 300;">
+                            Урок доступен
+                        </div>
+                        
+                        <div class="activity" style="">
+                            <div ng-show="model.editor.loading">Сохранение...</div>
+                            <div ng-show="model.editor.unsaved">Изменения не сохранены...</div>
+                        </div>
+                   
+                        <div class="col-md-1 pull-right" style="margin-right: 30px;margin-top: -10px;">
+                            <div class="shadow btn-round"  ng-if="model.editor.new_lesson == false" ng-click="delete_current_lesson($event)"><a class="icon-delete"  href="#" style="opacity: 0.2;height: 27px;float:left;"></a>
+                            </div>
+                            <div class="shadow btn-round" ng-if="model.editor.new_lesson == true" ng-click="finish_changed_lesson()"><a class="icon-save"  href="#" style="opacity: 0.2;height: 27px;float:left;"></a>
+                            </div>
+                        </div>
+
                     </div>
 
-                     <div class="col-md-1" style="
-                        cursor: pointer;
-                        margin: 3px 10px 0px 18px;
-                        ">
-                        <md-switch ng-model="data.cb2" aria-label="Switch 2" ng-true-value="'yup'" ng-false-value="'nope'" class="md-warn" style="margin:0">
-                        </md-switch>
 
+                    <div style="width:100%;height:70px;padding: 10px 20px 10px 20px;">
+                        <md-input-container style="text-align: left;">
+                            <label>Название урока</label>
+                            <input class="lesson_name" type="text" 
+                                    ng-model="model.editor.current_lesson.name"
+                                    ng-change="make_dirty_data()"
+                                    ng-model-onblur ng-blur="finish_changed_lesson()">
+                        </md-input-container>
                     </div>
-                    <div class="col-md-3" style="font-size: 18px;
-                        font-weight: 300;">
-                        Урок доступен
+
+                    <div style="width:100%;padding: 10px 20px 10px 20px;">
+                        <md-input-container  style="text-align: left;">
+                            <label>Описание урока</label>
+                            <textarea ng-model="model.editor.current_lesson.description" columns="3" 
+                            md-maxlength="1500"
+                            ng-change="make_dirty_data()"
+                            ng-model-onblur ng-blur="finish_changed_lesson()"
+                            ></textarea>
+                        </md-input-container>
                     </div>
+
+                </div>
+
+                <div class="shadow page_editor" style="margin-top:20px;background-color:white;">
+                    <p class="pull-left" style="padding:20px;font-size:20px;font-weight:400;">
+                    Страница № {{model.editor.current_lesson.pages[model.editor.current_page_index].number}}
+                    </p>
+                    <div class="col-md-1 pull-right" style="margin-right: 30px;margin-top: 10px;">
+                        <div class="shadow btn-round"  ng-if="model.editor.new_lesson == false" ng-click="delete_current_page($event)"><a class="icon-delete"  href="#" style="opacity: 0.2;height: 27px;float:left;"></a>
+                        </div>
+                    </div>
+
                     
-                    <div class="activity" style="">
-                        <div ng-show="model.editor.loading">Сохранение...</div>
-                        <div ng-show="model.editor.unsaved">Изменения не сохранены...</div>
-                    </div>
-               
-                    <div class="col-md-1 pull-right" style="margin-right: 30px;margin-top: -10px;">
-                        <div class="shadow btn-round"  ng-if="model.editor.new_lesson == false" ng-click="delete_current_lesson($event)"><a class="icon-delete"  href="#" style="opacity: 0.2;height: 27px;float:left;"></a>
-                        </div>
-                        <div class="shadow btn-round" ng-if="model.editor.new_lesson == true" ng-click="finish_changed_lesson()"><a class="icon-save"  href="#" style="opacity: 0.2;height: 27px;float:left;"></a>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div style="width:100%;height:70px;padding: 10px 20px 10px 20px;">
-                    <md-input-container style="text-align: left;">
-                        <label>Название урока</label>
-                        <input class="lesson_name" type="text" 
-                                ng-model="model.editor.current_lesson.name"
+                    <div ng-if="model.editor.current_lesson.pages.length > 0">
+                        <div style="width:100%;padding: 10px 20px 10px 20px;">
+                            <textarea style="width:100%; height:200px;resize: none;" 
+                                ng-model="model.editor.current_lesson.pages[model.editor.current_page_index].text"
                                 ng-change="make_dirty_data()"
-                                ng-model-onblur ng-blur="finish_changed_lesson()">
-                    </md-input-container>
-                </div>
+                                ng-blur="finish_changed_page_text()"
+                            ></textarea>
+                        </div>
 
-                <div style="width:100%;padding: 10px 20px 10px 20px;">
-                    <md-input-container  style="text-align: left;">
-                        <label>Описание урока</label>
-                        <textarea ng-model="model.editor.current_lesson.description" columns="3" 
-                        md-maxlength="1500"
-                        ng-change="make_dirty_data()"
-                        ng-model-onblur ng-blur="finish_changed_lesson()"
-                        ></textarea>
-                    </md-input-container>
-                </div>
-                
-                <div style="width:100%;padding: 10px 20px 10px 20px;">
-                    <textarea style="width:100%; height:300px;resize: none;" 
-                    ng-model="model.pages[model.current_page_index].text"
-                    ng-change="make_dirty_data()"
-                    ng-blur="finish_changed_page_text()"
-                    ta-toolbar="ta_toolbar()"
-                    ta-html-editor-class="page_text_textarea"
-                    ></textarea>
-                </div>
+                        <!--
+                        <button class="btn btn-info add_variant pull-right" ng-click="add_variant('radiobox')" style="margin:20px;">
+                            Добавить вариант ответа
+                        </button>
+                        -->
 
+                        <div ng-include="'/assets/partials/editor_lesson_variants.html'"></div>
 
-                <button class="btn btn-info add_variant pull-right" ng-click="add_variant('radiobox')" style="margin:20px;">
-                    Добавить вариант ответа</button>
+                    </div>
+                    <div style="" ng-if="model.editor.current_lesson.pages.length == 0">
+                        <p>В уроке нет созданный страниц. Создайте страницы через меню справа.</p>
+                    </div>
+                </div>
 
             </div>
 
+
+
+
+
+
+            <!-- Right panel-->
             <div class="col-md-4" style="margin-left: 30px;padding: 0;min-height:300px;">
                 
 
@@ -91,26 +118,51 @@
                     font-weight: 500;
                     padding: 19px 0 0 0;
                     position: relative;
+                    margin-bottom: 40px;
                 "> СТРАНИЦЫ УРОКА
-                    <div fab ripple fab-class="fab-add-page" fab-class-menu="fab-add-page-menu" icon="icon-add" style="">
-                        <div><div ng-click="">
+                    <div fab ripple class="fab-add-page" fab-class="fab-add-page" fab-class-menu="fab-add-page-menu" icon="icon-add" menu-right-x="58" menu-y="21" menu-width="380" menu-height="204">
+                        <div><div ng-click="add_page('text')">
                             <i class="type-text-image" style="float: left;margin-right:10px"></i>
                             Страница с текстовым вопросом</div>
                         </div>
-                        <div><div ng-click="">
+                        <div><div ng-click="add_page('checkbox')">
                             <i class="type-radiobox-image" style="float: left;margin-right:10px"></i>
                             Страница с выбором нескольких ответов</div>
                         </div>
-                        <div><div ng-click="">
+                        <div><div ng-click="add_page('radiobox')">
                             <i class="type-checkbox-image" style="float: left;margin-right:10px"></i>
                             Страница с выбором одного ответа</div>
                         </div>
-                        <div><div ng-click="">
+                        <div><div ng-click="add_page('pairs')">
                             <i class="type-pairs-image" style="float: left;margin-right:10px"></i>
                             Страница с подбором пары</div>
                         </div>
                     </div>
 
+                </div>
+
+
+                <div id="list_pages" class="list_pages" sv-root sv-part="model.editor.current_lesson.pages"
+                    sv-on-sort="finish_moving($item, $partFrom, $partTo, $indexFrom, $indexTo)">
+                    
+                    <div class="shadow page_item" ng-click="change_page($index, $event)"
+                        ng-repeat="page in model.editor.current_lesson.pages"
+                        ng-class="{active: $index == model.editor.current_page_index}"
+                        sv-element="opts">
+                        <div class="list_pages_content">
+                            <i ng-if="page.type == 'text'" class="type-text-image" style="float: left;margin: 14px 0 0 10px;"></i>
+                            <i ng-if="page.type == 'radiobox'" class="type-radiobox-image" style="float: left;margin: 14px 0 0 10px;"></i>
+                            <i ng-if="page.type == 'checkbox'" class="type-checkbox-image" style="float: left;margin: 14px 0 0 10px;"></i>
+                            <i ng-if="page.type == 'pairs'" class="type-pairs-image" style="float: left;margin: 14px 0 0 10px;"></i>
+                            <div style="display: inline-block;">
+                                <div class="list_pages_content_title"> Страница № {{page.number}}</div>
+                                <!-- {{get_type_name(page.type)}}-->
+                                <div class="list_pages_content_text">
+
+                                {{page.text | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>

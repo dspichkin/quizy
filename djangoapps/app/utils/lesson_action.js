@@ -12,11 +12,12 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                 '</div>',
             link: function(scope, elem, attr) {
                 var element = elem[0];
+                var lesson_id = attr.lessonId;
 
                 scope.close_action = function() {
-                    console.log('close_action', $('.lesson_action'))
                     $('.lesson_action').remove();
-                }
+                };
+
                 scope.show_action = function($event) {
                     $event.preventDefault();
                     var x = $event.pageX;
@@ -31,7 +32,7 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                     html_menu += '          <div class="header_title">Меню урока</div>';
                     html_menu += '      </div>';
                     html_menu += '      <div class="action_menu_items" style="opacity: 0">';
-                    html_menu += '          <div class="action_item">Редактировать урок</div>';
+                    html_menu += '          <div class="action_item" ng-click="edit_lesson(' + lesson_id + ')">Редактировать урок</div>';
                     html_menu += '          <div class="action_item">Назначить ученика</div>';
                     html_menu += '          <div class="action_item">Запустить для тестирования</div>';
                     html_menu += '      </div>';
@@ -44,12 +45,16 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                         width: 300,
                         height: 237,
                         opacity: 1}, {
-                            duration: 300,
+                            duration: 200,
                             complete: function() {
-                                $(e).find('.action_menu_items').velocity({opacity: 1});
+                                $(e).find('.action_menu_items').velocity({opacity: 1}, {duration: 200});
                             } });
-                }
+                };
 
+                scope.edit_lesson = function(lesson_id) {
+                    scope.close_action();
+                    scope.main.go_editor_lesson(lesson_id);
+                }
                 scope.test = function() {
                 }
             }

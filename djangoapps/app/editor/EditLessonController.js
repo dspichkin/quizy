@@ -4,8 +4,11 @@ var Page = require('../models/page');
 var Lesson = require('../models/lesson');
 
 var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog) {
+
     if (!$scope.user || !$scope.user.is_authenticated) {
-        $scope.main.go_home_page();
+        $scope.main.reset_menu();
+        $location.path('/');
+        return;
     }
 
     $scope.model['editor'] = {
@@ -38,17 +41,6 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
     // создаем новый урок
     if (!$stateParams.lesson_id) {
         $scope.model.editor.new_lesson = true;
-        /*
-        $data.new_lesson().then(function(data) {
-            if (data.hasOwnProperty('data')) {
-                if (data.data.hasOwnProperty('id')) {
-                    $location.path('/editor/' + data.data.id + '/');
-                }
-            }
-        }, function(error) {
-            $log.error('Ошибка создания нового урока', error);
-        });
-        */
     } else {
         $scope.model.editor.new_lesson = false;
         $data.get_lesson($stateParams.lesson_id).then(function(data) {
@@ -56,9 +48,10 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
             if (!data.data || data.data.length == 0) {
                 $scope.main.go_home_page();
             } else {
+                $scope.model.editor.current_lesson.pages = [];
                 for (var i = 0, len = data.data.pages.length; i < len; i++) {
                     var q = new Page(data.data.pages[i]);
-                    $scope.model.pages.push(q);
+                    $scope.model.editor.current_lesson.pages.push(q);
                 }
             }
         }, function(error) {
@@ -71,20 +64,19 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
 
     // Заново раздаем номера вопросам
     var re_number_pages = function() {
-        for (var i = 0, len = $scope.model.editor.pages.length; i < len; i++) {
-            $scope.model.editor.pages[i].number = i + 1;
+        for (var i = 0, len = $scope.model.editor.current_lesson.pages.length; i < len; i++) {
+            $scope.model.editor.current_lesson.pages[i].number = i + 1;
         }
 
-        $data.save_data($scope.model.editor.pages).then(function(response) {
-            console.log($scope.model.editor.pages);
+        $data.save_data($scope.model.editor.current_lesson.pages).then(function(response) {
         }, function(error) {
             $log.error("Ошибка записи вопросов.", error);
         });
     };
 
     $scope.finish_moving = function($item, $partFrom, $partTo, $indexFrom, $indexTo) {
-        for (var i = 0, len = $scope.model.editor.pages.length; i < len; i++) {
-            if ($scope.model.editor.pages[i].id == $item.id) {
+        for (var i = 0, len = $scope.model.editor.current_lesson.pages.length; i < len; i++) {
+            if ($scope.model.editor.current_lesson.pages[i].id == $item.id) {
                 $scope.model.editor.current_page_index = i;
             }
         }
@@ -92,19 +84,7 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
     };
 
 
-    $scope.ta_toolbar = function() {
-        /*
-        ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-        ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
-        ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],
-        ['html', 'insertImage','insertLink', 'insertVideo', 'wordcount', 'charcount']
-         */
-        return [['h1', 'h2', 'h3'], ['bold', 'italics'], ['p', 'pre', 'quote'],
-            ['undo', 'clear']];
-    };
-
     $scope.delete_current_lesson = function($event) {
-        console.log($scope.model.editor.current_lesson)
         $mdDialog.show({
               targetEvent: $event,
               templateUrl: '/assets/partials/confirm_delete_lesson.html',
@@ -126,13 +106,13 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
                     };
                 }
             });
-    }
+    };
 
     $scope.add_page = function(type_slug) {
         $scope.model.editor.loading = true;
         var _new_page = Page({
             type: type_slug,
-            number: $scope.model.editor.pages.length + 1,
+            number: $scope.model.editor.current_lesson.pages.length + 1,
             text: "",
             variants: []
         });
@@ -140,8 +120,11 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
 
         _new_page.create($scope.model.editor.current_lesson.id).then(function(response) {
             _new_page.id = response.id;
-            $scope.model.editor.pages.push(_new_page);
+            $scope.model.editor.current_lesson.pages.push(_new_page);
             $scope.model.editor.current_page_index = $scope.model.editor.pages.length - 1;
+            if ($scope.model.editor.current_page_index < 0) {
+                $scope.model.editor.current_page_index = 0;
+            }
             $scope.add_variant(type_slug);
             $scope.$apply();
             $scope.model.editor.loading = false;
@@ -190,13 +173,11 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
 
 
     /**
-     * Сохранение изменний
-     * Если нет урока создаем его
-     * @return {[type]} [description]
+     * Сохранение изменний в варианте текстового ответа
      */
     $scope.finish_changed_page_text = function() {
         $scope.model.editor.loading = true;
-        $scope.model.editor.pages[$scope.model.current_page_index].save().then(
+        $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].save().then(
             function() {
                 $scope.model.editor.loading = false;
                 $scope.model.editor.is_dirty_data = false;
@@ -216,11 +197,11 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
                 text: "",
                 right_answer: false
             };
-            $scope.model.editor.pages[$scope.model.current_page_index]
+            $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index]
                 .new_variant(_variant).then(
                     function(data) {
                         _variant = data;
-                        $scope.model.pages[$scope.model.current_page_index].variants.push(_variant);
+                        $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].variants.push(_variant);
                         $scope.$apply();
                         $scope.model.editor.loading = false;
                     },
@@ -241,17 +222,17 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
                 pair_type: "answer"
             };
 
-            $scope.model.editor.pages[$scope.model.current_page_index]
+            $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index]
                 .new_variant(_variant_page).then(
                     function(data) {
-                        _variant_question = data;
+                        var _variant_question = data;
                         _variant_answer.pair = _variant_question.id;
 
-                        $scope.model.pages[$scope.model.current_page_index]
+                        $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index]
                             .new_variant(_variant_answer).then(
                                 function(data) {
                                     _variant_question.pair_object = data;
-                                    $scope.model.pages[$scope.model.current_page_index].variants.push(_variant_question);
+                                    $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].variants.push(_variant_question);
                                     $scope.$apply();
                                 },
                                 function(error) {
@@ -271,11 +252,11 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
             var _variant = {
                 text: ""
             };
-            $scope.model.editor.pages[$scope.model.current_page_index]
+            $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index]
                 .new_variant(_variant).then(
                     function(data) {
                         _variant = data;
-                        $scope.model.editor.pages[$scope.model.current_page_index].variants.push(_variant);
+                        $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].variants.push(_variant);
                         $scope.$apply();
                         $scope.model.editor.loading = false;
                     },
@@ -289,10 +270,10 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
 
 
     $scope.remove_variant = function(id) {
-        $scope.model.editor.pages[$scope.model.current_page_index]
+        $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index]
             .remove_variant(id).then(
                 function(data) {
-                    var _v = $scope.model.pages[$scope.model.current_page_index].variants;
+                    var _v = $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].variants;
                     var index = -1;
                     for (var i = 0, len = _v.length; i < len; i++) {
                         if (_v[i].id == id) {
@@ -315,8 +296,7 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
 
     $scope.finish_changed_variant = function(id) {
         $scope.model.editor.loading = true;
-        var _page = $scope.model.editor.pages[$scope.model.current_page_index];
-        // console.log('_page', _page)
+        var _page = $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index];
         _page.save().then(
             function(data) {
                 $scope.model.editor.loading = false;
