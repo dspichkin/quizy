@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import os
 
 # from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
@@ -389,6 +390,12 @@ def lessons(request, lesson_pk=None):
             else:
                 return Response([], status=status.HTTP_200_OK)
         else:
+            try:
+                lesson = Lesson.objects.get(pk=lesson_pk, created_by=request.user)
+            except Lesson.DoesNotExist:
+                return Response(status=status.HTTP_404)
+            return Response(LessonSerializer(instance=lesson).data, status=status.HTTP_200_OK)
+            """
             lessonEnrolls = LessonEnroll.objects.filter(lesson=lesson_pk, learner=request.user)
             if len(lessonEnrolls) > 0:
                 for l in lessonEnrolls:
@@ -398,21 +405,26 @@ def lessons(request, lesson_pk=None):
 
             if len(lessons) > 0:
                 return Response(LessonSerializer(instance=lessons[0]).data, status=status.HTTP_200_OK)
+            """
+
+    is_dirty = False
+    is_active = None
+    name = None
+    description = None
+    code_errors = None
+    is_correct = None
 
     # create lesson
     if request.method == 'POST' and request.user.is_authenticated() and not lesson_pk:
         raw_data = request.body.decode("utf-8")
-
-        is_dirty = False
-        is_active = None
-        name = None
-        description = None
 
         if raw_data:
             req = json.loads(raw_data)
             is_active = req.get("is_active")
             name = req.get("name")
             description = req.get("description")
+            code_errors = req.get("code_errors")
+            is_correct = req.get("is_correct")
 
         lesson = Lesson.objects.create(created_by=request.user)
         if lesson.is_active != is_active and is_active is not None:
@@ -424,6 +436,13 @@ def lessons(request, lesson_pk=None):
         if lesson.description != description and description is not None:
             lesson.description = description
             is_dirty = True
+        if lesson.code_errors != code_errors and code_errors is not None:
+            lesson.code_errors = code_errors
+            is_dirty = True
+        if lesson.is_correct != is_correct and is_correct is not None:
+            lesson.is_correct = is_correct
+            is_dirty = True
+
         if is_dirty is True:
             lesson.save()
         return Response(LessonSerializer(instance=lesson).data, status=status.HTTP_200_OK)
@@ -439,6 +458,9 @@ def lessons(request, lesson_pk=None):
         is_active = req.get("is_active")
         name = req.get("name")
         description = req.get("description")
+        code_errors = req.get("code_errors")
+        is_correct = req.get("is_correct")
+
         lesson = get_object_or_404(Lesson, pk=lesson_pk, created_by=request.user)
         if lesson.is_active != is_active:
             lesson.is_active = is_active
@@ -449,6 +471,13 @@ def lessons(request, lesson_pk=None):
         if lesson.description != description:
             lesson.description = description
             is_dirty = True
+        if lesson.code_errors != code_errors and code_errors is not None:
+            lesson.code_errors = code_errors
+            is_dirty = True
+        if lesson.is_correct != is_correct and is_correct is not None:
+            lesson.is_correct = is_correct
+            is_dirty = True
+
         if is_dirty is True:
             lesson.save()
         return Response(LessonSerializer(instance=lesson).data, status=status.HTTP_200_OK)
@@ -492,6 +521,65 @@ def new_page(request, lesson_pk=None):
                         if is_dirty is True:
                             page.save()
                 return Response("OK", status=status.HTTP_200_OK)
+
+
+@api_view(['POST', 'DELETE'])
+def lesson_picture_upload(request, lesson_pk=None):
+    if not request.user.is_authenticated():
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    lesson = get_object_or_404(Lesson, pk=lesson_pk, created_by=request.user)
+    if request.method == "POST":
+        if lesson.picture:
+            if os.path.exists(lesson.picture.path):
+                os.remove(lesson.picture.path)
+                lesson.picture = None
+
+        f = request.FILES.get('file')
+        if f and f._size < 30 * 1024 * 1024:
+            lesson.picture = f
+            lesson.save()
+
+        return Response("OK", status=status.HTTP_200_OK)
+
+    if request.method == "DELETE":
+        if lesson.picture:
+            if os.path.exists(lesson.picture.path):
+                os.remove(lesson.picture.path)
+                lesson.picture = None
+                lesson.save()
+        return Response("OK", status=status.HTTP_200_OK)
+
+
+@api_view(['POST', 'DELETE'])
+def picture_picture_upload(request, page_pk=None):
+    if not request.user.is_authenticated():
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    page = get_object_or_404(Page, pk=page_pk)
+    if page.lesson.created_by != request.user:
+        return Response("OK", status=status.HTTP_200_OK)
+
+    if request.method == "POST":
+        if page.question_picture:
+            if os.path.exists(page.question_picture.path):
+                os.remove(page.question_picture.path)
+                page.question_picture = None
+
+        f = request.FILES.get('file')
+        if f and f._size < 30 * 1024 * 1024:
+            page.question_picture = f
+            page.save()
+
+        return Response("OK", status=status.HTTP_200_OK)
+
+    if request.method == "DELETE":
+        if lesson.question_picture:
+            if os.path.exists(lesson.question_picture.path):
+                os.remove(lesson.question_picture.path)
+                lesson.question_picture = None
+                lesson.save()
+        return Response("OK", status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST'])

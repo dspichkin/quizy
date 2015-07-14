@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+import os
 
 from uuid import uuid1
 
 from django.utils import timezone
 from django.db import models
+
+from sorl.thumbnail import ImageField
 
 from json_field import JSONField
 
@@ -43,6 +46,14 @@ class Course(BaseModel):
         return u"Курс без именени"
 
 
+def picture_upload(obj, fn):
+    if obj.pk:
+        fn, ext = os.path.splitext(fn)
+        return os.path.join('lessons', str(obj.pk), '%s' % 'lesson' + ext)
+    else:
+        raise Exception("Сохраните урок до загрузки изображения")
+
+
 class Lesson(BaseModel):
 
     is_active = models.BooleanField('активен?', default=True)
@@ -56,6 +67,11 @@ class Lesson(BaseModel):
                                  verbose_name='создатель', blank=True, null=True)
 
     course = models.ForeignKey('Course', verbose_name='курс', blank=True, null=True)
+
+    code_errors = JSONField('ошибки редактирования урока', default={}, blank=True, null=True)
+    is_correct = models.BooleanField('содержит ошибку?', default=True)
+
+    picture = ImageField(upload_to=picture_upload, blank=True, null=True)
 
     class Meta:
         ordering = ('created_by', 'number')
@@ -150,6 +166,14 @@ ANSWER_ERRORS = {
 }
 
 
+def picture_question_upload(obj, fn):
+    if obj.pk:
+        fn, ext = os.path.splitext(fn)
+        return os.path.join('lessons', str(obj.lesson.pk), '%s_%s%s' % ('question', obj.id, ext))
+    else:
+        raise Exception("Сохраните вопрос до загрузки изображения")
+
+
 class Page(models.Model):
     QUESTION_TYPE_CHOICES = (
         ('radiobox', 'Вопрос с выбором одного ответа'),
@@ -171,6 +195,8 @@ class Page(models.Model):
 
     text = models.TextField('Вопрос', blank=True, null=True)
     number = models.IntegerField('Порядок', default=1, blank=True, null=True)
+
+    question_picture = ImageField(upload_to=picture_question_upload, blank=True, null=True)
 
     is_correct = models.BooleanField('правильность заполнения вопроса', default=True)
     code_errors = JSONField('коды ошибок', default={}, blank=True, null=True)

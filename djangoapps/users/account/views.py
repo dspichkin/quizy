@@ -189,53 +189,6 @@ def ajax_login(request):
         return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
 
 
-    """
-    @sensitive_post_parameters_m
-    def dispatch(self, request, *args, **kwargs):
-        return super(LoginView, self).dispatch(request, *args, **kwargs)
-
-    def get_form_class(self):
-        return get_form_class(app_settings.FORMS, 'login', self.form_class)
-
-    def form_valid(self, form):
-        success_url = self.get_success_url()
-        try:
-            return form.login(self.request, redirect_url=success_url)
-        except ImmediateHttpResponse as e:
-            return e.response
-
-    def get_success_url(self):
-        # Explicitly passed ?next= URL takes precedence
-        ret = (get_next_redirect_url(self.request,
-                                     self.redirect_field_name)
-               or self.success_url)
-        return ret
-
-    def get_context_data(self, **kwargs):
-        ret = super(LoginView, self).get_context_data(**kwargs)
-        signup_url = passthrough_next_redirect_url(self.request,
-                                                    "/accounts/signup/",
-                                                   # reverse("account_signup"),
-                                                   self.redirect_field_name)
-        redirect_field_value = get_request_param(self.request,
-                                                 self.redirect_field_name)
-        site = get_current_site(self.request)
-
-        ret.update({"signup_url": signup_url,
-                    "site": site,
-                    "redirect_field_name": self.redirect_field_name,
-                    "redirect_field_value": redirect_field_value})
-        return ret
-    """
-#login = LoginView.as_view()
-
-
-#class AjaxLoginView(LoginView):
-#    template_name = "account/ajax_login.html"
-
-#ajax_login = AjaxLoginView.as_view()
-
-
 class CloseableSignupMixin(object):
     template_name_signup_closed = "account/signup_closed.html"
 
@@ -434,22 +387,47 @@ class ProfileView(JSONResponseMixin, View):
         self.object = self.request.user
         req = json.loads(self.request.body.decode("utf-8"))
         account_type = req.get('account_type')
+        first_name = req.get('first_name')
+        middle_name = req.get('middle_name')
+        last_name = req.get('last_name')
+        password = req.get('password')
+
         try:
+            is_dirty = False
             if account_type and int(account_type) == 1:
                 if self.object.account_type != account_type:
                     self.object.account_type = account_type
-                    self.object.save()
+                    is_dirty = True
+
             if account_type and int(account_type) == 2:
                 if self.object.account_type != account_type:
                     self.object.account_type = account_type
-                    self.object.save()
+                    is_dirty = True
+
+            if first_name is not None:
+                if self.object.first_name != first_name:
+                    self.object.first_name = first_name
+                    is_dirty = True
+
+            if middle_name is not None:
+                if self.object.middle_name != middle_name:
+                    self.object.middle_name = middle_name
+                    is_dirty = True
+
+            if last_name is not None:
+                if self.object.last_name != last_name:
+                    self.object.last_name = last_name
+                    is_dirty = True
+
+            if password is not None:
+                self.object.set_password(password)
+                is_dirty = True
+
+            if is_dirty is True:
+                self.object.save()
+
         except Exception:
             pass
-
-        password = req.get('password')
-        if password:
-            self.object.set_password(password)
-            self.object.save()
 
         return self.render_to_json_response(UserSerializer(self.request.user).data)
 

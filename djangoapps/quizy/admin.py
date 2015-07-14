@@ -33,7 +33,7 @@ class LessonAdmin(admin.ModelAdmin):
     readonly_fields = ('created_by',)
     fieldsets = (
         (None, {
-            'fields': ('name', 'description', 'is_active', 'created_by')
+            'fields': ('name', 'description', 'is_active', 'picture', 'created_by')
         }),
     )
 

@@ -1,3 +1,7 @@
+@primary_color: #4988c9;
+@secondary_color: #ff9e37;
+
+
 .type-pairs-image {
     margin: 0;
     background-image: url("../img/question_type_icons.png");
@@ -49,15 +53,7 @@
 
 
 
-.btn-round {
-    border: 1px solid #c3c3c3;
-    display: inline-block;
-    padding: 10px;
-    border-radius: 50%;
-    &:active {
-        box-shadow: initial;
-    }
-}
+
 
 .icon-add {
     display: inline-block;
@@ -115,11 +111,44 @@
 .icon-menu {
     display: inline-block;
     vertical-align: middle;
-    height: 24px;
-    width: 26px;
+    height: 17px;
+    width: 21px;
     text-align: center;
     line-height: 56px;
     background-image: url('/assets/img/icons/menu.svg');
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+.insert_photo {
+    color: @secondary_color;
+    font-size: 34px;
+    margin: -27px 0 0 2px;
 }

@@ -28,7 +28,7 @@ urlpatterns = patterns(
     url(r"^ajax-confirm-email/(?P<key>\w+)/$", views.ajax_confirm_email_key,
         name="account_confirm_email"),
     # Handle old redirects
-    #url(r"^ajax-confirm_email/(?P<key>\w+)/$",
+    # url(r"^ajax-confirm_email/(?P<key>\w+)/$",
     #    RedirectView.as_view(url='/accounts/confirm-email/%(key)s/',
     #                         permanent=True)),
 

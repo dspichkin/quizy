@@ -6,3 +6,5 @@ module.exports = angular.module('quizy.Directives', [])
     .directive('ripple', require('./utils/ripple.js'))
     .directive('fab', require('./utils/fab.js'))
     .directive('lessonAction', require('./utils/lesson_action.js'))
+    .directive('drag', require('./utils/drag.js'))
+

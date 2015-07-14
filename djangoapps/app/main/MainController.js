@@ -59,7 +59,6 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         $scope.model.menu.positionLoginTextTop = '0px';
 
         $scope.main.active_menu = 'main';
-        
     };
 
     $scope.main.make_short_header = function() {
@@ -69,6 +68,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         } else {
             $scope.model.menu.positionTop = -short_header_height + 'px';
             $scope.model.menu.positionBodyTop = short_header_height + 'px';
+
             $scope.model.menu.positionMainMenuTop = '180px';
             $scope.model.menu.positionTitleLeft = '37%';
             $scope.model.menu.positionTitleTop = '180px';
@@ -102,14 +102,13 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
 
     $scope.main.go_lessons_page = function() {
         $location.path('/lessons/');
-        $scope.model.current_content_url = null;
         $scope.main.make_short_header();
         $scope.main.active_menu = 'lessons';
     };
     
 
     $scope.main.go_price = function() {
-        reset_menu();
+        $scope.main.reset_menu();
         $scope.main.active_menu = 'price';
         $location.path('/price/');
     };
@@ -130,7 +129,22 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         $scope.model.current_content_url = null;
         $scope.main.make_short_header();
         $scope.main.active_menu = 'lessons';
-    }
+    };
+
+    $scope.main.go_play = function(lesson_id) {
+        if (lesson_id) {
+            $location.path('/play/' + lesson_id + '/');
+            $scope.main.make_short_header();
+            $scope.main.active_menu = 'lessons';
+        }
+    };
+
+
+    $scope.main.go_profile = function() {
+        $location.path('/accounts/profile/');
+        $scope.main.make_short_header();
+        $scope.main.active_menu = 'profile';
+    };
 
 
 

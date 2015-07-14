@@ -23,8 +23,9 @@ require('angular-material-icons');
 require('angular-parallax');
 
 require('sortable');
+require('ng-file-upload');
 
-
+require('angular-dragdrop');
 
 require('./editor/filters');
 require('./controllers');
@@ -38,6 +39,8 @@ angular.module('quizy', [
         'angular-sortable-view',
         'angular-parallax',
 
+        'ngDragDrop',
+        'ngFileUpload',
         'quizy.Controllers',
         'quizy.Directives',
         'quizy.filters'])

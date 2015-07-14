@@ -4,7 +4,6 @@
     <div class="mylesson_list" ng-if="user.is_authenticated && user.account_type==1">
                 
             <div fab ripple fab-class="fab-add-lesson" icon="icon-add" fab-class-menu="fab-add-lesson-menu" icon="icon-add" menu-right-x="178" menu-y="0" menu-width="200" menu-height="103">
-                <div><div ng-click="main.new_course()">Создать новый <b>курс</b></div></div>
                 <div><div ng-click="main.new_lesson()">Создать новый <b>урок</b></div></div>
             </div>
 
@@ -28,6 +27,7 @@
 
 
                 </div>
+                <!--
                 <div class="col-md-4" style="height:100%;padding: 0px 0 0 0;">
 
                     <div style="font-size: 20px;
@@ -50,6 +50,7 @@
                         color: black;
                         float: left;">Мои ученики</div>
                 </div>
+                -->
             </div>
 
             <div class="col-md-12" style="padding: 0;">
@@ -74,7 +75,9 @@
 
                     <tbody>
                         <tr ng-repeat="lesson in model.lesson.lessons">
-                            <td style="width: 170px;">
+                            <td style="width: 170px;vertical-align: middle;position:relative;">
+                                <div class="lesson_incorrect" ng-if="lesson.is_correct==false"></div>
+                                <div class="lesson_correct" ng-if="lesson.is_correct==true"></div>
                                 <div class="shadow btn-round" ripple style="position: relative;" lesson-action lesson-id="{{lesson.id}}">
                                     <a class="icon-menu"  href="#"></a>
                                 </div>
@@ -100,6 +103,9 @@
                 </table>
 
             </div>
+
+
+
 
 
 

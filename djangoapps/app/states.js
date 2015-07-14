@@ -54,7 +54,7 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
         .state('profile', {
             url: "/accounts/profile/",
             views: {
-                "profile": {
+                "main": {
                     templateUrl: "/assets/partials/profile.html",
                     controller: 'ProfileCtrl'
                 }
@@ -99,7 +99,7 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
         .state('play', {
             url: "/play/:lesson_id/?",
             views: {
-                "auth": {
+                "main": {
                     templateUrl: "/assets/partials/play.html",
                     controller: 'PlayCtrl'
                 }

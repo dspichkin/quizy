@@ -3,13 +3,15 @@
 var Page = require('../models/page');
 var Lesson = require('../models/lesson');
 
-var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog) {
+var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog, Upload) {
 
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.reset_menu();
         $location.path('/');
         return;
     }
+
+
 
     $scope.model['editor'] = {
         is_dirty_data: false,
@@ -37,28 +39,36 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
     $scope.main.make_short_header();
     $scope.main.active_menu = 'lessons';
 
+    $scope.current_menu = 'common';
+
+    $scope.reload_lesson = function() {
+        $data.get_lesson($stateParams.lesson_id).then(function(data) {
+            $scope.model.editor.current_lesson = new Lesson(data.data);
+
+            // проверяем на правильность во время загрузки
+            var _c = $scope.model.editor.current_lesson.is_correct;
+            $scope.model.editor.current_lesson.check();
+            // console.log(scope.model.editor.current_lesson)
+
+            // Todo сделать обработку ситуации
+            if (!data.data || data.data.length == 0) {
+                $scope.main.go_home_page();
+            }
+
+        }, function(error) {
+            $scope.model.editor.current_lesson = null;
+            $log.error('Ошибка получения урока', error);
+            $scope.main.go_home_page();
+        });
+    };
+
     // todo:  сделать loading на созание нового урока
     // создаем новый урок
     if (!$stateParams.lesson_id) {
         $scope.model.editor.new_lesson = true;
     } else {
         $scope.model.editor.new_lesson = false;
-        $data.get_lesson($stateParams.lesson_id).then(function(data) {
-            $scope.model.editor.current_lesson = new Lesson(data.data);
-            if (!data.data || data.data.length == 0) {
-                $scope.main.go_home_page();
-            } else {
-                $scope.model.editor.current_lesson.pages = [];
-                for (var i = 0, len = data.data.pages.length; i < len; i++) {
-                    var q = new Page(data.data.pages[i]);
-                    $scope.model.editor.current_lesson.pages.push(q);
-                }
-            }
-        }, function(error) {
-            $scope.model.editor.current_lesson = null;
-            $log.error('Ошибка получения урока', error);
-            $scope.main.go_home_page();
-        });
+        $scope.reload_lesson();
     }
 
 
@@ -73,6 +83,27 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
             $log.error("Ошибка записи вопросов.", error);
         });
     };
+
+    
+
+    $scope.show_editor_common = function() {
+        $scope.current_menu = 'common';
+    };
+
+    $scope.show_editor_content = function() {
+        $scope.current_menu = 'content';
+    };
+
+    $scope.get_template_content = function() {
+        if ($scope.current_menu == 'common') {
+            return '/assets/partials/editor_lesson_common.html';
+        }
+
+        if ($scope.current_menu == 'content') {
+            return '/assets/partials/editor_lesson_content.html';
+        }
+    };
+
 
     $scope.finish_moving = function($item, $partFrom, $partTo, $indexFrom, $indexTo) {
         for (var i = 0, len = $scope.model.editor.current_lesson.pages.length; i < len; i++) {
@@ -108,6 +139,43 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
             });
     };
 
+    $scope.delete_current_page = function($event) {
+        $mdDialog.show({
+              targetEvent: $event,
+              templateUrl: '/assets/partials/confirm_delete_page.html',
+              disableParentScroll: true,
+              clickOutsideToClose: true,
+                scope: $scope,        // use parent scope in template
+                preserveScope: true,
+                controller: function DialogController($scope, $mdDialog) {
+
+                    $scope.form_errors = {};
+                    $scope.closeDialog = function() {
+                        $mdDialog.hide();
+                    };
+                    $scope.submit = function($event) {
+                        $event.preventDefault();
+                        $mdDialog.hide();
+                        $scope.model.editor.loading = true;
+                        var current_index = $scope.model.editor.current_page_index;
+                        $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].remove().then(
+                            function(response) {
+                                $scope.model.editor.current_lesson.pages.splice(current_index, 1);
+                                if (current_index >= $scope.model.editor.current_lesson.pages.length - 1) {
+                                    $scope.model.editor.current_lesson.current_page_index = $scope.model.editor.current_lesson.pages.length - 1;
+                                }
+                                re_number_pages();
+                                $scope.$apply();
+                                $scope.model.editor.loading = false;
+                            }, function(error) {
+                                $log.error("Ошибка удаленния вопроса. ", error);
+                                $scope.model.editor.loading = false;
+                            });
+                                };
+                            }
+            });
+    };
+
     $scope.add_page = function(type_slug) {
         $scope.model.editor.loading = true;
         var _new_page = Page({
@@ -125,8 +193,6 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
             if ($scope.model.editor.current_page_index < 0) {
                 $scope.model.editor.current_page_index = 0;
             }
-            $scope.add_variant(type_slug);
-            $scope.$apply();
             $scope.model.editor.loading = false;
         }, function(error) {
             $scope.model.editor.loading = false;
@@ -139,25 +205,6 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
         $scope.model.editor.current_page_index = $index;
     };
 
-    $scope.remove_page = function() {
-        if (confirm("Вы действительно хотите удалить вопрос?")) {
-            $scope.model.editor.loading = true;
-            var current_index = $scope.model.editor.current_page_index;
-            $scope.model.editor.pages[$scope.model.editor.current_page_index].remove().then(
-                function(response) {
-                    $scope.model.editor.pages.splice(current_index, 1);
-                    if (current_index >= $scope.model.editor.pages.length - 1) {
-                        $scope.model.editor.current_page_index = $scope.model.editor.pages.length - 1;
-                    }
-                    re_number_pages();
-                    $scope.$apply();
-                    $scope.model.editor.loading = false;
-                }, function(error) {
-                    $log.error("Ошибка удаленния вопроса. ", error);
-                    $scope.model.editor.loading = false;
-                });
-        }
-    };
 
     $scope.get_type_name = function(type_slug) {
         for (var i = 0, len = $scope.model.editor.page_types.length; i < len; i++) {
@@ -177,6 +224,7 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
      */
     $scope.finish_changed_page_text = function() {
         $scope.model.editor.loading = true;
+        $scope.model.editor.current_lesson.check();
         $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].save().then(
             function() {
                 $scope.model.editor.loading = false;
@@ -296,6 +344,7 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
 
     $scope.finish_changed_variant = function(id) {
         $scope.model.editor.loading = true;
+        $scope.model.editor.current_lesson.check();
         var _page = $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index];
         _page.save().then(
             function(data) {
@@ -315,24 +364,14 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
      * @return {[type]} [description]
      */
     $scope.finish_changed_lesson = function() {
-        //$scope.model.editor.new_lesson = true;
-        /*
-        $data.new_lesson().then(function(data) {
-            if (data.hasOwnProperty('data')) {
-                if (data.data.hasOwnProperty('id')) {
-                    $location.path('/editor/' + data.data.id + '/');
-                }
-            }
-        }, function(error) {
-            $log.error('Ошибка создания нового урока', error);
-        });
-        */
         $scope.model.editor.loading = true;
+        $scope.model.editor.current_lesson.check();
+
         if ($scope.model.editor.new_lesson == true) {
             $data.new_lesson($scope.model.editor.current_lesson).then(function(data) {
                 if (data.hasOwnProperty('data')) {
                     if (data.data.hasOwnProperty('id')) {
-                        $scope.main.go_editor_lesson(data.data.id)
+                        $scope.main.go_editor_lesson(data.data.id);
                     }
                 }
             }, function(error) {
@@ -348,27 +387,8 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
                 $scope.model.editor.loading = false;
             });
         }
-
-
-        
     };
-/*
-    var is_new_lesson = function(data) {
-        if ($scope.model.editor.new_lesson == true) {
-            $data.new_lesson(data).then(function(data) {
-                if (data.hasOwnProperty('data')) {
-                    if (data.data.hasOwnProperty('id')) {
-                        // $location.path('/editor/lesson/' + data.data.id + '/');
-                        $scope.main.go_editor_lesson(data.data.id)
-                        return;
-                    }
-                }
-            }, function(error) {
-                $log.error('Ошибка создания нового урока', error);
-            });
-        }
-    }
-*/
+
 
     $scope.make_dirty_data = function() {
         $scope.model.editor.is_dirty_data = true;
@@ -384,11 +404,46 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog)
         }
     });
 
+    $scope.progressUpload = 0;
 
+    $scope.upload = function($files, $event) {
+        var file = $files[0];
+        Upload.upload({
+            url: 'api/lessons/' + $scope.model.editor.current_lesson.id + '/upload/',
+            file: file
+        }).progress(function(evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            //console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+            $scope.progressUpload = progressPercentage + '%';
+        }).success(function(data, status, headers, config) {
+            $scope.progressUpload = 0;
+            $scope.reload_lesson();
+            setTimeout(function() {
+                $scope.$apply();
+            });
+        }).error(function(data, status, headers, config) {
+            $log.error('Ошибка загрузки: ' + status);
+            $scope.progressUpload = 0;
+            $scope.reload_lesson();
+            setTimeout(function() {
+                $scope.$apply();
+            });
+        });
+    };
 
+    $scope.remove_lesson_picture = function() {
+        $scope.model.editor.current_lesson.remove_lesson_picture().then(function() {
+            $scope.reload_lesson();
+            setTimeout(function() {
+                $scope.$apply();
+            });
+        }, function() {
+            $log.error("Ошибка удаления картинки урока.", error);
+        });
+    };
 
 
 };
 
 
-module.exports = ['$scope', '$stateParams', '$log', '$data', '$location', '$mdDialog', EditCtrl];
+module.exports = ['$scope', '$stateParams', '$log', '$data', '$location', '$mdDialog', 'Upload', EditCtrl];

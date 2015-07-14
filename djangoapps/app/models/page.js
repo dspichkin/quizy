@@ -37,6 +37,10 @@ function Page(data) {
 Page.prototype = new BaseObject();
 Page.prototype.constructor = Page;
 
+var _code_errors = {
+    300: "Не заполнено поле вопроса",
+    301: "Не заполнен один из вариантов ответов"
+};
 
 _.assign(Page.prototype, {
     create: function(lesson_id) {
@@ -76,8 +80,6 @@ _.assign(Page.prototype, {
     serialize: function() {
         return JSON.stringify({
             id: this.id,
-            created_at: this.created_at,
-            updated_at: this.updated_at,
             type: this.type,
             text: this.text,
             number: this.number,
@@ -85,6 +87,36 @@ _.assign(Page.prototype, {
             code_errors: this.code_errors,
             variants: this.variants
         });
+    },
+    add_error: function(index) {
+        this.code_errors[index] = _code_errors[index];
+    },
+    remove_error: function(index) {
+        delete this.code_errors[index];
+    },
+    check: function() {
+        if (!this.text || this.text == "") {
+            this.add_error('300');
+        } else {
+            this.remove_error('300');
+        }
+        var _is_correct_variants = true;
+        for (var i = 0, len = this.variants.length; i < len; i++) {
+            if (!this.variants[i].text || this.variants[i].text == "") {
+                this.add_error('301');
+                _is_correct_variants = false;
+            }
+        }
+        if (_is_correct_variants == true) {
+            this.remove_error('301');
+        }
+
+        if (Object.keys(this.code_errors).length > 0) {
+            this.is_correct = false;
+        } else {
+            this.is_correct = true;
+        }
+
     }
 
 });

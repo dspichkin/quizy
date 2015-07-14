@@ -97,7 +97,7 @@
                         display: inline-block;
                         width: 100%;">
                         <md-input-container style="text-align: left;width:43%;float: left;">
-                            <label>Первая половиная ответа</label>
+                            <label>Левая половиная ответа (перетаскиваемая)</label>
 
                                 <input class="variant_pair_page" style="width:100%;"
                                     type="text"
@@ -106,7 +106,7 @@
                                     ng-model-onblur ng-blur="finish_changed_variant(item.id)">
                         </md-input-container>
                         <md-input-container style="text-align: left;width:45%;float: left;margin: 0px 0px 0 10px;">
-                            <label>Вторая половиная ответа</label>
+                            <label>Правая половиная ответа</label>
                             <input class="variant_pair_answer" style="width:100%;" type="text"
                                 ng-model="item.pair_object.text"
                                 ng-if="item.pair_object.pair_type == 'answer'"

@@ -34,7 +34,7 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                     html_menu += '      <div class="action_menu_items" style="opacity: 0">';
                     html_menu += '          <div class="action_item" ng-click="edit_lesson(' + lesson_id + ')">Редактировать урок</div>';
                     html_menu += '          <div class="action_item">Назначить ученика</div>';
-                    html_menu += '          <div class="action_item">Запустить для тестирования</div>';
+                    html_menu += '          <div class="action_item" ng-click="play_lesson(' + lesson_id + ')">Запустить для тестирования</div>';
                     html_menu += '      </div>';
                     html_menu += '  </div>';
                     html_menu += '</div>';
@@ -54,9 +54,13 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                 scope.edit_lesson = function(lesson_id) {
                     scope.close_action();
                     scope.main.go_editor_lesson(lesson_id);
-                }
-                scope.test = function() {
-                }
+                };
+
+                scope.play_lesson = function(lesson_id) {
+                    scope.close_action();
+                    scope.main.go_play(lesson_id);
+                };
+
             }
         };
     }

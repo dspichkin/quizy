@@ -1,67 +1,128 @@
-<div class="container-fluid editor" ng-controller="PlayCtrl">
-    <div ng-if="model.current_page_index < model.lesson.pages.length">
-        <div>Название урока: {{model.lesson.name}}</div>
-        
-        <div>Описание урока: {{model.lesson.description}}</div>
-        <br>
-        <br>
-        <div>
-            Вопрос: 
-            <div ng-bind-html="model.lesson.pages[model.current_page_index].text"></div>
-        </div>
+<div class="play">
+    
+    <div class="play_panel" style="
+    height: 100%;
+    width: 90%;
+    display: inline-block;
+    margin-top: -50px;">
 
-        <div ng-if="model.lesson.pages[model.current_page_index].type == 'radiobox'" class="variant_radiobox">
-            <ul class="radio_variants">
-                <li ng-repeat="item in model.lesson.pages[model.current_page_index].variants" class="variant">
+
+        <div ng-if="model.play.current_page_index < model.play.lesson.pages.length">
+            <div class="shadow" style="float:left;width: 65%;background-color: white;text-align: left;
+    padding: 20px;min-height: 400px;position: relative;">
+
+                <div style="font-size: 17px;font-weight: 500;">
+                    Вопрос №{{model.play.lesson.pages[model.play.current_page_index].number}}
+                </div>
+
+                <div style="margin: 20px;" ng-bind-html="model.lesson.pages[model.current_page_index].text"></div>
+
+                <div ng-if="model.lesson.pages[model.current_page_index].type == 'radiobox'" class="variant_radiobox" style="position: absolute;
+    bottom: 80px;
+    min-height: 100px;">
+                    <ul class="radio_variants">
+                        <li ng-repeat="item in model.lesson.pages[model.current_page_index].variants" class="variant" style="margin: 20px;">
+                            
+                            <input class="variant_text_radio" type="radio"
+                                ng-model="item.answer"
+                                name="radiobox"
+                                ng-value="true"
+                                ng-change="answer_ready(item.id)"
+                                >
+                            <span style="margin: 0 0 0 15px;">{{item.text}}</span>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div ng-if="model.lesson.pages[model.current_page_index].type == 'checkbox'" class="variant_checkbox">
+                    <ul class="checkbox_variants">
+                        <li ng-repeat="item in model.lesson.pages[model.current_page_index].variants" class="variant">
+                            <input class="variant_text_checkbox" type="checkbox" 
+                                name="checkbox"
+                                ng-model="item.answer"
+                                ng-change="answer_ready(item.id)"
+                                >
+                            {{item.text}}
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div ng-if="model.play.lesson.pages[model.play.current_page_index].type == 'pairs'" class="variant_checkbox">
+
+                    <div class="pairs_panel">
+                        <div style="float:left;">
+                            <div ng-repeat="variant in model.play.lesson.pages[model.play.current_page_index].variants" ng-if="variant.pair_type=='question'"
+                                class="question_panel">
+                                <div class="question_title">{{variant.text}}</div>
+                                <div class="dropable question_dropable">
+                                    <div drag class="dragable question_dragable" action="make_answer" data-id="{{variant.id}}">{{variant.text}}</div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div style="float:right;display:block;">
+
+                            <div ng-repeat="variant in model.play.lesson.pages[model.play.current_page_index].variants" ng-if="variant.pair_type=='answer'" class="answer_panel">
+                                <div class="dropable answer_dropable" data-id="{{variant.id}}"></div>
+                                <div class="answer_title" style="">{{variant.text}}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
                     
-                    <input class="variant_text_radio" type="radio"
-                        ng-model="item.answer"
-                        name="radiobox"
-                        ng-value="true"
-                        ng-change="answer_ready(item.id)"
-                        >
-                    {{item.text}}
-                </li>
-            </ul>
+                </div>
+
+
+                <div style="position: absolute;
+                    bottom: 20px;
+                    right: 20px;">
+
+                    <div class="shadow btn-secondary btn-disabled" ng-if="!model.play.next_question">ПОДТВЕРДИТЕ ОТВЕТ
+                    </div>
+                    <div ripple class="shadow btn-secondary" ng-if="model.play.next_question"
+                        ng-click="next_question($event)">ПОДТВЕРДИТЕ ОТВЕТ
+                    </div>
+                </div>
+            </div>
+
+            <div class="shadow" style="float: left;
+                width: 25%;
+                background-color: white;
+                min-height: 300px;
+                margin: 0 0 20px 20px;
+                padding: 25px;
+                text-align: left;">
+                <p style="font-size: 12px;">Прохождение урока</p>
+                <p style="font-size: 26px;font-weight: 500;">{{model.play.lesson.name}}</p>
+                <p>{{model.play.lesson.description}}</p>
+            </div>
+
         </div>
 
+        <div ng-if="model.play.current_page_index == model.play.lesson.pages.length">
+            Номер попытки: {{model.play.result.number_of_attempt}}<br>
+            Результат: 
+            <span ng-if="model.success == false">Не успешно</span>
+            <span ng-if="model.success == true">Успешно</span>
 
-        <div ng-if="model.lesson.pages[model.current_page_index].type == 'checkbox'" class="variant_checkbox">
-            <ul class="checkbox_variants">
-                <li ng-repeat="item in model.lesson.pages[model.current_page_index].variants" class="variant">
-                    <input class="variant_text_checkbox" type="checkbox" 
-                        name="checkbox"
-                        ng-model="item.answer"
-                        ng-change="answer_ready(item.id)"
-                        >
-                    {{item.text}}
+            <ul>
+                <li ng-repeat="page in model.play.lesson.pages">
+                    {{page.number}}
+                    <span>
+                        {{page.text | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}
+                    </span>
+                    <span ng-if="get_answer_result(page.id)==false">Неверно</span>
+                    <span ng-if="get_answer_result(page.id)==true">Верно</span>
                 </li>
             </ul>
+
+            <a href="/lessons/">Вернуться</a>
         </div>
 
-        <br>
-        <br>
-        <button type="button" class="btn btn-success" ng-disabled="!model.next_question"
-            ng-click="next_question()">Далее</button>
-    </div>
-
-    <div ng-if="model.current_page_index == model.lesson.pages.length">
-        Номер попытки: {{model.result.number_of_attempt}}<br>
-        Результат: 
-        <span ng-if="model.success == false">Не успешно</span>
-        <span ng-if="model.success == true">Успешно</span>
-
-        <ul>
-            <li ng-repeat="page in model.lesson.pages">
-                {{page.number}}
-                <span>
-                    {{page.text | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}
-                </span>
-                <span ng-if="get_answer_result(page.id)==false">Неверно</span>
-                <span ng-if="get_answer_result(page.id)==true">Верно</span>
-            </li>
-        </ul>
-
-        <a href="/lessons/">Вернуться</a>
     </div>
 </div>

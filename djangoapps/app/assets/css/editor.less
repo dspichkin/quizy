@@ -15,6 +15,123 @@
         width: 100%;
         display: table;
 
+        .errors {
+            height: 37px;
+            font-size: 13px;
+            font-weight: 200;
+            color: red;
+            overflow: auto;
+            float: right;
+            margin: 10px 64px 0px 0px;
+        }
+
+        .editor_menu_tabs {
+
+            height: 48px;
+            display: block;
+            margin: 0 0 0 8px;
+
+            .editor_menu_tab_item {
+                color: black;
+                font-size: 14px;
+                text-align: center;
+                line-height: 24px;
+                padding: 21px 24px 0 12px;
+                cursor: pointer;
+                white-space: nowrap;
+                position: relative;
+                text-transform: uppercase;
+                float: left;
+                font-weight: 500;
+                box-sizing: border-box;
+            }
+        }
+
+        .lesson_common {
+            padding: 0;
+            overflow: auto;
+            min-height: 400px;
+            margin: 20px;
+            min-width: 1000px;
+            
+            .incorrect_lesson {
+                height:2px;width:100%;background-color:red;
+            }
+            .correct_lesson {
+                height:2px;width:100%;background-color:green;
+            }
+
+            .picture_lesson {
+                margin: -80px 10px 10px 160px;
+            }
+
+            .remove_lesson_picture {
+                margin: 14px 0px 0px 12px;
+                text-decoration: underline;
+                font-size: 13px;
+            }
+
+        }
+        .lesson_content {
+            display: inline-block;
+            min-width: 1000px;
+            min-height: 400px;
+            overflow: auto;
+            margin: 20px;
+
+            .remove_question_picture {
+                float: right;
+                margin: -30px 0 0 0;
+            }
+
+            .incorrect_page {
+                position:absolute;
+                width:2px;
+                height:100%;
+                background-color:red;
+                top:0;
+                left:0;
+            }
+            .incorrect_page_content {
+                position:absolute;
+                width:100%;
+                height:2px;
+                background-color:red;
+                top:0;
+                left:0;
+            }
+            .correct_page {
+                position:absolute;
+                width:2px;
+                height:100%;
+                background-color:green;
+                top:0;
+                left:0;
+            }
+
+
+            .page_editor {
+                margin: 20px 0px 20px 15px;
+                background-color: white;
+                min-width: 620px;
+                position: relative;
+            }
+
+            .lesson_pages {
+                margin: 20px 20px 20px 20px;
+                padding: 0;
+                min-height:300px;
+                width: 300px;
+                float: left;
+            }
+        }
+
+
+
+
+
+
+
         .btn_add_page {
             margin-top: 20px;
             padding: 1px;

@@ -1,58 +1,75 @@
-
+<div class="profile" style="min-height:450px;text-align:center">
 <!--<h1>Профиль пользователя {{ user.username }}</h1>-->
-
-<div class="profile-page row" style="min-height: 500px;padding: 20px;">
-
-    <div class="profile-user col s3">
-        <p ng-if="user.username">{{user.username}}</p>
-        
-        <p>Тип аккаунта:
-            <select class="browser-default" ng-model="model.account_type" ng-change="change_account_type()" >
-                <option ng-repeat="value in model.account_type_choice">{{value}}</option>
-            </select>
-        </p>
-    
-        <br>
-
-        <button class="btn btn-primary btn-attention width-100" ng-if="user.role == 'learner'" ng-click="meta.is_add_user_screen = true" style="font-size: 10px;
-            height: 46px;
-            line-height: 12px;">
-            Отправить запос на подключение к организации*
-            <i class="icon icon-become-admin"></i>
-        </button>
-     </div>
-
-
-
-    <div class="right col s3">
-        
-        <div id="okModal" class="modal" ng-style="model.show_pass_ok && {'display': 'inline-block'};">
-            <div class="modal-content">
-                <h4>Смена пароля</h4>
-                <p>Пароль успешно поменян!</p>
+<div class="shadow profile_panel">
+    <div class="profile_header">
+        <div class="avatar_panel">
+            <div class="avatar_image"></div>
+            <div class="shadow btn_change_avatar_image" ripple>
+                <i class="material-icons insert_photo">insert photo</i>
             </div>
-            <div class="modal-footer">
-                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat"
-                ng-click="model.show_pass_ok = !model.show_pass_ok">OK</a>
-            </div>
-        </div>
-
-
-        <div class="btn btn-info profile-change-pass amber darken-3 waves-effect waves-amber" ng-click="is_show_pass = !is_show_pass">Сменить пароль</div>
-        <br>
-        <br>
-        <div class="profile-passw" ng-if="is_show_pass === true">
-            <i class="icon icon-close-1 pull-right" ng-click="$parent.is_show_pass = false"></i>
-
-            <div class="fs-12">Смена пароля</div>
-            <div><input placeholder="новый пароль" ng-model="$parent.pass1" type="password"/></div>
-            <div><input placeholder="повторите пароль" ng-model="$parent.pass2" type="password"/></div>
-
-            <div class="red-text" ng-show="is_change_pass_error">{{model.error_msg}}</div>
-
-            <button class="btn btn-primary btn-staff" ng-click="changePass()">поменять пароль</button>
         </div>
     </div>
-    
+    <div class="profile_content">
+        <div class="data_unsave pull-left"><span ng-if="model.profile.is_dirty_data==true">Изменения не сохранены</span></div>
+        <button class="btn btn-primary btn_change_password pull-right" ng-click="change_password($event)">
+            Сменить пароль
+        </button>
+
+
+        <div class="label_container">
+            <div class="shadow edit_password" ripple><i class="material-icons">edit</i></div>
+            <md-input-container  style="text-align: left;">
+                <label>Ваш аккаунт</label>
+                <input ng-model="model.profile.user.email"
+                readonly="readonly" 
+                >
+            </md-input-container>
+        </div>
+
+        <div class="label_container">
+                <span class="type_account_label">Тип аккаунта</span>
+                <md-select class="type_account_select" placeholder="State" ng-model="model.profile.account_type" ng-change="save_account_type()">
+                    <md-option ng-repeat="value in model.profile.account_type_choice" value="{{value}}">{{value}}</md-option>
+                </md-select>
+
+        </div>
+
+        <div class="label_container">
+            <md-input-container  style="text-align: left;">
+                <label>Укажите ваше имя</label>
+                <input ng-model="model.profile.user.first_name" 
+                md-maxlength="100"
+                ng-change="make_data_dirty()"
+                ng-model-onblur ng-blur="save_account()"
+                >
+            </md-input-container>
+        </div>
+
+        <div class="label_container">
+            <md-input-container  style="text-align: left;">
+                <label>Укажите вашу фамилию</label>
+                <input ng-model="model.profile.user.last_name"
+                md-maxlength="100"
+                ng-change="make_data_dirty()"
+                ng-model-onblur ng-blur="save_account()"
+                >
+            </md-input-container>
+        </div>
+
+        <div class="label_container">
+            <md-input-container  style="text-align: left;">
+                <label>Укажите ваше отчество</label>
+                <input ng-model="model.profile.user.middle_name"
+                md-maxlength="100"
+                ng-change="make_data_dirty()"
+                ng-model-onblur ng-blur="save_account()"
+                >
+            </md-input-container>
+        </div>
+
+         
+
+    </div>
+</div>
 </div>
 

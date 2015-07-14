@@ -27,7 +27,8 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
     }
 
 
-    $scope.main.go_lessons_page();
+    $scope.main.make_short_header();
+    $scope.main.active_menu = 'lessons';
 
     $scope.load_lesson = function(callback) {
         $http.get('/api/mylessons/').then(function(data) {
@@ -64,8 +65,6 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
         }, function(error) {
             $log.error('Ошибка получения уроков', error);
         });
-
-        
     };
 
     $scope.delete_lesson = function(lesson_id) {
@@ -87,17 +86,8 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
         }
     };
 
-    $scope.edit_lesson = function(lesson_id) {
-        $scope.main.main.go_editor_lesson(lesson_id);
-    };
-
     $scope.main.new_lesson = function() {
-        //$location.path('/editor/');
-        $scope.main.go_editor_lesson()
-    };
-
-    $scope.play_lesson = function(lesson_id) {
-        $location.path('/play/' + lesson_id + '/');
+        $scope.main.go_editor_lesson();
     };
 
     $scope.lesson_enroll = function($event, lesson_id) {
@@ -160,8 +150,6 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
                     };
                 }
             });
-        
-        
     };
 
     $scope.remove_enroll = function(enroll_id) {
@@ -171,6 +159,7 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
             $log.error(error);
         });
     };
+
 
 
     $scope.play_lesson = function(lesson_id) {

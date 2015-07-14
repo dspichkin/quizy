@@ -27,7 +27,8 @@ from rest_framework.routers import DefaultRouter
 
 from quizy.views import (PageViewSet, user_data,
     MyLessonsViewSet, answers,
-    lessons, new_page, lesson_archive, enroll_user)
+    lessons, new_page, lesson_archive, enroll_user,
+    lesson_picture_upload, picture_picture_upload)
 # LessonsViewSet,
 
 
@@ -57,6 +58,8 @@ urlpatterns = [
     # url(r'^api/lessons/$', get_lessons, name='get_lessons'),
     url(r'^api/lessons/(\d+)?/?$', lessons, name='get_lessons'),
     url(r'^api/lessons/(\d+)/new_page/$', new_page, name='new_page'),
+    url(r'^api/lessons/(\d+)/upload/$', lesson_picture_upload, name='lesson_picture_upload'),
+    url(r'^api/pages/(\d+)/upload/$', picture_picture_upload, name='picture_picture_upload'),
     url(r'^api/archive/(\d+)?/?$', lesson_archive, name='lesson_archive'),
 
     # Авторизация

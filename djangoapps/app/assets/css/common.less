@@ -1,13 +1,94 @@
 @primary_color: #4988c9;
 @primary_color_border: #205D6F;
 @secondary_color: #ff9e37;
-
+@secondary_color_border: #FFE4C4;
 
 .shadow {
   box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
 }
 
+.btn-disabled {
+	box-shadow: none;
+	opacity: 0.5;
+}
+
 .btn-primary {
 	background-color: @primary_color;
 	border-color: @primary_color_border;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-transform: none;
+    overflow: visible;
+    text-indent: 0px;
+    text-shadow: none;
+    letter-spacing: normal;
+    word-spacing: normal;
+    &:active {
+        box-shadow: none;
+    }
+}
+
+.btn-secondary{
+	background-color: @secondary_color;
+	border-color: @secondary_color_border;
+	color: white;
+	cursor: pointer;
+	display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-transform: none;
+    overflow: visible;
+    text-indent: 0px;
+    text-shadow: none;
+    letter-spacing: normal;
+    word-spacing: normal;
+    &:active {
+    	box-shadow: none;
+    }
+}
+
+
+.btn-round {
+    border: 1px solid #c3c3c3;
+    display: inline-block;
+    padding: 8px 9px 10px 9px;
+    border-radius: 50%;
+    &:active {
+        box-shadow: initial;
+    }
 }
