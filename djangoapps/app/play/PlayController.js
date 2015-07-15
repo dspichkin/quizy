@@ -15,6 +15,10 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
             }
         });
     }
+    //для хранения радиобокс ответа
+    $scope.tempdata = {
+        'radiobox_answer': null
+    };
 
     $scope.main.make_short_header();
     $scope.main.active_menu = 'lessons';
@@ -32,7 +36,7 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
         lesson: null
     };
 
-    scope.model.play['attempt'] = new Attempt({});
+    $scope.model.play['attempt'] = new Attempt({});
 
     var load_lesson = function(lesson_id) {
         $http.get('/api/lessons/' + lesson_id + "/").then(function(data) {
@@ -52,34 +56,54 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
 
     var has_answer = function() {
         var _pages = $scope.model.play.lesson.pages;
-        if (_pages[$scope.model.play.current_page_index].type == 'checkbox' ||
-            _pages[$scope.model.play.current_page_index].type == 'radiobox') {
-            var _variants = _pages[$scope.model.play.current_page_index].variants;
-            for (var i = 0, len = _variants.length; i < len; i++) {
-                if (_variants[i].answer == true) {
+        if (_pages.hasOwnProperty($scope.model.play.current_page_index)) {
+            if (_pages[$scope.model.play.current_page_index].type == 'checkbox') {
+                var _variants = _pages[$scope.model.play.current_page_index].variants;
+                for (var i = 0, len = _variants.length; i < len; i++) {
+                    if (_variants[i].answer == true) {
+                        return true;
+                    }
+                }
+            }
+            if (_pages[$scope.model.play.current_page_index].type == 'radiobox') {
+                if ($scope.tempdata.radiobox_answer) {
+                    return true;
+                }
+             }
+            if (_pages[$scope.model.play.current_page_index].type == 'pairs') {
+                var _current_answers = $scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index];
+                // проверяем количество текущих ответов с ниобходим кол-вом ответов
+                var _required_answers = $scope.model.play.lesson.pages[$scope.model.play.current_page_index].variants.length / 2;
+                var _current_answers_number = 0;
+                for (var i in _current_answers) {
+                    if (_current_answers[i].answer) {
+                        _current_answers_number++;
+                    }
+                }
+
+                if (_current_answers_number == _required_answers) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            if (_pages[$scope.model.play.current_page_index].type == 'text') {
+                if (!$scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index]) {
+                    $scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index] = {
+                        'type': 'text',
+                        'page_id': $scope.model.play.lesson.pages[$scope.model.play.current_page_index].id,
+                        'text_answer': ""
+                    };
+                }
+
+                if ($scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index].text_answer != "") {
                     return true;
                 }
             }
         }
-        if (_pages[$scope.model.play.current_page_index].type == 'pairs') {
-            var _current_answers = $scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index];
-            // проверяем количество текущих ответов с ниобходим кол-вом ответов
-            var _required_answers = $scope.model.play.lesson.pages[$scope.model.play.current_page_index].variants.length / 2;
-            var _current_answers_number = 0;
-            for (var i in _current_answers) {
-                if (_current_answers[i].answer) {
-                    _current_answers_number++;
-                }
-            }
-
-            if (_current_answers_number == _required_answers) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
         return false;
+
     };
 
     $scope.answer_ready = function() {
@@ -89,8 +113,13 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
         });
     };
 
-
-    $scope.make_answer = function(question_id, answer_id) {
+    /**
+     * Делаем ответ для pairs
+     * @param  {[type]} question_id [description]
+     * @param  {[type]} answer_id   [description]
+     * @return {[type]}             [description]
+     */
+    $scope.make_answer_for_pairs = function(question_id, answer_id) {
         // записывае ответ сделанный пользователем
         var _pages = $scope.model.play.lesson.pages;
         if (_pages[$scope.model.play.current_page_index].type == 'pairs') {
@@ -109,24 +138,69 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
                 };
             }
 
-            //console.log("22 ", _step)
             $scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index] = _step;
             $scope.answer_ready();
         }
-        
     };
 
+
+
     $scope.next_question = function($event) {
+        // записывае текущий ответ
+        var _page_type = $scope.model.play.lesson.pages[$scope.model.play.current_page_index].type;
+        if (_page_type == 'checkbox') {
+            var _step = $scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index];
+            var _variants = scope.model.play.lesson.pages[$scope.model.play.current_page_index].variants;
+            var _answers = {
+                'type': 'checkbox',
+                'page_id': $scope.model.play.lesson.pages[$scope.model.play.current_page_index].id,
+                'answers': []
+            };
 
+            for (var i = 0, len = _variants.length; i < len; i++) {
+                if (_variants[i].hasOwnProperty('answer')) {
+                    _answers.answers.push({
+                        'variant_id': _variants[i].id,
+                        'answer': _variants[i].answer
+                    });
+                } else {
+                    _answers.answers.push({
+                        'variant_id': _variants[i].answer,
+                        'answer': false
+                    });
+                }
+            }
 
-        if ($scope.model.next_question == true) {
-            $scope.model.current_page_index++;
+            $scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index] = _answers;
         }
 
-        // Прверяем ответы
-        if ($scope.model.current_page_index == $scope.model.lesson.pages.length) {
+        if (_page_type == 'radiobox') {
+            var _answers = {
+                'type': 'radiobox',
+                'page_id': $scope.model.play.lesson.pages[$scope.model.play.current_page_index].id,
+                'answers': [{
+                    'variant_id': $scope.tempdata.radiobox_answer,
+                    'answer': true
+                }]
+            };
+            $scope.tempdata.radiobox_answer = null;
+            $scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index] = _answers;
+        }
+
+        // переход к следующей страницы
+        if ($scope.model.play.next_question == true) {
+            $scope.model.play.current_page_index++;
+            if ($scope.model.play.current_page_index >= $scope.model.play.lesson.pages.length) {
+                $scope.model.play.current_page_index = $scope.model.play.lesson.pages.length;
+            }
+        }
+
+
+        // Запись ответа
+        /*
+        if ($scope.model.play.current_page_index == $scope.model.play.lesson.pages.length) {
             $scope.model.answers = [];
-            var _pages = $scope.model.lesson.pages;
+            var _pages = $scope.model.play.lesson.pages;
             for (var i = 0, len = _pages.length; i < len; i++) {
                 var _is_correct = true;
                 if (_pages[i].type == 'checkbox' || _pages[i].type == 'radiobox') {
@@ -145,10 +219,10 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
                             }
                         }
                     }
-                    $scope.model.answers.push({
-                        "page_id": _pages[i].id,
-                        "is_correct": _is_correct
-                    });
+                    //$scope.model.play.answers.push({
+                    //    "page_id": _pages[i].id,
+                    //    "is_correct": _is_correct
+                    //});
                 }
 
             }
@@ -169,16 +243,22 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
                 });
             //console.log('$scope.model.answers ', $scope.model.answers)
         }
-
+        
         $scope.model.next_question = false;
+        */
+        $scope.answer_ready();
+        $scope.get_answer_result();
     };
 
-
+    /**
+     * Вычесляем правильность завершения урока
+     * @param  {[type]} page_id [description]
+     * @return {[type]}         [description]
+     */
     $scope.get_answer_result = function(page_id) {
-        for (var i = 0, len = $scope.model.answers.length; i < len; i++) {
-            if ($scope.model.answers[i].page_id == page_id) {
-                return $scope.model.answers[i].is_correct;
-            }
+        console.log("steps ",$scope.model.play.attempt.answer_steps)
+        var _steps = $scope.model.play.attempt.answer_steps;
+        for (var i = 0, len = _steps.length; i < len; i++) {
         }
     };
 };

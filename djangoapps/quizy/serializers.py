@@ -30,6 +30,7 @@ class JSONField(serializers.Field):
 
 
 class VariantSerializer(serializers.ModelSerializer):
+    code_errors = JSONField()
 
     class Meta:
         model = Variant

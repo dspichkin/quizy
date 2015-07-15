@@ -6,9 +6,13 @@ var Lesson = require('../models/lesson');
 var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog, Upload) {
 
     if (!$scope.user || !$scope.user.is_authenticated) {
-        $scope.main.reset_menu();
-        $location.path('/');
-        return;
+        $scope.main.run(function() {
+            if (!$scope.user || !$scope.user.is_authenticated) {
+                $scope.main.reset_menu();
+                $location.path('/');
+                return;
+            }
+        });
     }
 
 
@@ -41,7 +45,7 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
 
     $scope.current_menu = 'common';
 
-    $scope.reload_lesson = function() {
+    $scope.reload_lesson = function(callback) {
         $data.get_lesson($stateParams.lesson_id).then(function(data) {
             $scope.model.editor.current_lesson = new Lesson(data.data);
 
@@ -53,6 +57,10 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
             // Todo сделать обработку ситуации
             if (!data.data || data.data.length == 0) {
                 $scope.main.go_home_page();
+            }
+
+            if (callback) {
+                callback();
             }
 
         }, function(error) {
@@ -165,6 +173,7 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
                                     $scope.model.editor.current_lesson.current_page_index = $scope.model.editor.current_lesson.pages.length - 1;
                                 }
                                 re_number_pages();
+                                $scope.model.editor.current_page_index = 0;
                                 $scope.$apply();
                                 $scope.model.editor.loading = false;
                             }, function(error) {
@@ -189,10 +198,15 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
         _new_page.create($scope.model.editor.current_lesson.id).then(function(response) {
             _new_page.id = response.id;
             $scope.model.editor.current_lesson.pages.push(_new_page);
-            $scope.model.editor.current_page_index = $scope.model.editor.pages.length - 1;
+            $scope.model.editor.current_page_index = $scope.model.editor.current_lesson.pages.length - 1;
             if ($scope.model.editor.current_page_index < 0) {
                 $scope.model.editor.current_page_index = 0;
             }
+            setTimeout(function() {
+                $scope.$apply();
+                $scope.add_variant($scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].type);
+            });
+
             $scope.model.editor.loading = false;
         }, function(error) {
             $scope.model.editor.loading = false;
@@ -203,6 +217,7 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
 
     $scope.change_page = function($index, $event) {
         $scope.model.editor.current_page_index = $index;
+        $scope.model.editor.current_lesson.check();
     };
 
 
@@ -295,18 +310,22 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
                     }
                 );
         }
-
         if (type == 'text') {
             var _variant = {
+                code_errors: {},
+                is_correct: true,
+                number: 1,
                 text: ""
             };
             $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index]
                 .new_variant(_variant).then(
                     function(data) {
-                        _variant = data;
-                        $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].variants.push(_variant);
-                        $scope.$apply();
-                        $scope.model.editor.loading = false;
+                        $scope.reload_lesson(function() {
+                            $scope.model.editor.loading = false;
+                        });
+                        //$scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].variants.push(data);
+                        //$scope.$apply();
+                        
                     },
                     function(error) {
                         $log.error("Ошибка создания нового варианта ответа. ", error);

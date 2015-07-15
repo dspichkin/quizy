@@ -102,7 +102,7 @@ _.assign(Page.prototype, {
         }
         var _is_correct_variants = true;
         for (var i = 0, len = this.variants.length; i < len; i++) {
-            if (!this.variants[i].text || this.variants[i].text == "") {
+            if (this.variants[i].text == "") {
                 this.add_error('301');
                 _is_correct_variants = false;
             }

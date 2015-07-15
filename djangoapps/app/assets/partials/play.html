@@ -15,35 +15,48 @@
                     Вопрос №{{model.play.lesson.pages[model.play.current_page_index].number}}
                 </div>
 
-                <div style="margin: 20px;" ng-bind-html="model.lesson.pages[model.current_page_index].text"></div>
+                <div class="question_text"ng-bind-html="model.play.lesson.pages[model.play.current_page_index].text"></div>
 
-                <div ng-if="model.lesson.pages[model.current_page_index].type == 'radiobox'" class="variant_radiobox" style="position: absolute;
-    bottom: 80px;
-    min-height: 100px;">
-                    <ul class="radio_variants">
-                        <li ng-repeat="item in model.lesson.pages[model.current_page_index].variants" class="variant" style="margin: 20px;">
-                            
-                            <input class="variant_text_radio" type="radio"
-                                ng-model="item.answer"
-                                name="radiobox"
-                                ng-value="true"
-                                ng-change="answer_ready(item.id)"
-                                >
-                            <span style="margin: 0 0 0 15px;">{{item.text}}</span>
-                        </li>
-                    </ul>
+
+                <div ng-if="model.play.lesson.pages[model.play.current_page_index].type == 'text'" class="variant_text" style="width: 100%;
+    padding: 0px 20px 10px 20px;">
+                    <md-input-container style="text-align: left;">
+                        <label>Введите ответ</label>
+                            <input class="variant_text" type="text" 
+                            ng-model="model.play.attempt.answer_steps[model.play.current_page_index].text_answer"
+                            ng-change="answer_ready(item.id)"
+                            >
+                        </md-input-container>
                 </div>
 
 
-                <div ng-if="model.lesson.pages[model.current_page_index].type == 'checkbox'" class="variant_checkbox">
+
+
+                <div ng-if="model.play.lesson.pages[model.play.current_page_index].type == 'radiobox'" class="variant_radiobox">
+                    <div class="radio_variants">
+                        <md-radio-group ng-model="tempdata.radiobox_answer" ng-change="answer_ready()">
+                            <md-radio-button ng-repeat="item in model.play.lesson.pages[model.play.current_page_index].variants"
+                                               ng-value="item.id"
+                                               aria-label="{{item.text}}" class="variant">
+                                  <span style="margin: 0 0 0 15px;">{{item.text}}</span>
+                            </md-radio-button>
+                        </md-radio-group>
+                    </div>
+                </div>
+
+
+                <div ng-if="model.play.lesson.pages[model.play.current_page_index].type == 'checkbox'" class="variant_checkbox">
                     <ul class="checkbox_variants">
-                        <li ng-repeat="item in model.lesson.pages[model.current_page_index].variants" class="variant">
-                            <input class="variant_text_checkbox" type="checkbox" 
-                                name="checkbox"
-                                ng-model="item.answer"
-                                ng-change="answer_ready(item.id)"
-                                >
-                            {{item.text}}
+                        <li ng-repeat="item in model.play.lesson.pages[model.play.current_page_index].variants" class="variant">
+                            <div style="clear:both;">
+                            <md-checkbox class="variant_text_checkbox" ng-model="item.answer" type="checkbox" aria-label="Checkbox" value="{{item.answer}}" 
+                                ng-true-value="true"
+                                ng-false-value="false"
+                                ng-change="answer_ready()"
+                                style="float: left;margin: 15px 0px 0px 0px;">
+                                {{item.text}}
+                            </md-checkbox>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -57,7 +70,7 @@
                                 class="question_panel">
                                 <div class="question_title">{{variant.text}}</div>
                                 <div class="dropable question_dropable">
-                                    <div drag class="dragable question_dragable" action="make_answer" data-id="{{variant.id}}">{{variant.text}}</div>
+                                    <div drag class="dragable question_dragable" action="make_answer_for_pairs" data-id="{{variant.id}}">{{variant.text}}</div>
                                 </div>
 
                             </div>
@@ -103,15 +116,15 @@
             </div>
 
         </div>
-
-        <div ng-if="model.play.current_page_index == model.play.lesson.pages.length">
-            Номер попытки: {{model.play.result.number_of_attempt}}<br>
+        <!-- вывод резултата -->
+        <div class="shadow reflexy_panel" ng-if="model.play.current_page_index == model.play.lesson.pages.length">
+            <h3>Номер попытки: {{model.play.attempt.number_of_attempt}}</h3>
             Результат: 
-            <span ng-if="model.success == false">Не успешно</span>
-            <span ng-if="model.success == true">Успешно</span>
+            <span ng-if="model.play.success == false">Не успешно</span>
+            <span ng-if="model.play.success == true">Успешно</span>
 
             <ul>
-                <li ng-repeat="page in model.play.lesson.pages">
+                <li class="reflexy_step" ng-repeat="page in model.play.lesson.pages">
                     {{page.number}}
                     <span>
                         {{page.text | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}

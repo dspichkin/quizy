@@ -10,32 +10,32 @@
                     <div style="clear:both;margin: -17px 0 0 0;
                         display: inline-block;
                         width: 100%;">
-                    <input class="variant_text_radio" 
-                        type="radio"
-                        ng-model="item.right_answer"
-                        name="radiobox"
-                        ng-value="true" 
-                        ng-checked="item.right_answer == true"
-                        ng-change="finish_changed_variant(item.id)"
-                        style="float: left;margin: 34px 25px 0px 0;"
-                        >
-                    <md-input-container style="text-align: left;
-                        width: 82%;
-                        float: left;">
-                        <label>Вариант ответа</label>
+                        <input class="variant_text_radio" 
+                            type="radio"
+                            ng-model="item.right_answer"
+                            name="radiobox"
+                            ng-value="true" 
+                            ng-checked="item.right_answer == true"
+                            ng-change="finish_changed_variant(item.id)"
+                            style="float: left;margin: 34px 25px 0px 0;"
+                            >
+                        <md-input-container style="text-align: left;
+                            width: 82%;
+                            float: left;">
+                            <label>Вариант ответа</label>
 
-                        <input class="variant_text" type="text" ng-model="item.text"
-                            ng-change="make_dirty_data()"
-                            ng-model-onblur ng-blur="finish_changed_variant(item.id)">
-                    </md-input-container>
+                            <input class="variant_text" type="text" ng-model="item.text"
+                                ng-change="make_dirty_data()"
+                                ng-model-onblur ng-blur="finish_changed_variant(item.id)">
+                        </md-input-container>
                     
-                    <button class="btn" style="width: 28px;
-                        padding: 4px;
-                        height: 28px;
-                        margin: 28px 0px 0 25px;"
-                        ng-click="remove_variant(item.id)">
-                        <i class="glyphicon glyphicon-remove"></i>
-                    </button>
+                        <button class="btn" style="width: 28px;
+                            padding: 4px;
+                            height: 28px;
+                            margin: 28px 0px 0 25px;"
+                            ng-click="remove_variant(item.id)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
                     </div>
                 </li>
             </ul>
@@ -47,32 +47,32 @@
 
             <ul class="checkbox_variants">
                 <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" class="variant">
-                    <div style="clear:both;margin: -17px 0 0 0;
+                    <div style="clear:both;margin: 10px 0 0 0;
                         display: inline-block;
                         width: 100%;">
-                    <md-checkbox ng-model="item.right_answer" aria-label="Checkbox 1" value="{{item.right_answer}}" 
-                        ng-init="item.right_answer == true"
-                        ng-true-value="true"
-                        ng-false-value="false"
-                        ng-change="finish_changed_variant(item.id)"
-                        style="float: left;margin: 30px 16px 0px 0px;">
-                    </md-checkbox>
+                        <md-checkbox ng-model="item.right_answer" aria-label="Checkbox 1" value="{{item.right_answer}}" 
+                            ng-init="item.right_answer == true"
+                            ng-true-value="true"
+                            ng-false-value="false"
+                            ng-change="finish_changed_variant(item.id)"
+                            style="float: left;margin: 30px 16px 0px 0px;">
+                        </md-checkbox>
 
-                    <md-input-container style="text-align: left;
-                        width: 82%;
-                        float: left;">
-                        <label>Вариант ответа</label>
-                        <input class="variant_text" type="text" ng-model="item.text"
-                            ng-change="make_dirty_data()"
-                            ng-model-onblur ng-blur="finish_changed_variant(item.id)">
-                    </md-input-container>
-                    <button class="btn" style="width: 28px;
-                        padding: 4px;
-                        height: 28px;
-                        margin: 28px 0px 0 25px;"
-                        ng-click="remove_variant(item.id)">
-                        <i class="glyphicon glyphicon-remove"></i>
-                    </button>
+                        <md-input-container style="text-align: left;
+                            width: 82%;
+                            float: left;">
+                            <label>Вариант ответа</label>
+                            <input class="variant_text" type="text" ng-model="item.text"
+                                ng-change="make_dirty_data()"
+                                ng-model-onblur ng-blur="finish_changed_variant(item.id)">
+                        </md-input-container>
+                        <button class="btn" style="width: 28px;
+                            padding: 4px;
+                            height: 28px;
+                            margin: 28px 0px 0 25px;"
+                            ng-click="remove_variant(item.id)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
                     </div>
                 </li>
             </ul>
