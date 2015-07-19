@@ -4,7 +4,7 @@ ROOT=`pwd`
 name=django
 prefix=quizy
 
-socket=/var/run/$prefix-$name.sock 
+socket=/tmp/$prefix-$name.sock 
 pidfile=$ROOT/logs/run/$name.pid 
 errlog=$ROOT/logs/$name.error.log
 python=$WORKON_HOME/test/bin/python
