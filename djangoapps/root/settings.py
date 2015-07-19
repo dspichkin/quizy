@@ -213,7 +213,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'default',
-            'filename': os.path.join(LOGS_ROOT, 'lms.log')
+            'filename': os.path.join(LOGS_ROOT, 'quizy.log')
         },
         'billing': {
             'level': 'DEBUG',
