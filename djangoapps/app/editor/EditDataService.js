@@ -15,7 +15,6 @@ module.exports = ['$http', function($http) {
     };
 
     var _new_lesson = function(data) {
-        console.log(data)
         return $http.post(url_lessons, data);
     };
 
