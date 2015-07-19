@@ -36,13 +36,13 @@ class EmailConfirmationAdmin(admin.ModelAdmin):
 class AccountAdmin(UserAdmin):
     list_display = ('username', 'account_type', 'number_of_pupil', 'is_active', 'verified', 'is_superuser')
     fieldsets = UserAdmin.fieldsets
-    add_fieldsets = (
+    extra_fieldsets = (
         (u'Дополнения', {
             'classes': ('wide',),
             'fields': ('middle_name', 'avatar', 'account_type', 'pupils')}
         ),
     )
-    fieldsets += (add_fieldsets)
+    fieldsets += (extra_fieldsets)
 
 class SystemMessageAdmin(admin.ModelAdmin):
     pass
