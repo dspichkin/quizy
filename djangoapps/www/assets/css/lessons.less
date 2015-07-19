@@ -1,0 +1,176 @@
+@primary_color: #4988c9;
+@secondary_color: #ff9e37;
+
+
+.lesson {
+    .lesson_panel {
+        background-color: white;
+        height:100%;
+        width: 90%;
+        display: inline-block;
+        margin-top: -50px;
+
+        .lessons_teacher {
+            min-height: 100px;
+        }
+
+        .lessons_pupil {
+            min-height: 100px;
+
+            .play_lesson_btn {
+                border: 1px solid grey;
+                width: 48px;
+                height: 48px;
+                padding: 10px 0 0 0;
+                vertical-align: middle;
+                border-radius: 50%;
+                background-clip: padding-box;
+                box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            }
+        }
+
+        .lessons_header {
+            height: 70px;
+            border-bottom: 1px solid #c3c3c3;
+            padding: 8px 0 8px 0;
+
+            .mylesson_title {
+                height: 100%;
+                font-size: 20px;
+                padding: 7px 0 0 11px;
+                border-right: 1px solid #c3c3c3;
+                text-align: left;
+            }
+
+            .search_panel {
+                text-align: left;
+                padding: 7px 0px 0px 10px;
+                cursor:pointer;
+
+                label {
+                    font-weight:300;
+                }
+
+                .md-input-focused label {
+                    color: @secondary_color;
+                }
+                md-input-container .md-input {
+                    border-width: 0;
+                }
+            }
+        }
+        .table {
+            .lesson_incorrect {
+                height: 100%;
+                width: 4px;
+                background-color: red;
+                display: block;
+                left: 0;
+                top: 0;
+                position: absolute;
+            }
+            .lesson_correct {
+                height: 100%;
+                width: 4px;
+                background-color: green;
+                display: block;
+                left: 0;
+                top: 0;
+                position: absolute;
+            }
+            .table_th {
+                height: 60px;
+                vertical-align: middle;
+                padding: 0px 0px 0px 12px;
+            }
+        }
+    }
+    .fab-add-lesson {
+        background-color: #FF9E37;
+        position: absolute;
+        right: 150px;
+        top: -28px;
+        border: initial;
+        z-index: 20;
+        line-height: 56px;
+        min-width: 0;
+        width: 56px;
+        height: 56px;
+        vertical-align: middle;
+        border-radius: 50%;
+        background-clip: padding-box;
+        overflow: hidden;
+        transition: .2s linear;
+        transition-property: background-color,box-shadow;
+
+        &:active {
+            box-shadow: initial;
+        }
+
+
+    }
+
+    .fab-add-lesson-menu {
+        
+    }
+
+    .enroll_pupil {
+        display: flex;
+        width: 400px;
+        overflow: auto;
+
+            
+        .td_enroll_pupils {
+            width: 220px;
+            text-align:left;
+            overflow:auto;
+        }
+
+        .remove_enroll {
+            display: inline-block;
+            margin: 3px 6px 0 0px;
+            cursor: pointer;
+            float: left;
+            .icon-remove-enroll {
+                font-size: 16px;
+                &:hover {
+                    background-color: #d3d3d3;
+                }
+            }
+
+        }
+        .enroll_result {
+            width: 200px;
+        }
+        .enroll_data {
+            margin: 4px 9px 0px 27px;
+        }
+        .enroll_success {
+            background-image: url('/assets/img/stats.png');
+            background-repeat: no-repeat;
+            width: 20px;
+            background-size: cover;
+            height: 30px;
+            background-position-x: -3px;
+            float: left;
+        }
+        .enroll_fail {
+            background-image: url('/assets/img/stats.png');
+            background-repeat: no-repeat;
+            width: 20px;
+            background-size: cover;
+            height: 30px;
+            background-position-x: -65px;
+            float: left;
+        }
+        .enroll_undone {
+            background-image: url('/assets/img/stats.png');
+            background-repeat: no-repeat;
+            width: 20px;
+            background-size: cover;
+            height: 30px;
+            background-position-x: -33px;
+            float: left;
+        }
+    }
+}

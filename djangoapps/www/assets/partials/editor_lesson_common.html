@@ -1,0 +1,92 @@
+<div class="lesson_common" style="">
+    <div class="shadow" style="margin: 20px 15px 20px 15px;
+                background-color: white;
+                min-width: 620px;">
+        <div class="incorrect_lesson" ng-if="model.editor.current_lesson.is_correct==false"></div>
+        <div class="correct_lesson" ng-if="model.editor.current_lesson.is_correct==true" ></div>
+
+        <div class="editor_main_panel_title" style="position: relative;width:100%;height:60px;padding: 22px 0 0 0;">
+            <div class="" style="float: left;font-size: 20px;text-align: left;    margin: 0 60px 0px 38px;
+                font-weight: 500;">
+                <span ng-if="model.editor.new_lesson == true">Новый урок</span>
+                <span ng-if="model.editor.new_lesson == false && model.editor.current_lesson.is_correct == true" style="font-size:18px;color:#4988c9;cursor:pointer;text-decoration: underline;" ng-click="main.go_test_play(model.editor.current_lesson.id)">Запустить урок</span>
+
+            </div>
+
+             <div class="col-md-1 pull-right" style="">
+                <div class="shadow btn-round"  ng-if="model.editor.new_lesson == false" ng-click="delete_current_lesson($event)"><a class="icon-delete"  href="#" style="opacity: 0.2;height: 27px;float:left;"></a>
+                </div>
+                <div class="shadow btn-round" ng-if="model.editor.new_lesson == true" ng-click="finish_changed_lesson()"><a class="icon-save"  href="#" style="opacity: 0.2;height: 27px;float:left;"></a>
+                </div>
+            </div>
+
+             <div class="" style="
+                cursor: pointer;
+                margin: 3px 10px 0px 10px;
+                width: 340px;
+                float: right
+                ">
+                <md-switch ng-model="model.editor.current_lesson.is_active" aria-label="Lesson active" ng-true-value="false" ng-false-value="true" class="md-warn" style="margin:0;float:left;"
+                ng-change="finish_changed_lesson()">
+                </md-switch>
+
+                <div class="" style="font-size: 18px;text-align:left;
+                    font-weight: 300;" ng-if="model.editor.current_lesson.is_active == true">
+                    Урок доступен для назначения
+                </div>
+                <div class="" style="font-size: 18px;
+                    text-align:left;
+                    font-weight: 300;margin: 0 0 0 -20px;" ng-if="model.editor.current_lesson.is_active == false">
+                    Урок недоступен для назначения
+                </div>
+            </div>
+            
+            
+            <div class="activity" style="right: 100px;
+        top: 76px;
+        position: absolute;">
+                <div ng-show="model.editor.loading">Сохранение...</div>
+                <div ng-show="model.editor.unsaved">Изменения не сохранены...</div>
+            </div>
+
+        </div>
+
+        <div style="margin: 20px 0 15px 15px;">
+            <div style="width:100%;height:70px;padding: 10px 20px 10px 20px;">
+                <md-input-container style="text-align: left;">
+                    <label>Название урока</label>
+                    <input class="lesson_name" type="text" 
+                            ng-model="model.editor.current_lesson.name"
+                            ng-change="make_dirty_data()"
+                            ng-model-onblur ng-blur="finish_changed_lesson()">
+                </md-input-container>
+            </div>
+
+            <div style="width:100%;padding: 10px 20px 10px 20px;height: 188px;">
+                <md-input-container  style="text-align: left;">
+                    <label>Описание урока</label>
+                    <textarea ng-model="model.editor.current_lesson.description" columns="3" 
+                    md-maxlength="1500"
+                    ng-change="make_dirty_data()"
+                    ng-model-onblur ng-blur="finish_changed_lesson()"
+                    ></textarea>
+                </md-input-container>
+            </div>
+
+            <div style="width:100%;padding: 10px 20px 10px 20px;height: 188px;text-align: left;display: inline-table;">
+                <div>
+                    <div ripple class="shadow btn-primary" accept="image/*" ngf-accept="'image/*'" ngf-select ngf-change="upload($files, $event)">Картинка урока
+                         <div style="height:2px;width:100%;background-color:red;"
+                         ng-style="{width: progressUpload}"></div>
+                    </div>
+                    <div class="remove_lesson_picture" ng-if="model.editor.current_lesson.picture" ng-click="remove_lesson_picture()">Удалить картику</div>
+                </div>
+                <md-card class="picture_lesson" ng-if="model.editor.current_lesson.picture" style="max-width: 200px;">
+                    <img ng-src="{{model.editor.current_lesson.picture}}" class="md-card-image" alt="Picture lesson">
+                </md-card>
+            </div>
+        </div>
+    </div>
+
+</div>
+

@@ -1,0 +1,77 @@
+<div class="profile" style="min-height:450px;text-align:center">
+<!--<h1>Профиль пользователя {{ user.username }}</h1>-->
+<div class="shadow profile_panel">
+    <div class="profile_header">
+        <div ng-click="main.go_home_page()" class="close_profile"><i class="material-icons" style="font-size: 35px;">close</i></div>
+
+        <div class="avatar_panel">
+            <div class="avatar_image"></div>
+            <div class="shadow btn_change_avatar_image" ripple>
+                <i class="material-icons insert_photo">insert photo</i>
+            </div>
+        </div>
+    </div>
+    <div class="profile_content">
+        <div class="data_unsave pull-left"><span ng-if="model.profile.is_dirty_data==true">Изменения не сохранены</span></div>
+        <button class="btn btn-primary btn_change_password pull-right" ng-click="change_password($event)">
+            Сменить пароль
+        </button>
+
+
+        <div class="label_container">
+            <div class="shadow edit_password" ripple><i class="material-icons">edit</i></div>
+            <md-input-container  style="text-align: left;">
+                <label>Ваш аккаунт</label>
+                <input ng-model="model.profile.user.email"
+                readonly="readonly" 
+                >
+            </md-input-container>
+        </div>
+
+        <div class="label_container">
+                <span class="type_account_label">Тип аккаунта</span>
+                <md-select class="type_account_select" placeholder="State" ng-model="model.profile.account_type" ng-change="save_account_type()">
+                    <md-option ng-repeat="value in model.profile.account_type_choice" value="{{value}}">{{value}}</md-option>
+                </md-select>
+
+        </div>
+
+        <div class="label_container">
+            <md-input-container  style="text-align: left;">
+                <label>Укажите ваше имя</label>
+                <input ng-model="model.profile.user.first_name" 
+                md-maxlength="100"
+                ng-change="make_data_dirty()"
+                ng-model-onblur ng-blur="save_account()"
+                >
+            </md-input-container>
+        </div>
+
+        <div class="label_container">
+            <md-input-container  style="text-align: left;">
+                <label>Укажите вашу фамилию</label>
+                <input ng-model="model.profile.user.last_name"
+                md-maxlength="100"
+                ng-change="make_data_dirty()"
+                ng-model-onblur ng-blur="save_account()"
+                >
+            </md-input-container>
+        </div>
+
+        <div class="label_container">
+            <md-input-container  style="text-align: left;">
+                <label>Укажите ваше отчество</label>
+                <input ng-model="model.profile.user.middle_name"
+                md-maxlength="100"
+                ng-change="make_data_dirty()"
+                ng-model-onblur ng-blur="save_account()"
+                >
+            </md-input-container>
+        </div>
+
+         
+
+    </div>
+</div>
+</div>
+

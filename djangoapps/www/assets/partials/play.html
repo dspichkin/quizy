@@ -1,0 +1,160 @@
+<div class="play">
+    
+    <div class="play_panel" style="
+    height: 100%;
+    width: 90%;
+    display: inline-block;
+    margin-top: -50px;">
+
+
+        <div ng-if="model.play.current_page_index < model.play.attempt.lesson.pages.length">
+            <div class="shadow" style="float:left;width: 65%;background-color: white;text-align: left;
+    padding: 20px;min-height: 400px;position: relative;">
+
+                <div style="font-size: 17px;font-weight: 500;">
+                    Вопрос №{{model.play.attempt.lesson.pages[model.play.current_page_index].number}}
+                </div>
+
+                <div class="question_text"ng-bind-html="model.play.attempt.lesson.pages[model.play.current_page_index].text"></div>
+
+                <div class="question_picture" style="max-width: 200px;margin: 0 0 20px 0;" ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].picture">
+                    <img  style="width: 200px;" ng-src="{{model.play.attempt.lesson.pages[model.play.current_page_index].picture}}" />
+                </div>
+
+
+                <div ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].type == 'text'" class="variant_text" style="width: 100%;padding: 0px 20px 10px 20px;">
+
+                    <ul>
+                        <li ng-repeat="item in model.play.attempt.lesson.pages[model.play.current_page_index].variants" class="variant">
+                            <div style="clear:both;margin: -17px 0 0 0;">
+                                <md-input-container style="text-align: left;">
+                                <label>Введите ответ</label>
+                                    <input class="variant_text" type="text" 
+                                    ng-model="tempdata.text_answer_temp"
+                                    ng-change="answer_text(item.id)"
+                                    >
+                                </md-input-container>
+                            </div>
+                        </li>
+                    </ul>
+
+
+                    
+                </div>
+
+
+
+
+                <div ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].type == 'radiobox'" class="variant_radiobox">
+                    <div class="radio_variants">
+                        <md-radio-group ng-model="tempdata.radiobox_answer" ng-change="answer_ready()">
+                            <md-radio-button ng-repeat="item in model.play.attempt.lesson.pages[model.play.current_page_index].variants"
+                                               ng-value="item.id"
+                                               aria-label="{{item.text}}" class="variant">
+                                  <span style="margin: 0 0 0 15px;">{{item.text}}</span>
+                            </md-radio-button>
+                        </md-radio-group>
+                    </div>
+                </div>
+
+
+                <div ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].type == 'checkbox'" class="variant_checkbox">
+                    <ul class="checkbox_variants">
+                        <li ng-repeat="item in model.play.attempt.lesson.pages[model.play.current_page_index].variants" class="variant">
+                            <div style="clear:both;">
+                            <md-checkbox class="variant_text_checkbox" ng-model="item.answer" type="checkbox" aria-label="Checkbox" value="{{item.answer}}" 
+                                ng-true-value="true"
+                                ng-false-value="false"
+                                ng-change="answer_ready()"
+                                style="float: left;margin: 15px 0px 0px 0px;">
+                                {{item.text}}
+                            </md-checkbox>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+
+                <div ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].type == 'pairs'" class="variant_checkbox">
+
+                    <div class="pairs_panel">
+                        <div style="float:left;">
+                            <div ng-repeat="variant in model.play.attempt.lesson.pages[model.play.current_page_index].variants" ng-if="variant.pair_type=='question'"
+                                class="question_panel">
+                                <div class="question_title">{{variant.text}}</div>
+                                <div class="dropable question_dropable">
+                                    <div drag class="dragable question_dragable" action="make_answer_for_pairs" data-id="{{variant.id}}">{{variant.text}}</div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div style="float:right;display:block;">
+
+                            <div ng-repeat="variant in model.play.attempt.lesson.pages[model.play.current_page_index].variants" ng-if="variant.pair_type=='answer'" class="answer_panel">
+                                <div class="dropable answer_dropable" data-id="{{variant.id}}"></div>
+                                <div class="answer_title" style="">{{variant.text}}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    
+                </div>
+
+
+                <div style="position: absolute;
+                    bottom: 20px;
+                    right: 20px;">
+
+                    <div class="shadow btn-secondary btn-disabled" ng-if="!model.play.next_question">ПОДТВЕРДИТЕ ОТВЕТ
+                    </div>
+                    <div ripple class="shadow btn-secondary" ng-if="model.play.next_question"
+                        ng-click="next_question($event)">ПОДТВЕРДИТЕ ОТВЕТ
+                    </div>
+                </div>
+            </div>
+
+            <div class="shadow" style="float: left;
+                width: 25%;
+                background-color: white;
+                min-height: 300px;
+                margin: 0 0 20px 20px;
+                padding: 25px;
+                text-align: left;">
+                <p style="font-size: 12px;">Прохождение урока</p>
+                <p style="font-size: 26px;font-weight: 500;">{{model.play.attempt.lesson.name}}</p>
+                <p>{{model.play.attempt.lesson.description}}</p>
+                <div ng-if="model.play.attempt.lesson.picture">
+                    <img ng-src="{{model.play.attempt.lesson.picture}}" style="width: 100%;">
+                </div>
+            </div>
+
+        </div>
+        <!-- вывод резултата -->
+        <div class="shadow reflexy_panel" ng-if="model.play.current_page_index == model.play.attempt.lesson.pages.length">
+            <h3>Номер попытки: {{model.play.attempt.number_of_attempt}}</h3>
+            Результат: 
+            <span ng-if="model.play.attempt.result.success==false" style="color: red;">Неверно</span>
+            <span ng-if="model.play.attempt.result.success==true" style="color: green;">Верно</span>
+            <ul>
+                <li class="reflexy_step" ng-repeat="item in model.play.attempt.result.steps" ng-style="item.success==false && {'background-color':'#FFE2E2'}">
+                    <span>
+                        {{get_page_by_id(item.page_id).text | htmlToPlaintext | limitTo: 25 }}{{get_page_by_id(item.page_id).text.length > 25 ? '...' : ''}}
+                    </span>
+                    <span style="float: right;width: 52px;">
+                    <span ng-if="item.success==false" style="color: red;">Неверно</span>
+                    <span ng-if="item.success==true" style="color: green;">Верно</span>
+                    </span>
+                </li>
+            </ul>
+
+            <div>
+                <div class="btn-primary" ng-if="model.play.attempt.result.success==false" ng-click="repeat()">Повторить</div>
+                <div class="btn-primary" ng-click="back()">Вернуться</div>
+            </div>
+        </div>
+
+    </div>
+</div>

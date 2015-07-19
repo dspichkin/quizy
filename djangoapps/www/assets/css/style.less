@@ -1,0 +1,71 @@
+@primary_color: #4988c9;
+@secondary_color: #ff9e37;
+
+
+
+html, body, .main {
+    height: 100%;
+}
+
+
+body, button, html, input, select, textarea {
+    font-family: Roboto,'Helvetica Neue',sans-serif;
+}
+
+div {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+ul {
+    list-style-type: none;
+}
+
+
+a, button, div, .btn, input, select, textarea {
+	
+  &:focus {
+	    outline: 0 none !important;
+	    border-color: none;
+		/* -webkit-box-shadow: none;*/
+		/* box-shadow: none;*/
+	}
+}
+
+.md-dialog-backdrop {
+    height: 1000%;
+}
+
+md-content {
+    background-color: initial !important;
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(/assets/fonts/material/MaterialIcons-Regular.eot); /* For IE6-8 */
+  src: local('Material Icons'),
+       local('MaterialIcons-Regular'),
+       url(/assets/fonts/material/MaterialIcons-Regular.woff2) format('woff2'),
+       url(/assets/fonts/material/MaterialIcons-Regular.woff) format('woff'),
+       url(/assets/fonts/material/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+
+@import 'fab.less';
+@import 'profile.less';
+@import 'icons.less';
+@import 'lessons.less';
+@import 'utils.less';
+@import 'menu.less';
+@import 'modal.less';
+@import 'login.less';
+@import 'main.less';
+@import 'common.less';
+@import 'editor.less';
+@import 'play.less';

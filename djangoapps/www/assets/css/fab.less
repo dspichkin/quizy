@@ -1,0 +1,58 @@
+.fab {
+	position: relative;
+
+    .fab_shadow {
+	    position: fixed;
+	    background-color: black;
+	    width: 1000%;
+	    height: 1000%;
+	    top: 0;
+	    left: 0;
+	    z-index: 1;
+	    opacity: 0.1;
+	    cursor: default;
+    }
+	.fab_menu {
+		position: absolute;
+		background-color: white;
+		z-index: 100;
+		box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+	}
+
+	.fab_menu_item {
+		line-height: 40px;
+		font-size: 15px;
+	    text-transform: none;
+		font-weight: 400;
+		border-bottom: 1px solid #c3c3c3;
+		padding: 5px 16px 5px 16px;
+
+		&:hover {
+			background-color: #e3eaf1;
+			cursor: pointer;
+		}
+	}
+	/*
+	.fab_menu {
+		transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+      	transition-duration: 200ms;
+      	transition-delay: 100ms;
+      	
+	    opacity: 1;
+	 }
+
+	.fab_menu.ng-hide-remove {
+	  	opacity: 0;
+	  	display: block !important;
+	}
+
+	.fab_menu.ng-hide-remove.ng-hide-remove-active {
+	  opacity: 1;
+	}
+	*/
+	
+}
+
+
+   
+
