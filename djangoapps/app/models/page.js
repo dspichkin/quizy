@@ -102,8 +102,10 @@ _.assign(Page.prototype, {
         this.code_errors[index] = _code_errors[index];
     },
     remove_error: function(index) {
-        if (this.code_errors.hasOwnProperty(index)) {
-            delete this.code_errors[index];
+        if (this.code_errors) {
+            if (this.code_errors.hasOwnProperty(index)) {
+                delete this.code_errors[index];
+            }
         }
     },
     check: function() {

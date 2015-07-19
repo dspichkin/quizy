@@ -48,7 +48,32 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
     $scope.reload_lesson = function(callback) {
         $data.get_lesson($stateParams.lesson_id).then(function(data) {
             var _is_correct = data.data.is_correct;
-            $scope.model.editor.current_lesson = new Lesson(data.data);
+            var l = new Lesson(data.data);
+            // изменяет variants для pairs
+            for (var x = 0, lenx = l.pages.length; x < lenx; x++) {
+
+                if (l.pages[x].type == 'pairs') {
+                    var _raw_variants = l.pages[x].variants;
+                    var _new_variants = [];
+                    for (var i = 0, len = _raw_variants.length; i < len; i++) {
+                        if (_raw_variants[i].pair_type == "answer") {
+                            var _answer = _raw_variants[i];
+                            var _page;
+                            for (var j = 0, len = _raw_variants.length; j < len; j++) {
+                                if (_raw_variants[j].id == _answer.pair) {
+                                    _page = _raw_variants[j];
+                                    _page.pair_object = _answer;
+
+                                    _new_variants.push(_page);
+                                }
+                            }
+                        }
+                    }
+                    l.pages[x].variants = _new_variants;
+                }
+            }
+
+            $scope.model.editor.current_lesson = l;
             // проверяем на правильность во время загрузки
             var _c = $scope.model.editor.current_lesson.is_correct;
             $scope.model.editor.current_lesson.check();
