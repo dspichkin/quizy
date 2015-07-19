@@ -25,7 +25,7 @@ SECRET_KEY = '$8*$lla@97l1(l&r+*--yf==op-(bvwr90*&3#_*=(sthoo2^_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -47,9 +47,9 @@ INSTALLED_APPS = (
 
     'users',
     'users.account',
-    'users.socialaccount',
+    # 'users.socialaccount',
     # 'users.socialaccount.providers.facebook',
-    'users.socialaccount.providers.google',
+    # 'users.socialaccount.providers.google',
     # 'users.socialaccount.providers.linkedin',
     # 'users.socialaccount.providers.twitter',
     # 'users.socialaccount.providers.vk',
@@ -67,6 +67,14 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'root.urls'
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    # Required by `allauth` template tags
+    'django.core.context_processors.request',
+    # `allauth` specific context processors
+    'allauth.account.context_processors.account',
+    'allauth.socialaccount.context_processors.socialaccount',
+)
 
 TEMPLATES = [
     {
@@ -205,7 +213,7 @@ LOGGING = {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'default',
-            'filename': os.path.join(LOGS_ROOT, 'lms.log')
+            'filename': os.path.join(LOGS_ROOT, 'quizy.log')
         },
         'billing': {
             'level': 'DEBUG',

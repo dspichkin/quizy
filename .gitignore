@@ -10,7 +10,7 @@ logs/
 /djangoapps/*.db
 temp/
 
-/www/assets
+/djangoapps/www/assets
 /uploads
 /djangoapps/uploads
 settings_local*
