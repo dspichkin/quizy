@@ -78,13 +78,20 @@
             </ul>
         </div>
         <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'text'" class="variant_text" style="padding:20px;">
-            <md-input-container style="text-align: left;">
-            <label>Правильный ответ</label>
-                <input class="variant_text" type="text" 
-                ng-model="model.editor.current_lesson.pages[model.editor.current_page_index].variants[0].text"
-                ng-change="make_dirty_data()"
-                ng-model-onblur ng-blur="finish_changed_page_text()">
-            </md-input-container>
+            
+            <ul>
+                <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" class="variant">
+                    <div style="clear:both;margin: -17px 0 0 0;">
+                        <md-input-container style="text-align: left;">
+                        <label>Правильный ответ</label>
+                            <input class="variant_text" type="text" 
+                            ng-model="item.text"
+                            ng-change="make_dirty_data()"
+                            ng-model-onblur ng-blur="finish_changed_page_text()">
+                        </md-input-container>
+                    </div>
+                </li>
+            </ul>
         </div>
 
         <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'pairs'" class="variant_pairs">
@@ -97,7 +104,7 @@
                         display: inline-block;
                         width: 100%;">
                         <md-input-container style="text-align: left;width:43%;float: left;">
-                            <label>Левая половиная ответа (перетаскиваемая)</label>
+                            <label>Левая половиная ответа</label>
 
                                 <input class="variant_pair_page" style="width:100%;"
                                     type="text"
@@ -118,6 +125,8 @@
                             <i class="glyphicon glyphicon-remove"></i>
                         </button>
                     </div>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

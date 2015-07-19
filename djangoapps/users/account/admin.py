@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+#
 import django
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
 from .models import (Account,
     EmailConfirmation, SystemMessage)
@@ -30,9 +33,16 @@ class EmailConfirmationAdmin(admin.ModelAdmin):
     # raw_id_fields = ('user__email',)
 
 
-class AccountAdmin(admin.ModelAdmin):
+class AccountAdmin(UserAdmin):
     list_display = ('username', 'account_type', 'number_of_pupil', 'is_active', 'verified', 'is_superuser')
-
+    fieldsets = UserAdmin.fieldsets
+    add_fieldsets = (
+        (u'Дополнения', {
+            'classes': ('wide',),
+            'fields': ('middle_name', 'avatar', 'account_type', 'pupils')}
+        ),
+    )
+    fieldsets += (add_fieldsets)
 
 class SystemMessageAdmin(admin.ModelAdmin):
     pass

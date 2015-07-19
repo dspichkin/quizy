@@ -37,7 +37,7 @@ class VariantSerializer(serializers.ModelSerializer):
 
 
 class PageSerializer(serializers.ModelSerializer):
-    variants = VariantSerializer(many=True)
+    variants = VariantSerializer(many=True, read_only=True)
     code_errors = JSONField()
 
     class Meta:
@@ -53,11 +53,13 @@ class LessonEnrollSerializer(serializers.ModelSerializer):
 
 class EnrollSerializer(serializers.ModelSerializer):
     learner = UserSerializer(read_only=True)
-    result = JSONField()
+    created_by = UserSerializer(read_only=True)
+    data = JSONField()
     lesson = LessonEnrollSerializer(read_only=True)
 
     class Meta:
         model = LessonEnroll
+        exclude = ("data",)
 
 
 class LessonSerializer(serializers.ModelSerializer):

@@ -9,7 +9,7 @@
             <div class="" style="float: left;font-size: 20px;text-align: left;    margin: 0 60px 0px 38px;
                 font-weight: 500;">
                 <span ng-if="model.editor.new_lesson == true">Новый урок</span>
-                <span ng-if="model.editor.new_lesson == false && model.editor.current_lesson.is_correct == true" style="font-size:18px;color:#4988c9;cursor:pointer;text-decoration: underline;">Запустить урок</span>
+                <span ng-if="model.editor.new_lesson == false && model.editor.current_lesson.is_correct == true" style="font-size:18px;color:#4988c9;cursor:pointer;text-decoration: underline;" ng-click="main.go_test_play(model.editor.current_lesson.id)">Запустить урок</span>
 
             </div>
 
@@ -81,7 +81,7 @@
                     </div>
                     <div class="remove_lesson_picture" ng-if="model.editor.current_lesson.picture" ng-click="remove_lesson_picture()">Удалить картику</div>
                 </div>
-                <md-card class="picture_lesson" ng-if="model.editor.current_lesson.picture">
+                <md-card class="picture_lesson" ng-if="model.editor.current_lesson.picture" style="max-width: 200px;">
                     <img ng-src="{{model.editor.current_lesson.picture}}" class="md-card-image" alt="Picture lesson">
                 </md-card>
             </div>

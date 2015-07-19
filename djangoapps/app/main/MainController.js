@@ -131,9 +131,17 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         $scope.main.active_menu = 'lessons';
     };
 
-    $scope.main.go_play = function(lesson_id) {
+    $scope.main.go_play = function(enroll_id) {
         if (lesson_id) {
-            $location.path('/play/' + lesson_id + '/');
+            $location.path('/play/' + enroll_id + '/');
+            $scope.main.make_short_header();
+            $scope.main.active_menu = 'lessons';
+        }
+    };
+
+    $scope.main.go_test_play = function(lesson_id) {
+        if (lesson_id) {
+            $location.path('/play/demo/' + lesson_id + '/');
             $scope.main.make_short_header();
             $scope.main.active_menu = 'lessons';
         }
@@ -236,11 +244,12 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         }
         $scope.user.loaded = false;
         $http.post('/accounts/ajax-logout/').then(function(data) {
-            $scope.main.go_home_page()
+            $scope.main.go_home_page();
         }, function(error) {
             $log.error('Ошибка выхода', error);
         });
     };
+
 
 
     //===================================

@@ -97,7 +97,16 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             }
         })
         .state('play', {
-            url: "/play/:lesson_id/?",
+            url: "/play/:enroll_id/?",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/play.html",
+                    controller: 'PlayCtrl'
+                }
+            }
+        })
+        .state('play_demo', {
+            url: "/play/demo/:lesson_id/?",
             views: {
                 "main": {
                     templateUrl: "/assets/partials/play.html",

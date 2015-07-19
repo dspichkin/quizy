@@ -15,7 +15,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 class EnrollAdmin(admin.ModelAdmin):
-    list_display = ['learner', 'is_archive']
+    list_display = ['learner', 'created_by', 'success', 'is_archive']
     # list_editable = ['is_active']
     list_filter = ['lesson__name']
     search_fields = ('learner__username', 'learner__first_name', 'learner__last_name', 'learner__email')
@@ -33,11 +33,11 @@ class LessonAdmin(admin.ModelAdmin):
     readonly_fields = ('created_by',)
     fieldsets = (
         (None, {
-            'fields': ('name', 'description', 'is_active', 'picture', 'created_by')
+            'fields': ('name', 'description', 'is_active', 'picture', 'is_correct', 'created_by')
         }),
     )
 
-    list_display = ['created_by', 'name', 'is_active', ]
+    list_display = ['created_by', 'name', 'is_active', 'is_correct']
     # list_editable = ['is_active']
 
     # actions = ['delete_selected']

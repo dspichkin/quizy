@@ -10,8 +10,23 @@
         display: inline-block;
         margin-top: -50px;
 
-        .mylesson_list {
+        .lessons_teacher {
             min-height: 100px;
+        }
+
+        .lessons_pupil {
+            min-height: 100px;
+
+            .play_lesson_btn {
+                border: 1px solid grey;
+                width: 48px;
+                height: 48px;
+                padding: 10px 0 0 0;
+                vertical-align: middle;
+                border-radius: 50%;
+                background-clip: padding-box;
+                box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+            }
         }
 
         .lessons_header {
@@ -97,5 +112,65 @@
 
     .fab-add-lesson-menu {
         
+    }
+
+    .enroll_pupil {
+        display: flex;
+        width: 400px;
+        overflow: auto;
+
+            
+        .td_enroll_pupils {
+            width: 220px;
+            text-align:left;
+            overflow:auto;
+        }
+
+        .remove_enroll {
+            display: inline-block;
+            margin: 3px 6px 0 0px;
+            cursor: pointer;
+            float: left;
+            .icon-remove-enroll {
+                font-size: 16px;
+                &:hover {
+                    background-color: #d3d3d3;
+                }
+            }
+
+        }
+        .enroll_result {
+            width: 200px;
+        }
+        .enroll_data {
+            margin: 4px 9px 0px 27px;
+        }
+        .enroll_success {
+            background-image: url('/assets/img/stats.png');
+            background-repeat: no-repeat;
+            width: 20px;
+            background-size: cover;
+            height: 30px;
+            background-position-x: -3px;
+            float: left;
+        }
+        .enroll_fail {
+            background-image: url('/assets/img/stats.png');
+            background-repeat: no-repeat;
+            width: 20px;
+            background-size: cover;
+            height: 30px;
+            background-position-x: -65px;
+            float: left;
+        }
+        .enroll_undone {
+            background-image: url('/assets/img/stats.png');
+            background-repeat: no-repeat;
+            width: 20px;
+            background-size: cover;
+            height: 30px;
+            background-position-x: -33px;
+            float: left;
+        }
     }
 }

@@ -10,7 +10,7 @@ function Page(data) {
     if (data == undefined) {
         console.log("Неверное создание объекта page");
     }
-
+    /*
     if (data.type == 'pairs') {
         var _raw_variants = data.variants;
         var _new_variants = [];
@@ -19,16 +19,20 @@ function Page(data) {
                 var _answer = _raw_variants[i];
                 var _page;
                 for (var j = 0, len = _raw_variants.length; j < len; j++) {
+                    console.log(_raw_variants[j].id, _answer.pair)
                     if (_raw_variants[j].id == _answer.pair) {
                         _page = _raw_variants[j];
                         _page.pair_object = _answer;
-                        _new_variants.push(_page);
+
+                        //_new_variants.push(_page);
                     }
                 }
             }
         }
+        
         data.variants = _new_variants;
     }
+    */
 
     _.assign(this, data);
 }
@@ -77,6 +81,12 @@ _.assign(Page.prototype, {
             type: "DELETE"
         });
     },
+    remove_page_picture: function() {
+        return $.ajax({
+            url: 'api/pages/' + this.id + '/upload/',
+            type: "DELETE"
+        });
+    },
     serialize: function() {
         return JSON.stringify({
             id: this.id,
@@ -92,7 +102,9 @@ _.assign(Page.prototype, {
         this.code_errors[index] = _code_errors[index];
     },
     remove_error: function(index) {
-        delete this.code_errors[index];
+        if (this.code_errors.hasOwnProperty(index)) {
+            delete this.code_errors[index];
+        }
     },
     check: function() {
         if (!this.text || this.text == "") {
@@ -116,7 +128,6 @@ _.assign(Page.prototype, {
         } else {
             this.is_correct = true;
         }
-
     }
 
 });

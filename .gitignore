@@ -5,7 +5,7 @@ djangoapps/pepsi/static/compiled/*
 ._.DS_Store
 logs/
 /.idea*
-/*.db
+*.db
 *.sqlite3
 /djangoapps/*.db
 temp/

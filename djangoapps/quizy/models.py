@@ -2,6 +2,7 @@
 import os
 
 from uuid import uuid1
+from random import randrange
 
 from django.utils import timezone
 from django.db import models
@@ -49,7 +50,7 @@ class Course(BaseModel):
 def picture_upload(obj, fn):
     if obj.pk:
         fn, ext = os.path.splitext(fn)
-        return os.path.join('lessons', str(obj.pk), '%s' % 'lesson' + ext)
+        return os.path.join('lessons', str(obj.pk), '%s' % 'lesson_' + str(randrange(0, 9999)) + ext)
     else:
         raise Exception("Сохраните урок до загрузки изображения")
 
@@ -69,7 +70,7 @@ class Lesson(BaseModel):
     course = models.ForeignKey('Course', verbose_name='курс', blank=True, null=True)
 
     code_errors = JSONField('ошибки редактирования урока', default={}, blank=True, null=True)
-    is_correct = models.BooleanField('содержит ошибку?', default=True)
+    is_correct = models.BooleanField('урок составлен верно?', default=True)
 
     picture = ImageField(upload_to=picture_upload, blank=True, null=True)
 
@@ -91,11 +92,15 @@ class LessonEnroll(BaseModel):
     """
     learner = models.ForeignKey('account.Account', related_name='enrolls',
                                 verbose_name='обучаемый')
+    created_by = models.ForeignKey('account.Account', related_name='enroll_created',
+                                verbose_name='кто создал назначение')
     course = models.ForeignKey('Course', related_name='enrolls',
                             verbose_name='курс', blank=True, null=True)
     lesson = models.ForeignKey('Lesson', related_name='enrolls',
                             verbose_name='урок', blank=True, null=True)
-    result = JSONField('результат прохождения', default='{}')
+
+    data = JSONField('результат прохождения', default={})
+    last_data = models.DateTimeField('дата последней попытки', null=True, blank=True)
     number_of_attempt = models.IntegerField('кол-во попыток', default=0)
     success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
     is_archive = models.BooleanField('урок в архиве', default=False)
@@ -169,7 +174,7 @@ ANSWER_ERRORS = {
 def picture_question_upload(obj, fn):
     if obj.pk:
         fn, ext = os.path.splitext(fn)
-        return os.path.join('lessons', str(obj.lesson.pk), '%s_%s%s' % ('question', obj.id, ext))
+        return os.path.join('lessons', str(obj.lesson.pk), 'question_%s%s' % (str(obj.id) + '_' + str(randrange(0, 9999)), ext))
     else:
         raise Exception("Сохраните вопрос до загрузки изображения")
 
@@ -196,7 +201,7 @@ class Page(models.Model):
     text = models.TextField('Вопрос', blank=True, null=True)
     number = models.IntegerField('Порядок', default=1, blank=True, null=True)
 
-    question_picture = ImageField(upload_to=picture_question_upload, blank=True, null=True)
+    picture = ImageField(upload_to=picture_question_upload, blank=True, null=True)
 
     is_correct = models.BooleanField('правильность заполнения вопроса', default=True)
     code_errors = JSONField('коды ошибок', default={}, blank=True, null=True)

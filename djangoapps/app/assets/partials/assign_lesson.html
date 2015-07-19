@@ -1,6 +1,6 @@
 <md-dialog aria-label="assign" >
     <md-content style="min-width: 400px;
-    min-height: 300px;
+    min-height: 320px;
     padding: 20px;">
         <div ng-if="model.modal.loading">
             <div style="background-color: black;
@@ -21,29 +21,50 @@
                 z-index: 11;"></div>
         </div>
 
-        <div class="modal-content" style="margin-top: -20px;">
+        <div style="margin-top: -20px;" ng-if="model.modal_enroll.show_create_account==false">
             <h4>Назначение урока на ученика</h4>
-            <h4 ng-if="model.modal.show_invite">Приглашение ученика зарегистрироваться</h4>
-            <h4 ng-if="model.modal.show_error" style="color:red;">Ошибка</h4>
+
             <md-input-container>
                 <label>Введите email ученика:</label>
-                <input type="text" ng-model="model.modal.inputed_address" md-maxlength="100">
+                <input type="text" ng-model="model.modal_enroll.inputed_address" md-maxlength="100"
+                ng-change="change_inputed_address()">
             </md-input-container>
-            <div ng-if="model.modal.show_invite">
-                <p>Указаный вами email {{model.modal.inputed_address}} не найден среди зарегистрированных пользователей.</p>
-                <p>Хотите ввести email заново?</p>
-            </div>
-            <div ng-if="model.modal.show_error" style="color:red;">
-                <p>{{model.modal.error_message}}</p>
+            <div ng-if="model.modal_enroll.show_error" style="color:red;">
+                <p>{{model.modal_enroll.error_message}}</p>
             </div>
 
+            <md-content style="height: 100px;margin: -15px 0 0 0;">
+                <md-list>
+                     <md-list-item ng-repeat="item in model.modal_enroll.mypupils track by $index" style="    min-height: 10px;">
+                        <div class="enroll_select_email"  ng-click="select_pupil($index)">{{ item }}</div>
+                     </md-list-item>
+                </md-list>
+            </md-content>
+
         </div>
-        <div class="modal-footer" style="position: absolute;
+         <div ng-if="model.modal_enroll.show_create_account==false" 
+            class="modal-footer" style="position: absolute;
             bottom: 0;
             right: 0;
-            padding: 20px;">
-            <md-button class="md-raised" ng-click="ok()">OK</md-button>
+            padding: 20px;
+            width:100%;">
+            <md-button class="md-raised" ng-click="ok()" ng-disabled="submit_disabled==true">OK</md-button>
             <md-button class="md-raised" ng-click="closeDialog()">Отмена</md-button>
+        </div>
+         <div style="margin-top: -20px;" ng-if="model.modal_enroll.show_create_account==true">
+            <h4>Создание учетной записи</h4>
+            <p>Указаный вами email <b>{{model.modal_enroll.inputed_address}}</b>
+            не найден среди зарегистрированных учеников.</p>
+            <p>Создать для него новую учетную запись и автоматически назначить на нее урок?</p>
+        </div>
+        <div ng-if="model.modal_enroll.show_create_account==true" 
+            class="modal-footer" style="position: absolute;
+            bottom: 0;
+            right: 0;
+            padding: 20px;
+            width:100%;">
+            <md-button class="md-raised" ng-click="createAccount()">Да</md-button>
+            <md-button class="md-raised" ng-click="cancelCreateAccount()">Нет, не надо!</md-button>
         </div>
     </md-content>
 </md-dialog>

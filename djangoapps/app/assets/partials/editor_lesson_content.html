@@ -5,10 +5,10 @@
         <div class="shadow page_editor pull-left">
             <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].is_correct==false" class="incorrect_page_content"></div>
 
-            <p class="pull-left" style="padding:20px;font-size:20px;font-weight:400;">
+            <p class="pull-left" style="padding:20px;font-size:20px;font-weight:400;" ng-if="model.editor.current_lesson.pages.length > 0">
             Страница № {{model.editor.current_lesson.pages[model.editor.current_page_index].number}}
             </p>
-            <div class="col-md-1 pull-right" style="margin-right: 30px;margin-top: 10px;">
+            <div class="col-md-1 pull-right" style="margin-right: 30px;margin-top: 10px;" ng-if="model.editor.current_lesson.pages.length > 0">
                 <div class="shadow btn-round"  ng-if="model.editor.new_lesson == false" ng-click="delete_current_page($event)"><a class="icon-delete"  href="#" style="opacity: 0.2;height: 27px;float:left;"></a>
                 </div>
             </div>
@@ -28,24 +28,28 @@
 
                 <div style="width:100%;padding: 10px 20px 10px 20px;height: 188px;text-align: left;display: inline-table;">
                     <div>
-                        <div ripple class="shadow btn-primary" accept="image/*" ngf-accept="'image/*'" ngf-select ngf-change="upload($files, $event)">Картинка вопроса
+                        <div ripple class="shadow btn-primary" accept="image/*" ngf-accept="'image/*'" ngf-select ngf-change="page_picture_upload($files, $event)">Картинка вопроса
                              <div style="height:2px;width:100%;background-color:red;"
                              ng-style="{width: progressUpload}"></div>
                         </div>
                     </div>
-                    <div class="remove_question_picture" ng-if="model.editor.current_lesson.picture" ng-click="remove_lesson_picture()">Удалить картику</div>
-                    <md-card class="picture_lesson" ng-if="model.editor.current_lesson.picture">
-                        <img ng-src="{{model.editor.current_lesson.picture}}" class="md-card-image" alt="Picture question">
-                    </md-card>
+                    <div class="remove_question_picture" ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].picture" ng-click="remove_question_picture()">Удалить картику</div>
+                    <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].picture">
+                        <md-card class="picture_lesson" ng-if="model.editor.current_lesson.picture" style="max-width: 200px;">
+                            <img ng-src="{{model.editor.current_lesson.pages[model.editor.current_page_index].picture}}" class="md-card-image" alt="Картинка вопроса">
+                        </md-card>
+                    </div>
                 </div>
 
                 <div ng-include="'/assets/partials/editor_lesson_variants.html'"></div>
 
             </div>
-            <div style="" ng-if="model.editor.current_lesson.pages.length == 0">
+            <div style="min-height:100px;margin:20px;" ng-if="model.editor.current_lesson.pages.length == 0">
                 <p>В уроке нет созданный страниц. Создайте страницы через меню справа.</p>
             </div>
+
         </div>
+
 
 
         <div class="lesson_pages">

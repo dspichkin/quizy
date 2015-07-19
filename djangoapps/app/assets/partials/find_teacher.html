@@ -2,6 +2,7 @@
     <md-content style="min-width: 400px;
     min-height: 300px;
     padding: 20px;">
+        <!--
         <div ng-if="model.modal_find_teacher.loading">
             <div style="background-color: black;
                 width: 100%;
@@ -20,29 +21,29 @@
                 top: 28%;
                 z-index: 11;"></div>
         </div>
+        -->
+        <h4>Поиск преподователя</h4>
 
-        <div class="modal-content" style="margin-top: -20px;">
-            <h4>Назначение урока на ученика</h4>
-            <h4 ng-if="model.modal_find_teacher.show_invite">Приглашение ученика зарегистрироваться</h4>
-            <h4 ng-if="model.modal_find_teacher.show_error" style="color:red;">Ошибка</h4>
-            <md-input-container>
-                <label>Введите email ученика:</label>
-                <input type="text" ng-model="model.modal_find_teacher.inputed_address" md-maxlength="100">
-            </md-input-container>
-            <div ng-if="model.modal_find_teacher.show_invite">
-                <p>Указаный вами email {{model.modal_find_teacher.inputed_address}} не найден среди зарегистрированных пользователей.</p>
-                <p>Хотите ввести email заново?</p>
-            </div>
-            <div ng-if="model.modal_find_teacher.show_error" style="color:red;">
-                <p>{{model.modal_find_teacher.error_message}}</p>
-            </div>
-
+        <md-input-container>
+            <label>Введите email преподователя:</label>
+            <input type="text" ng-model="model.modal_find_teacher.inputed_address" md-maxlength="100"
+            ng-change="change_inputed_address()">
+        </md-input-container>
+        <!--
+        <div ng-if="model.modal_find_teacher.show_invite">
+            <p>Указаный вами email {{model.modal_find_teacher.inputed_address}} не найден среди зарегистрированных пользователей.</p>
+            <p>Хотите ввести email заново?</p>
+        </div>
+        -->
+        <div ng-if="model.modal_find_teacher.show_error" style="color:red;">
+            <div ng-bind-html="model.modal_find_teacher.error_message"></div>
         </div>
         <div class="modal-footer" style="position: absolute;
             bottom: 0;
             right: 0;
-            padding: 20px;">
-            <md-button class="md-raised" ng-click="ok()">OK</md-button>
+            padding: 20px;
+            width: 100%;">
+            <md-button class="md-raised" ng-click="ok()" ng-disabled="submit_disabled==true">OK</md-button>
             <md-button class="md-raised" ng-click="closeDialog()">Отмена</md-button>
         </div>
     </md-content>

@@ -21,50 +21,59 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
     };
 
     if (!$scope.user || !$scope.user.is_authenticated) {
-        $scope.main.reset_menu();
-        $location.path('/');
-        return;
+        $scope.main.run(function() {
+            if (!$scope.user || !$scope.user.is_authenticated) {
+                $scope.main.reset_menu();
+                $location.path('/');
+                return;
+            }
+        });
     }
 
 
     $scope.main.make_short_header();
     $scope.main.active_menu = 'lessons';
 
-    $scope.load_lesson = function(callback) {
-        $http.get('/api/mylessons/').then(function(data) {
-            $scope.model.lesson.lessons_for_me = [];
-            for (var i = 0, len = data.data.length; i < len; i++) {
-                var l = new Lesson(data.data[i]);
-                $scope.model.lesson.lessons_for_me.push(l);
-            }
-        }, function(error) {
-            $log.error('Ошибка получения назначенных на меня уроков', error);
-        });
 
-        $http.get('/api/lessons/').then(function(data) {
-            $scope.model.lesson.lessons = [];
-            for (var i = 0, len = data.data.length; i < len; i++) {
-                var l = new Lesson(data.data[i]);
-                $scope.model.lesson.lessons.push(l);
-            }
-            $http.get('/api/archive/').then(function(data) {
-                $scope.model.lesson.archive = [];
+
+
+    $scope.load_lesson = function(callback) {
+        if ($scope.user.account_type == 1) {
+            $http.get('/api/lessons/').then(function(data) {
+                $scope.model.lesson.lessons = [];
                 for (var i = 0, len = data.data.length; i < len; i++) {
-                    var l = new Lesson(data.data[i]);
-                    $scope.model.lesson.archive.push(l);
+                    $scope.model.lesson.lessons.push(new Lesson(data.data[i]));
                 }
-                setTimeout(function() {
-                    $scope.$apply();
-                })
-                if (callback) {
-                    callback();
+                $http.get('/api/archive/').then(function(data) {
+                    $scope.model.lesson.archive = [];
+                    for (var i = 0, len = data.data.length; i < len; i++) {
+                        var l = new Lesson(data.data[i]);
+                        $scope.model.lesson.archive.push(l);
+                    }
+
+                    setTimeout(function() {
+                        $scope.$apply();
+                    });
+                    if (callback) {
+                        callback();
+                    }
+                }, function(error) {
+                    $log.error('Ошибка получения архива уроков', error);
+                });
+            }, function(error) {
+                $log.error('Ошибка получения уроков', error);
+            });
+        } else {
+            $http.get('/api/mylessons/').then(function(data) {
+                $scope.model.lesson.lessons_for_me = [];
+                for (var i = 0, len = data.data.length; i < len; i++) {
+                    data.data[i].created_at = Date.parse(data.data[i].created_at);
+                    $scope.model.lesson.lessons_for_me.push(data.data[i]);
                 }
             }, function(error) {
-                $log.error('Ошибка получения архива уроков', error);
+                $log.error('Ошибка получения назначенных на меня уроков', error);
             });
-        }, function(error) {
-            $log.error('Ошибка получения уроков', error);
-        });
+        }
     };
 
     $scope.delete_lesson = function(lesson_id) {
@@ -90,70 +99,9 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
         $scope.main.go_editor_lesson();
     };
 
-    $scope.lesson_enroll = function($event, lesson_id) {
-        $scope.model.assign_lesson_id = lesson_id;
-        $mdDialog.show({
-              targetEvent: $event,
-              templateUrl: '/assets/partials/assign_lesson.html',
-              disableParentScroll: true,
-              clickOutsideToClose: true,
-                scope: $scope,        // use parent scope in template
-                preserveScope: true,
-                controller: function DialogController($scope, $mdDialog) {
-                    $scope.model['modal_enroll'] = {
-                        show_user: true,
-                        inputed_address: "",
-                        show_error: false,
-                        error_message: ""
-                    };
-                    $scope.form_errors = {};
-                    $scope.closeDialog = function() {
-                        $mdDialog.hide();
-                    };
-                    $scope.ok = function($event) {
-                        var _data = {
-                            lesson_id: $scope.model.assign_lesson_id,
-                            email: $scope.model.modal_enroll.inputed_address
-                        };
-                        $scope.model.modal_enroll.loading = true;
-                        $.post('/api/enroll_user/', _data).then(function(data) {
-                            $scope.model.modal_enroll.loading = false;
-                            if (data.hasOwnProperty('signal')) {
-                                if (data.signal == 'invite') {
-                                    $scope.model.modal_enroll.show_user = false;
-                                    $scope.model.modal_enroll.show_invite = true;
-                                    $scope.$apply();
-                                }
-                            }
-                            if (data.hasOwnProperty('code')) {
-                                if (data.code == 200) {
-                                    $mdDialog.hide();
-                                    $scope.model.modal_enroll.show_error = false;
-                                    $scope.$apply();
-                                    $scope.load_lesson();
-                                }
-                            }
-                            if (data.hasOwnProperty('code')) {
-                                if (data.code == 300) {
-                                    $scope.model.modal_enroll.show_error = true;
-                                    $scope.model.modal_enroll.error_message = "Указаный вами email " +
-                                        $scope.model.modal_enroll.inputed_address + " не найден среди зарегистрированных пользователей.";
-                                    $scope.$apply();
-                                }
-                            }
-                        }, function(error) {
-                            $scope.model.modal_enroll.show_error = true;
-                            $scope.model.modal_enroll.error_message = "Invalid request";
-                            $scope.$apply();
-                            $log.error(error);
-                        });
-                    };
-                }
-            });
-    };
 
     $scope.remove_enroll = function(enroll_id) {
-        $http.delete('/api/enroll_user/' + enroll_id + '/').then(function(data) {
+        $http.delete('/api/enroll_pupil/' + enroll_id + '/').then(function(data) {
             $scope.load_lesson();
         }, function(error) {
             $log.error(error);
@@ -162,9 +110,9 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
 
 
 
-    $scope.play_lesson = function(lesson_id) {
-        $location.path('/play/' + lesson_id + '/');
-    }
+    $scope.play_lesson = function(enroll_id) {
+        $location.path('/play/' + enroll_id + '/');
+    };
 
     $scope.move_to_archive = function(lesson_id) {
         $http.post('/api/archive/' + lesson_id + "/").then(function(data) {
@@ -172,7 +120,7 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
         }, function(error) {
             $log.error('Ошибка перемещения урока в архив', error);
         });
-    }
+    };
 
 
     $scope.find_teacher = function($event) {
@@ -194,44 +142,161 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
                     $scope.closeDialog = function() {
                         $mdDialog.hide();
                     };
+                    $scope.submit_disabled = true;
+                    $scope.change_inputed_address = function() {
+                        if ($scope.model.modal_find_teacher.inputed_address != "") {
+                            $scope.submit_disabled = false;
+                        } else {
+                            $scope.submit_disabled = true;
+                        }
+                    }
                     $scope.ok = function($event) {
                         var _data = {
-                            teacher_id: ""
+                            email: $scope.model.modal_find_teacher.inputed_address
                         };
+
                         $scope.model.modal_find_teacher.loading = true;
-                        $.post('/api/enroll_user/', _data).then(function(data) {
+                        $.get('/api/find_teacher/', _data).then(function(data) {
                             $scope.model.modal_find_teacher.loading = false;
-                            
                             if (data.hasOwnProperty('code')) {
                                 if (data.code == 200) {
                                     $mdDialog.hide();
                                     $scope.model.modal_find_teacher.show_error = false;
-                                    $scope.$apply();
-                                    $scope.load_lesson();
+                                    $mdDialog.hide();
                                 }
-                            }
-                            if (data.hasOwnProperty('code')) {
-                                if (data.code == 300) {
-                                    $scope.model.modal_find_teacher.show_error = true;
-                                    $scope.model.modal_find_teacher.error_message = "Указаный вами email " +
-                                        $scope.model.modal_find_teacher.inputed_address + " не найден среди зарегистрированных пользователей.";
-                                    $scope.$apply();
-                                }
-                            }
+                            } 
+                            $scope.model.modal_find_teacher.show_error = true;
+                            $scope.model.modal_find_teacher.error_message = "Указаный вами email " +
+                                $scope.model.modal_find_teacher.inputed_address + " не найден среди зарегистрированных преподователей.";
+                            $scope.$apply();
+
                         }, function(error) {
                             $scope.model.modal_find_teacher.show_error = true;
                             $scope.model.modal_find_teacher.error_message = "Invalid request";
                             $scope.$apply();
                             $log.error(error);
                         });
+
                     };
                 }
             });
-        
-    }
+    };
+
+
+     $scope.lesson_enroll = function($event, lesson_id) {
+        $scope.assign_lesson_id = lesson_id;
+        $mdDialog.show({
+              targetEvent: $event,
+              templateUrl: '/assets/partials/assign_lesson.html',
+              disableParentScroll: true,
+              clickOutsideToClose: true,
+                scope: $scope,        // use parent scope in template
+                preserveScope: true,
+                controller: function DialogController($scope, $mdDialog) {
+                    $scope.model['modal_enroll'] = {
+                        inputed_address: "",
+                        show_error: false,
+                        error_message: "",
+                        show_create_account: false
+                    };
+
+                    $scope.get_mypupils = function() {
+                        $.get('/api/get_mypupil/').then(function(data) {
+                            $scope.model.modal_enroll.mypupils = data;
+                            $scope.$apply();
+                        }, 
+                        function(error) {
+                            $scope.model.modal_enroll.show_error = true;
+                            $scope.model.modal_enroll.error_message = "Invalid request";
+                            $scope.$apply();
+                            $log.error(error);
+                        });
+                    }
+
+                    $scope.select_pupil = function($index) {
+                        $scope.model.modal_enroll.inputed_address = $scope.model.modal_enroll.mypupils[$index];
+                        $scope.change_inputed_address();
+                    };
+
+                    $scope.get_mypupils();
+
+                    $scope.form_errors = {};
+                    $scope.closeDialog = function() {
+                        $mdDialog.hide();
+                    };
+                    $scope.submit_disabled = true;
+                    $scope.change_inputed_address = function() {
+                        if ($scope.model.modal_enroll.inputed_address != "") {
+                            $scope.submit_disabled = false;
+                        } else {
+                            $scope.submit_disabled = true;
+                        }
+                    };
+                    $scope.ok = function($event) {
+                        var _data = {
+                            lesson_id: $scope.assign_lesson_id,
+                            email: $scope.model.modal_enroll.inputed_address
+                        };
+                        $scope.model.modal_enroll.loading = true;
+                        $.post('/api/enroll_pupil/', JSON.stringify(_data)).then(function(data) {
+                            $scope.model.modal_enroll.loading = false;
+                            if (data.hasOwnProperty('code')) {
+                                if (data.code == 404) {
+                                    $scope.model.modal_enroll.show_error = true;
+                                    $scope.model.modal_enroll.error_message = "Указаный вами email " +
+                                        $scope.model.modal_enroll.inputed_address + " не найден среди зарегистрированных учеников.";
+                                    $scope.model.modal_enroll.show_create_account = true;
+                                    $scope.$apply();
+                                }
+                            } else {
+                                $mdDialog.hide();
+                                $scope.model.modal_enroll.show_error = false;
+                                $scope.$apply();
+                                $scope.load_lesson();
+                            }
+                        }, function(error) {
+                            $scope.model.modal_enroll.show_error = true;
+                            $scope.model.modal_enroll.error_message = "Invalid request";
+                            $scope.$apply();
+                            $log.error(error);
+                        });
+                    };
+
+                    scope.cancelCreateAccount = function($event) {
+                        $scope.model.modal_enroll.show_create_account = false;
+                        $scope.model.modal_enroll.inputed_address = null;
+                        $scope.model.modal_enroll.error_message = null;
+                        $scope.model.modal_enroll.show_error = false;
+                    };
+
+                    scope.createAccount = function($event) {
+                        var _data = {
+                            lesson_id: $scope.assign_lesson_id,
+                            email: $scope.model.modal_enroll.inputed_address
+                        };
+
+                        $.post('/api/create_pupil/', JSON.stringify(_data)).then(function(data) {
+                            $scope.model.modal_enroll.show_create_account = false;
+                            $scope.model.modal_enroll.inputed_address = null;
+                            $scope.model.modal_enroll.error_message = null;
+                            $scope.model.modal_enroll.show_error = false;
+
+                            $mdDialog.hide();
+                            $scope.load_lesson();
+                        }, function(error) {
+                            $scope.model.modal_enroll.show_error = true;
+                            $scope.model.modal_enroll.error_message = "Invalid request";
+                            $scope.$apply();
+                            $log.error(error);
+                        });
+                    };
+                }
+            });
+    };
+
 
     // =============================
-    $scope.load_lesson()
+    $scope.load_lesson();
 
 
 };

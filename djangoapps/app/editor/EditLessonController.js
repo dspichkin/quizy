@@ -47,12 +47,15 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
 
     $scope.reload_lesson = function(callback) {
         $data.get_lesson($stateParams.lesson_id).then(function(data) {
+            var _is_correct = data.data.is_correct;
             $scope.model.editor.current_lesson = new Lesson(data.data);
-
             // проверяем на правильность во время загрузки
             var _c = $scope.model.editor.current_lesson.is_correct;
             $scope.model.editor.current_lesson.check();
-            // console.log(scope.model.editor.current_lesson)
+
+            if (_is_correct != $scope.model.editor.current_lesson.is_correct) {
+                $scope.model.editor.current_lesson.save();
+            }
 
             // Todo сделать обработку ситуации
             if (!data.data || data.data.length == 0) {
@@ -436,6 +439,31 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
             $scope.progressUpload = progressPercentage + '%';
         }).success(function(data, status, headers, config) {
             $scope.progressUpload = 0;
+            $scope.reload_lesson(function() {
+                setTimeout(function() {
+                    $scope.$apply();
+                });
+            });
+
+        }).error(function(data, status, headers, config) {
+            $log.error('Ошибка загрузки: ' + status);
+            $scope.progressUpload = 0;
+            $scope.reload_lesson();
+            setTimeout(function() {
+                $scope.$apply();
+            });
+        });
+    };
+    $scope.page_picture_upload = function($files, $event) {
+        var file = $files[0];
+        Upload.upload({
+            url: 'api/pages/' + $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].id + '/upload/',
+            file: file
+        }).progress(function(evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            $scope.progressUpload = progressPercentage + '%';
+        }).success(function(data, status, headers, config) {
+            $scope.progressUpload = 0;
             $scope.reload_lesson();
             setTimeout(function() {
                 $scope.$apply();
@@ -448,14 +476,26 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
                 $scope.$apply();
             });
         });
-    };
-
+    }
     $scope.remove_lesson_picture = function() {
         $scope.model.editor.current_lesson.remove_lesson_picture().then(function() {
             $scope.reload_lesson();
             setTimeout(function() {
                 $scope.$apply();
             });
+        }, function() {
+            $log.error("Ошибка удаления картинки урока.", error);
+        });
+    };
+
+    $scope.remove_question_picture = function() {
+        $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].remove_page_picture().then(function() {
+            $scope.reload_lesson(function() {
+                setTimeout(function() {
+                    $scope.$apply();
+                });
+            });
+            
         }, function() {
             $log.error("Ошибка удаления картинки урока.", error);
         });

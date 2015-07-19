@@ -81,8 +81,10 @@
      -moz-transition: top .2s ease-out 0.1s;
      -o-transition: top .2s ease-out 0.1s;
      transition: top .2s ease-out 0.1s;" ng-style="{'top': model.menu.positionTop}" >
+     <!--
     <div ng-show="user && user.is_authenticated" style="font-size:15px;padding: 10px 0 0 18px;" >Вы зашли под пользователем {{user.email}}</div>
-    
+    -->
+
     <div style="
         height: 34px;
     width: 100%;
@@ -121,12 +123,22 @@
         <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="reg($event)">
             Регистрация
         </div>
-        <div class="btn-menu" ng-if="user.is_authenticated" ripple ng-click="main.go_profile()" style="
-            ">
-            Личный кабинет
-        </div>
-         <div class="btn-menu" ng-if="user.is_authenticated" ripple ng-click="main.logout($event)" style=>
-            Выход
+        
+         <div class="btn-menu" ng-if="user.is_authenticated">
+            <div ng-if="user.is_authenticated" ripple ng-click="main.go_profile()" style="float: left;
+    margin: 0;cursor: pointer;width: 27px;"><i class="material-icons" style="font-size: 26px;color:#ff9e37">settings</i></div>
+
+            <md-menu>
+                <div style="margin: 0 0 0 33px;cursor: pointer;border-bottom: 1px solid #ff9e37;overflow: hidden;text-transform: initial;" aria-label="menu" ng-click="$mdOpenMenu()">{{user.email}}</div>
+
+                <md-menu-content width="4" style="height: 48px;padding:0;">
+                    <md-menu-item>
+                        <md-button ng-click="main.logout($event)">
+                        Выход
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+                </md-menu>
         </div>
        
     </div>
@@ -145,18 +157,16 @@
                     <span>Мои уроки</span>
                     <div ng-class="{'active_menu': main.active_menu=='lessons'}"></div>
                 </div>
-                 <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_lessons_page()">
+                 <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_lessons_page()">
                     <span>Мои ученики</span>
                     <div ng-class="{'active_menu': main.active_menu=='mypupils'}"></div>
                 </div>
-                <div class="tab-item" ripple ng-click="main.go_price()">
-                    <span>Каталог уроков</span>
-                    <div ng-class="{'active_menu': main.active_menu=='price'}"></div>
-                </div>
+                <!--
                 <div class="tab-item" ripple ng-click="main.go_description()">
                     <span>Описание</span>
                     <div ng-class="{'active_menu': main.active_menu=='description'}"></div>
                 </div>
+                -->
             </div>
         </div>
     </div>

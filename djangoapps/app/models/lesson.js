@@ -110,12 +110,10 @@ _.assign(Lesson.prototype, {
             }
         }
 
-        if (this.is_correct == true) {
-            if (Object.keys(this.code_errors).length > 0) {
-                this.is_correct = false;
-            } else {
-                this.is_correct = true;
-            }
+        if (Object.keys(this.code_errors).length > 0) {
+            this.is_correct = false;
+        } else {
+            this.is_correct = true;
         }
     }
 

@@ -5,15 +5,19 @@ module.exports = ['$rootScope', '$compile', '$timeout',
     function($rootScope, $compile, $timeout) {
         return {
             restrict: "AE",
-            scope: true,
+            scope: {
+                lesson_id: "=lessonId",
+                enroll_lessonFn: "=enrollLesson",
+                play_lessonFn: "=playLesson",
+                edit_lessonFn: "=editLesson"
+            },
             replace: true,
             template: '<div class="" ng-click="show_action($event)" >' +
                 '<a class="icon-menu" href="#"></a>' +
                 '</div>',
             link: function(scope, elem, attr) {
                 var element = elem[0];
-                var lesson_id = attr.lessonId;
-
+                //scope.lesson_id = attr.lessonId;
                 scope.close_action = function() {
                     $('.lesson_action').remove();
                 };
@@ -32,9 +36,9 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                     html_menu += '          <div class="header_title">Меню урока</div>';
                     html_menu += '      </div>';
                     html_menu += '      <div class="action_menu_items" style="opacity: 0">';
-                    html_menu += '          <div class="action_item" ng-click="edit_lesson(' + lesson_id + ')">Редактировать урок</div>';
-                    html_menu += '          <div class="action_item">Назначить ученика</div>';
-                    html_menu += '          <div class="action_item" ng-click="play_lesson(' + lesson_id + ')">Запустить для тестирования</div>';
+                    html_menu += '          <div class="action_item" ng-click="edit_lesson()">Редактировать урок</div>';
+                    html_menu += '          <div class="action_item" ng-click="enroll_lesson()">Назначить ученика</div>';
+                    html_menu += '          <div class="action_item" ng-click="play_lesson($event)">Запустить для тестирования</div>';
                     html_menu += '      </div>';
                     html_menu += '  </div>';
                     html_menu += '</div>';
@@ -51,16 +55,20 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                             } });
                 };
 
-                scope.edit_lesson = function(lesson_id) {
+                scope.edit_lesson = function() {
                     scope.close_action();
-                    scope.main.go_editor_lesson(lesson_id);
+                    scope.edit_lessonFn(scope.lesson_id);
                 };
 
-                scope.play_lesson = function(lesson_id) {
+                scope.play_lesson = function() {
                     scope.close_action();
-                    scope.main.go_play(lesson_id);
+                    scope.play_lessonFn(scope.lesson_id);
                 };
 
+                scope.enroll_lesson = function($event) {
+                    scope.close_action();
+                    scope.enroll_lessonFn($event, scope.lesson_id);
+                };
             }
         };
     }
