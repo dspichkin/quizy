@@ -185,7 +185,7 @@ class Account(AbstractUser):
     number_of_pupil = models.IntegerField('кол-во учеников', default=0)
     account_type = models.IntegerField('тип аккаунта', default=1, choices=ACCOUNT_TYPES)
 
-    pupils = models.ManyToManyField('self', 'ученики')
+    pupils = models.ManyToManyField('self', 'ученики', null=True, blank=True)
 
     objects = AccountManager()
 
