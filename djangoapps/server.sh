@@ -12,7 +12,7 @@ python=$WORKON_HOME/test/bin/python
 cd $ROOT
 case "$1" in
     "start")
-        uwsgi --chdir=$ROOT --module=obi.wsgi \
+        uwsgi --chdir=$ROOT --module=root.wsgi \
             --env DJANGO_SETTINGS_MODULE=obi.settings \
             --master --pidfile=$pidfile \
             --socket=$socket --processes=5 --harakiri=120 --post-buffering=1 \
