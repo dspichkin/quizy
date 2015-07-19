@@ -387,8 +387,6 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
      */
     $scope.finish_changed_lesson = function() {
         $scope.model.editor.loading = true;
-        $scope.model.editor.current_lesson.check();
-
         if ($scope.model.editor.new_lesson == true) {
             $data.new_lesson($scope.model.editor.current_lesson).then(function(data) {
                 if (data.hasOwnProperty('data')) {
@@ -400,6 +398,7 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
                 $log.error('Ошибка создания нового урока', error);
             });
         } else {
+            $scope.model.editor.current_lesson.check()
             $scope.model.editor.current_lesson.save().then(function() {
                 $scope.model.editor.loading = false;
                 $scope.model.editor.is_dirty_data = false;
