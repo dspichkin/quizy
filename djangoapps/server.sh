@@ -13,10 +13,10 @@ cd $ROOT
 case "$1" in
     "start")
         uwsgi --chdir=$ROOT --module=root.wsgi \
-            --env DJANGO_SETTINGS_MODULE=obi.settings \
+            --env DJANGO_SETTINGS_MODULE=root.settings \
             --master --pidfile=$pidfile \
             --socket=$socket --processes=5 --harakiri=120 --post-buffering=1 \
-            --max-requests=4000 --vacuum --home=$WORKON_HOME/obi \
+            --max-requests=4000 --vacuum --home=$WORKON_HOME/test/quizy \
             --daemonize=$errlog
         chmod o+w $socket
         ;;
