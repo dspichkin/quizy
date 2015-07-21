@@ -3,7 +3,7 @@
 var Page = require('../models/page');
 var Lesson = require('../models/lesson');
 
-var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog, Upload) {
+var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdDialog, Upload) {
 
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
@@ -73,7 +73,10 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
                 }
             }
 
+            //console.log(l)
             $scope.model.editor.current_lesson = l;
+
+            $scope.detect_media_type();
             // проверяем на правильность во время загрузки
             var _c = $scope.model.editor.current_lesson.is_correct;
             $scope.model.editor.current_lesson.check();
@@ -219,23 +222,27 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
             type: type_slug,
             number: $scope.model.editor.current_lesson.pages.length + 1,
             text: "",
+            code_errors: {},
             variants: []
         });
 
 
         _new_page.create($scope.model.editor.current_lesson.id).then(function(response) {
             _new_page.id = response.id;
-            $scope.model.editor.current_lesson.pages.push(_new_page);
-            $scope.model.editor.current_page_index = $scope.model.editor.current_lesson.pages.length - 1;
-            if ($scope.model.editor.current_page_index < 0) {
-                $scope.model.editor.current_page_index = 0;
-            }
-            setTimeout(function() {
-                $scope.$apply();
-                $scope.add_variant($scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].type);
-            });
+            $scope.reload_lesson(function() {
+                $scope.model.editor.current_page_index = $scope.model.editor.current_lesson.pages.length - 1;
+                if ($scope.model.editor.current_page_index < 0) {
+                    $scope.model.editor.current_page_index = 0;
+                }
 
-            $scope.model.editor.loading = false;
+                setTimeout(function() {
+                    $scope.$apply();
+                    $scope.add_variant($scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].type);
+                    $scope.model.editor.current_lesson.check();
+                });
+
+                $scope.model.editor.loading = false;
+            });
         }, function(error) {
             $scope.model.editor.loading = false;
             $log.error("Ошибка. Не могу создать новую страницу! ", error);
@@ -243,9 +250,45 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
 
     };
 
+    /**
+     * Определем медиа тип вопроса
+     * @return {[type]} [description]
+     */
+    $scope.detect_media_type = function() {
+        var _filename = $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].media;
+        if (_filename) {
+            var _ext = _filename.substr(_filename.length - 3);
+            if (_ext == 'mp4') {
+                $scope.model.editor.media_type = 'video';
+                $scope.model.editor.media_sources = [{
+                    src: $sce.trustAsResourceUrl($scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].media),
+                    type: "video/mp4"
+                }];
+            }
+            if (_ext == 'webm') {
+                $scope.model.editor.media_type = 'video';
+                $scope.model.editor.media_sources = [{
+                    src: $sce.trustAsResourceUrl($scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].media),
+                    type: "video/webm"
+                }];
+            }
+            if (_ext == 'mp3') {
+                $scope.model.editor.media_type = 'audio';
+                $scope.model.editor.media_sources = [{
+                    src: $sce.trustAsResourceUrl($scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].media),
+                    type: "audio/mp3"
+                }];
+            }
+            if (_ext == 'jpg' || _ext == 'png' || _ext == 'gif') {
+                $scope.model.editor.media_type = 'image';
+            }
+        }
+    };
+
     $scope.change_page = function($index, $event) {
         $scope.model.editor.current_page_index = $index;
         $scope.model.editor.current_lesson.check();
+        $scope.detect_media_type();
     };
 
 
@@ -351,9 +394,6 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
                         $scope.reload_lesson(function() {
                             $scope.model.editor.loading = false;
                         });
-                        //$scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].variants.push(data);
-                        //$scope.$apply();
-                        
                     },
                     function(error) {
                         $log.error("Ошибка создания нового варианта ответа. ", error);
@@ -423,7 +463,7 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
                 $log.error('Ошибка создания нового урока', error);
             });
         } else {
-            $scope.model.editor.current_lesson.check()
+            $scope.model.editor.current_lesson.check();
             $scope.model.editor.current_lesson.save().then(function() {
                 $scope.model.editor.loading = false;
                 $scope.model.editor.is_dirty_data = false;
@@ -500,9 +540,10 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
                 $scope.$apply();
             });
         });
-    }
+    };
+
     $scope.remove_lesson_picture = function() {
-        $scope.model.editor.current_lesson.remove_lesson_picture().then(function() {
+        $scope.model.editor.current_lesson.remove_lesson_media().then(function() {
             $scope.reload_lesson();
             setTimeout(function() {
                 $scope.$apply();
@@ -512,14 +553,14 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
         });
     };
 
-    $scope.remove_question_picture = function() {
-        $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].remove_page_picture().then(function() {
+    $scope.remove_question_media = function() {
+        $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].remove_page_media().then(function() {
             $scope.reload_lesson(function() {
                 setTimeout(function() {
                     $scope.$apply();
                 });
             });
-            
+
         }, function() {
             $log.error("Ошибка удаления картинки урока.", error);
         });
@@ -529,4 +570,4 @@ var EditCtrl = function($scope, $stateParams, $log, $data, $location, $mdDialog,
 };
 
 
-module.exports = ['$scope', '$stateParams', '$log', '$data', '$location', '$mdDialog', 'Upload', EditCtrl];
+module.exports = ['$scope', '$sce', '$stateParams', '$log', '$data', '$location', '$mdDialog', 'Upload', EditCtrl];

@@ -326,7 +326,7 @@ def demo_play(request, lesson_pk=None):
 
     return Response(EnrollSerializer(instance=enroll).data, status=status.HTTP_200_OK)
 
-
+"""
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes((AllowAny, ))
 def lessons(request, lesson_pk=None):
@@ -427,7 +427,7 @@ def lessons(request, lesson_pk=None):
         return Response(LessonSerializer(instance=lesson).data, status=status.HTTP_200_OK)
 
     return Response([], status=status.HTTP_200_OK)
-
+"""
 
 @api_view(['POST'])
 def new_page(request, lesson_pk=None):
@@ -505,23 +505,24 @@ def page_picture_upload(request, page_pk=None):
         return Response("OK", status=status.HTTP_200_OK)
 
     if request.method == "POST":
-        if page.picture:
-            if os.path.exists(page.picture.path):
-                os.remove(page.picture.path)
-                page.picture = None
+        if page.media:
+            if os.path.exists(page.media.path):
+                os.remove(page.media.path)
+                page.media = None
 
         f = request.FILES.get('file')
+        print "11 ", f
         if f and f._size < 30 * 1024 * 1024:
-            page.picture = f
+            page.media = f
             page.save()
 
         return Response("OK", status=status.HTTP_200_OK)
 
     if request.method == "DELETE":
-        if page.picture:
-            if os.path.exists(page.picture.path):
-                os.remove(page.picture.path)
-                page.picture = None
+        if page.media:
+            if os.path.exists(page.media.path):
+                os.remove(page.media.path)
+                page.media = None
                 page.save()
         return Response("OK", status=status.HTTP_200_OK)
 
@@ -590,7 +591,7 @@ def create_pupil(request):
         return Response("Неверный формат email", status=status.HTTP_400_BAD_REQUEST)
 
     lesson = get_object_or_404(Lesson, pk=lesson_id, created_by=request.user)
-    pupil, created = Account.objects.get_or_create(email=email)
+    pupil, created = Account.objects.get_or_create(email__iexact=email)
     try:
         LessonEnroll.objects.get(lesson=lesson, learner=pupil)
     except LessonEnroll.DoesNotExist:
@@ -613,7 +614,7 @@ def enroll_pupil(request, enroll_pk):
         if validateEmail(email) is False:
             return Response("Неверный формат email", status=status.HTTP_400_BAD_REQUEST)
         lesson = get_object_or_404(Lesson, pk=lesson_id, created_by=request.user)
-        pupil = Account.objects.filter(email=email)[:1]
+        pupil = Account.objects.filter(email__iexact=email)[:1]
         if pupil:
             try:
                 enroll = LessonEnroll.objects.get(lesson=lesson, learner=pupil[0])

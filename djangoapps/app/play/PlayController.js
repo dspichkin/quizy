@@ -4,7 +4,7 @@ var Page = require('../models/page');
 var Lesson = require('../models/lesson');
 var Attempt = require('../models/attempt');
 
-var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
+var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location) {
 
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
@@ -41,6 +41,9 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
     var load_enroll = function(enroll_id) {
         $http.get('/api/play/' + enroll_id + "/").then(function(data) {
             $scope.model.play.attempt = new Attempt(data.data);
+            if ($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media) {
+                $scope.detect_media_type();
+            }
         }, function(error) {
             $log.error('Ошибка получения назначенных на меня уроков', error);
         });
@@ -49,7 +52,9 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
     var load_lesson = function(lesson_id) {
         $http.get('/api/demo/play/' + lesson_id + "/").then(function(data) {
             $scope.model.play.attempt = new Attempt(data.data);
-
+            if ($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media) {
+                $scope.detect_media_type();
+            }
         }, function(error) {
             $log.error('Ошибка получения назначенных на меня уроков', error);
         });
@@ -176,10 +181,46 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
         }
     };
 
+    $scope.detect_media_type = function() {
+        var _filename = $scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media;
+        if (_filename) {
+            var _ext = _filename.substr(_filename.length - 3);
+            if (_ext == 'mp4') {
+                $scope.model.play.media_type = 'video';
+                $scope.model.play.media_sources = [{
+                    src: $sce.trustAsResourceUrl($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media),
+                    type: "video/mp4"
+                }];
+            }
+            if (_ext == 'webm') {
+                $scope.model.play.media_type = 'video';
+                $scope.model.play.media_sources = [{
+                    src: $sce.trustAsResourceUrl($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media),
+                    type: "video/webm"
+                }];
+            }
+            if (_ext == 'mp3') {
+                $scope.model.play.media_type = 'audio';
+                $scope.model.play.media_sources = [{
+                    src: $sce.trustAsResourceUrl($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media),
+                    type: "audio/mp3"
+                }];
+            }
+            if (_ext == 'jpg' || _ext == 'png' || _ext == 'gif') {
+                $scope.model.play.media_type = 'image';
+            }
+        }
+    };
+
     $scope.next_question = function($event) {
         //console.log($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index])
         // записывае текущий ответ
         var _page_type = $scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].type;
+
+        if ($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media) {
+            $scope.detect_media_type();
+        }
+
         if (_page_type == 'checkbox') {
             var _step = $scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index];
             var _variants = scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].variants;
@@ -279,4 +320,4 @@ var PlayCtrl = function($scope, $http, $stateParams, $log, $location) {
 };
 
 
-module.exports = ['$scope', '$http', '$stateParams', '$log', '$location', PlayCtrl];
+module.exports = ['$scope', '$sce', '$http', '$stateParams', '$log', '$location', PlayCtrl];

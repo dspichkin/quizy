@@ -13,7 +13,6 @@ function Lesson(data) {
     }
 
     _.assign(this, data);
-
     this.pages = [];
     for (var i = 0, len = data.pages.length; i < len; i++) {
         this.pages.push(new Page(data.pages[i]));
@@ -26,7 +25,8 @@ Lesson.prototype.constructor = Lesson;
 
 var _code_errors = {
     200: "Не заполнено имя урока",
-    201: "Не заполнено описание урока"
+    201: "Не заполнено описание урока",
+    202: "Нет ни одной страницы урока"
 };
 
 
@@ -80,10 +80,16 @@ _.assign(Lesson.prototype, {
         });
     },
     add_error: function(index) {
-        this.code_errors[index] = _code_errors[index];
+        if (this.code_errors) {
+            this.code_errors[index] = _code_errors[index];
+        }
     },
     remove_error: function(index) {
-        delete this.code_errors[index];
+        if (this.code_errors) {
+            if (this.code_errors.hasOwnProperty(index)) {
+                delete this.code_errors[index];
+            }
+        }
     },
     remove_lesson_picture: function() {
         return $.ajax({
@@ -103,17 +109,31 @@ _.assign(Lesson.prototype, {
             this.remove_error('201');
         }
 
+        if (this.pages.length == 0) {
+             this.add_error('202');
+        } else {
+            this.remove_error('202');
+        }
+
+        var _has_error = false;
         for (var i = 0, len = this.pages.length; i < len; i++) {
             this.pages[i].check();
             if (this.pages[i].is_correct == false) {
-                this.is_correct = false;
+                _has_error = true;
             }
         }
-
-        if (Object.keys(this.code_errors).length > 0) {
+        if (_has_error == true) {
             this.is_correct = false;
         } else {
             this.is_correct = true;
+        }
+
+        if (_has_error == false) {
+            if (Object.keys(this.code_errors).length > 0) {
+                this.is_correct = false;
+            } else {
+                this.is_correct = true;
+            }
         }
     }
 

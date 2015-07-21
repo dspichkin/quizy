@@ -60,12 +60,27 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
                 }
             }
         })
+        .state('courses', {
+            url: "/courses/",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/courses.html"
+                }
+            }
+        })
+        .state('course', {
+            url: "/courses/:course_id/",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/course.html"
+                }
+            }
+        })
         .state('lessons', {
             url: "/lessons/",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/lessons.html",
-                    controller: 'LessonsCtrl'
+                    templateUrl: "/assets/partials/lessons.html"
                 }
             }
         })

@@ -100,10 +100,10 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
     //    short_header();
     //};
 
-    $scope.main.go_lessons_page = function() {
-        $location.path('/lessons/');
+    $scope.main.go_courses_page = function() {
+        $location.path('/courses/');
         $scope.main.make_short_header();
-        $scope.main.active_menu = 'lessons';
+        $scope.main.active_menu = 'courses';
     };
     
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from django.db.models import Q
+# from django.db.models import Q
 from django.contrib.auth.models import Group
 
 
@@ -9,9 +9,8 @@ from quizy.models import Course, Lesson, LessonEnroll, Page, Variant
 # from quizy.forms import LessonForm
 
 
-
 class CourseAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'created_by', 'is_active', 'is_correct',]
 
 
 class EnrollAdmin(admin.ModelAdmin):
@@ -29,15 +28,14 @@ class EnrollAdmin(admin.ModelAdmin):
 
 
 class LessonAdmin(admin.ModelAdmin):
-    search_fields = ['name', 'created_by']
-    readonly_fields = ('created_by',)
+    search_fields = ['course', 'name', 'created_by']
     fieldsets = (
         (None, {
-            'fields': ('name', 'description', 'is_active', 'picture', 'is_correct', 'created_by')
+            'fields': ('course', 'name', 'description', 'is_active', 'picture', 'is_correct', 'created_by')
         }),
     )
 
-    list_display = ['created_by', 'name', 'is_active', 'is_correct']
+    list_display = ['course', 'name', 'is_active', 'is_correct']
     # list_editable = ['is_active']
 
     # actions = ['delete_selected']

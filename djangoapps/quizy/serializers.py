@@ -6,7 +6,7 @@ from rest_framework import serializers
 # from utils.serializers import JSONField
 
 from users.account.serializers import UserSerializer
-from quizy.models import Lesson, LessonEnroll, Page, Variant
+from quizy.models import Course, Lesson, LessonEnroll, Page, Variant
 
 
 class JSONField(serializers.Field):
@@ -66,9 +66,21 @@ class LessonSerializer(serializers.ModelSerializer):
     pages = PageSerializer(many=True, read_only=True)
     enrolls = EnrollSerializer(many=True, read_only=True)
     code_errors = JSONField()
+    material_type = serializers.CharField(source='type')
 
     class Meta:
         model = Lesson
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+    lessons = LessonSerializer(source='lesson_set', many=True, read_only=True)
+    code_errors = JSONField()
+    material_type = serializers.CharField(source='type')
+
+    class Meta:
+        model = Course
+        exclude = ('teacher',)
 
 
 

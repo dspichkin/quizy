@@ -31,15 +31,41 @@ class BaseModel(models.Model):
         super(BaseModel, self).save(*args, **kwargs)
 
 
+def course_picture_upload(obj, fn):
+    if obj.pk:
+        fn, ext = os.path.splitext(fn)
+        return os.path.join('courses', str(obj.pk), '%s' % 'lesson_' + str(randrange(0, 9999)) + ext)
+    else:
+        raise Exception("Сохраните курс до загрузки изображения")
+
+
 class Course(BaseModel):
     is_active = models.BooleanField('активен?', default=True)
     name = models.CharField('название курса', max_length=140, blank=True, null=True)
     description = models.TextField('описание', blank=True)
 
+    created_by = models.ForeignKey('account.Account', related_name='courses',
+                                 verbose_name='создатель', blank=True, null=True)
+
+    teacher = models.ManyToManyField('account.Account', related_name='courses_teachers',
+                                 verbose_name='преподователь', blank=True, null=True)
+
+    code_errors = JSONField('ошибки редактирования урока', default={}, blank=True, null=True)
+    is_correct = models.BooleanField('урок составлен верно?', default=True)
+
+    picture = ImageField(upload_to=course_picture_upload, blank=True, null=True)
+
+    @property
+    def type(self):
+        return 'course'
+
     class Meta:
         verbose_name = 'Курс'
         verbose_name_plural = 'Курсы'
         app_label = 'quizy'
+
+    #def type(self):
+    #    return 'course'
 
     def __unicode__(self):
         if self.name:
@@ -47,7 +73,7 @@ class Course(BaseModel):
         return u"Курс без именени"
 
 
-def picture_upload(obj, fn):
+def lesson_picture_upload(obj, fn):
     if obj.pk:
         fn, ext = os.path.splitext(fn)
         return os.path.join('lessons', str(obj.pk), '%s' % 'lesson_' + str(randrange(0, 9999)) + ext)
@@ -67,12 +93,15 @@ class Lesson(BaseModel):
     created_by = models.ForeignKey('account.Account', related_name='lessons',
                                  verbose_name='создатель', blank=True, null=True)
 
+    teacher = models.ManyToManyField('account.Account', related_name='lessons_teachers',
+                                 verbose_name='преподователь', blank=True, null=True)
+
     course = models.ForeignKey('Course', verbose_name='курс', blank=True, null=True)
 
     code_errors = JSONField('ошибки редактирования урока', default={}, blank=True, null=True)
     is_correct = models.BooleanField('урок составлен верно?', default=True)
 
-    picture = ImageField(upload_to=picture_upload, blank=True, null=True)
+    picture = ImageField(upload_to=lesson_picture_upload, blank=True, null=True)
 
     class Meta:
         ordering = ('created_by', 'number')
@@ -84,6 +113,10 @@ class Lesson(BaseModel):
         if self.name:
             return self.name
         return u"Урок без именени"
+
+    @property
+    def type(self):
+        return 'lesson'
 
 
 class LessonEnroll(BaseModel):
@@ -171,7 +204,7 @@ ANSWER_ERRORS = {
 }
 
 
-def picture_question_upload(obj, fn):
+def media_question_upload(obj, fn):
     if obj.pk:
         fn, ext = os.path.splitext(fn)
         return os.path.join('lessons', str(obj.lesson.pk), 'question_%s%s' % (str(obj.id) + '_' + str(randrange(0, 9999)), ext))
@@ -201,7 +234,7 @@ class Page(models.Model):
     text = models.TextField('Вопрос', blank=True, null=True)
     number = models.IntegerField('Порядок', default=1, blank=True, null=True)
 
-    picture = ImageField(upload_to=picture_question_upload, blank=True, null=True)
+    media = models.FileField(upload_to=media_question_upload, blank=True, null=True)
 
     is_correct = models.BooleanField('правильность заполнения вопроса', default=True)
     code_errors = JSONField('коды ошибок', default={}, blank=True, null=True)

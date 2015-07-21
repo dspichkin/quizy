@@ -25,7 +25,7 @@
                 margin: 3px 10px 0px 10px;
                 width: 340px;
                 float: right
-                ">
+                " ng-if="model.editor.current_lesson">
                 <md-switch ng-model="model.editor.current_lesson.is_active" aria-label="Lesson active" ng-true-value="false" ng-false-value="true" class="md-warn" style="margin:0;float:left;"
                 ng-change="finish_changed_lesson()">
                 </md-switch>

@@ -42,8 +42,8 @@ Page.prototype = new BaseObject();
 Page.prototype.constructor = Page;
 
 var _code_errors = {
-    300: "Не заполнено поле вопроса",
-    301: "Не заполнен один из вариантов ответов"
+    300: "На одной или несколько страниц не заполнено поле вопроса",
+    301: "На одной или несколько страниц не заполнен один из вариантов ответов"
 };
 
 _.assign(Page.prototype, {
@@ -81,7 +81,7 @@ _.assign(Page.prototype, {
             type: "DELETE"
         });
     },
-    remove_page_picture: function() {
+    remove_page_media: function() {
         return $.ajax({
             url: 'api/pages/' + this.id + '/upload/',
             type: "DELETE"
@@ -99,7 +99,9 @@ _.assign(Page.prototype, {
         });
     },
     add_error: function(index) {
-        this.code_errors[index] = _code_errors[index];
+        if (this.code_errors) {
+            this.code_errors[index] = _code_errors[index];
+        }
     },
     remove_error: function(index) {
         if (this.code_errors) {
@@ -125,10 +127,12 @@ _.assign(Page.prototype, {
             this.remove_error('301');
         }
 
-        if (Object.keys(this.code_errors).length > 0) {
-            this.is_correct = false;
-        } else {
-            this.is_correct = true;
+        if (this.code_errors) {
+            if (Object.keys(this.code_errors).length > 0) {
+                this.is_correct = false;
+            } else {
+                this.is_correct = true;
+            }
         }
     }
 
