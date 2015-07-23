@@ -77,8 +77,13 @@ def lessons(request, lesson_pk=None):
             description = req.get("description")
             code_errors = req.get("code_errors")
             is_correct = req.get("is_correct")
+            course_id = req.get("course")
 
-        lesson = Lesson.objects.create(created_by=request.user)
+        course = get_object_or_404(Course, pk=course_id)
+        # выставляем текущий номер урока в курсе
+        number_lesson = course.lesson_set.all().count() + 1
+        lesson = Lesson.objects.create(course=course, number=number_lesson, created_by=request.user)
+
         if lesson.is_active != is_active and is_active is not None:
             lesson.is_active = is_active
             is_dirty = True
@@ -103,6 +108,7 @@ def lessons(request, lesson_pk=None):
         lessons = Lesson.objects.filter(pk=lesson_pk, created_by=request.user)[:1]
         if len(lessons) > 0:
             lessons[0].delete()
+        return Response(status=status.HTTP_200_OK)
 
     if request.method == 'PUT' and request.user.is_authenticated() and lesson_pk:
         req = json.loads(request.body.decode("utf-8"))

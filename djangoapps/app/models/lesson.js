@@ -139,5 +139,4 @@ _.assign(Lesson.prototype, {
 
 });
 
-
 module.exports = Lesson;

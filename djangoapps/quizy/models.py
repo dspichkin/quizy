@@ -64,13 +64,21 @@ class Course(BaseModel):
         verbose_name_plural = 'Курсы'
         app_label = 'quizy'
 
-    #def type(self):
-    #    return 'course'
-
     def __unicode__(self):
         if self.name:
             return self.name
         return u"Курс без именени"
+
+    @property
+    def enroll_number(self):
+        return {
+            'number': self.course_enrolls.filter(course=self).count()
+        }
+
+    def get_first_lesson(self):
+        lessons = self.lesson_set.all().order_by('number')[:1]
+        if lessons:
+            return lessons[0]
 
 
 def lesson_picture_upload(obj, fn):
@@ -119,20 +127,20 @@ class Lesson(BaseModel):
         return 'lesson'
 
 
-class LessonEnroll(BaseModel):
+class CourseEnroll(BaseModel):
     """
     Назначения на курсы индивидульных пользователей
     """
-    learner = models.ForeignKey('account.Account', related_name='enrolls',
+    learner = models.ForeignKey('account.Account', related_name='course_enrolls',
                                 verbose_name='обучаемый')
-    created_by = models.ForeignKey('account.Account', related_name='enroll_created',
+    created_by = models.ForeignKey('account.Account', related_name='course_enrolls_created',
                                 verbose_name='кто создал назначение')
-    course = models.ForeignKey('Course', related_name='enrolls',
+    course = models.ForeignKey('Course', related_name='course_enrolls',
                             verbose_name='курс', blank=True, null=True)
-    lesson = models.ForeignKey('Lesson', related_name='enrolls',
-                            verbose_name='урок', blank=True, null=True)
 
-    data = JSONField('результат прохождения', default={})
+    auto_enroll = models.BooleanField('авто назначения на уроки', default=False)
+
+    data = JSONField('данные', default={}, blank=True, null=True)
     last_data = models.DateTimeField('дата последней попытки', null=True, blank=True)
     number_of_attempt = models.IntegerField('кол-во попыток', default=0)
     success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
@@ -141,12 +149,52 @@ class LessonEnroll(BaseModel):
     #  TODO: собирать статистику по прохождению
 
     class Meta:
-        verbose_name = 'Назначение'
-        verbose_name_plural = 'Назначения'
+        verbose_name = 'Назначение на курс'
+        verbose_name_plural = 'Назначения на курсы'
         app_label = 'quizy'
 
     def __unicode__(self):
-        return '%s(%s)' % (self.learner, self.lesson.name.lower())
+        return '%s(%s)' % (self.learner, self.course.name.lower())
+
+    @classmethod
+    def create(cls, course, learner, created_by):
+        enroll = cls.objects.create(course=course, learner=learner, created_by=created_by)
+        first_lesson = enroll.course.get_first_lesson()
+        if first_lesson:
+            LessonEnroll.objects.get_or_create(lesson=first_lesson, learner=learner, created_by=created_by)
+        return enroll
+
+
+class LessonEnroll(BaseModel):
+    """
+    Назначения на курсы индивидульных пользователей
+    """
+    learner = models.ForeignKey('account.Account', related_name='lesson_enrolls',
+                                verbose_name='обучаемый')
+    created_by = models.ForeignKey('account.Account', related_name='lesson_enrolls_created',
+                                verbose_name='кто создал назначение')
+    course = models.ForeignKey('CourseEnroll', related_name='lesson_enrolls',
+                            verbose_name='курс', blank=True, null=True)
+    lesson = models.ForeignKey('Lesson', related_name='enrolls',
+                            verbose_name='урок', blank=True, null=True)
+
+    data = JSONField('результат прохождения', default={}, blank=True, null=True)
+    last_data = models.DateTimeField('дата последней попытки', null=True, blank=True)
+    number_of_attempt = models.IntegerField('кол-во попыток', default=0)
+    success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
+    is_archive = models.BooleanField('урок в архиве', default=False)
+    date_archive = models.DateTimeField('дата перемещения в архиве', null=True, blank=True)
+    #  TODO: собирать статистику по прохождению
+
+    class Meta:
+        verbose_name = 'Назначение на урок'
+        verbose_name_plural = 'Назначения на уроки'
+        app_label = 'quizy'
+
+    def __unicode__(self):
+        if self.lesson:
+            return '%s (%s)' % (self.learner, self.lesson.name.lower())
+        return '%s (назначение без урока)' % (self.learner)
 
     @property
     def is_locked(self):
@@ -217,7 +265,8 @@ class Page(models.Model):
         ('radiobox', 'Вопрос с выбором одного ответа'),
         ('checkbox', 'Вопрос с выбором нескольких ответов'),
         ('text', 'Текстовый вопрос'),
-        ('pairs', 'Вопрос с подбором пары')
+        ('pairs', 'Вопрос с подбором пары'),
+        ('words_in_text', 'Страница с подбором слов в тексте')
     )
 
     lesson = models.ForeignKey('Lesson', related_name='pages',

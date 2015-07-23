@@ -3,8 +3,8 @@
 var Page = require('../models/page');
 var Lesson = require('../models/lesson');
 
-var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdDialog, Upload) {
 
+var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $location, $mdDialog, Upload) {
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
             if (!$scope.user || !$scope.user.is_authenticated) {
@@ -31,6 +31,9 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
         }, {
             type: "pairs",
             text: "Страница с подбором пары"
+        }, {
+            type: "words_in_text",
+            text: "Страница с подбором слов в тексте"
         }],
         pages: [],
         current_page_index: 0,
@@ -41,7 +44,7 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
     };
 
     $scope.main.make_short_header();
-    $scope.main.active_menu = 'lessons';
+    $scope.main.active_menu = 'courses';
 
     $scope.current_menu = 'common';
 
@@ -73,7 +76,6 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
                 }
             }
 
-            //console.log(l)
             $scope.model.editor.current_lesson = l;
 
             $scope.detect_media_type();
@@ -104,11 +106,23 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
     // todo:  сделать loading на созание нового урока
     // создаем новый урок
     if (!$stateParams.lesson_id) {
+        if (!$scope.main.current_course) {
+            $location.path('/');
+            return;
+        } else {
+            $scope.model.editor.current_lesson = {
+                course: $scope.main.current_course
+            };
+        }
         $scope.model.editor.new_lesson = true;
     } else {
         $scope.model.editor.new_lesson = false;
         $scope.reload_lesson();
     }
+
+
+
+
 
 
     // Заново раздаем номера вопросам
@@ -123,7 +137,14 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
         });
     };
 
-    
+
+    $scope.go_current_course = function(course_id) {
+        $location.path('/courses/' + course_id + '/');
+    };
+
+    $scope.go_edit_current_course = function(course_id) {
+        $location.path('/editor/course/' + course_id + '/');
+    };
 
     $scope.show_editor_common = function() {
         $scope.current_menu = 'common';
@@ -155,12 +176,13 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
 
 
     $scope.delete_current_lesson = function($event) {
+        var _course_id = $scope.model.editor.current_lesson.course.id;
         $mdDialog.show({
-              targetEvent: $event,
-              templateUrl: '/assets/partials/confirm_delete_lesson.html',
-              disableParentScroll: true,
-              clickOutsideToClose: true,
-                scope: $scope,        // use parent scope in template
+            targetEvent: $event,
+            templateUrl: '/assets/partials/confirm_delete_lesson.html',
+            disableParentScroll: true,
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
                 preserveScope: true,
                 controller: function DialogController($scope, $mdDialog) {
 
@@ -172,7 +194,7 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
                         $event.preventDefault();
                         $mdDialog.hide();
                         $scope.model.editor.current_lesson.delete();
-                        $scope.main.go_lessons_page();
+                        $scope.main.go_courses_page(_course_id);
                     };
                 }
             });
@@ -251,36 +273,39 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
     };
 
     /**
-     * Определем медиа тип вопроса
+     * Определем медиа тип вопроса для текущей страницы
      * @return {[type]} [description]
      */
     $scope.detect_media_type = function() {
-        var _filename = $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].media;
-        if (_filename) {
-            var _ext = _filename.substr(_filename.length - 3);
-            if (_ext == 'mp4') {
-                $scope.model.editor.media_type = 'video';
-                $scope.model.editor.media_sources = [{
-                    src: $sce.trustAsResourceUrl($scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].media),
-                    type: "video/mp4"
-                }];
-            }
-            if (_ext == 'webm') {
-                $scope.model.editor.media_type = 'video';
-                $scope.model.editor.media_sources = [{
-                    src: $sce.trustAsResourceUrl($scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].media),
-                    type: "video/webm"
-                }];
-            }
-            if (_ext == 'mp3') {
-                $scope.model.editor.media_type = 'audio';
-                $scope.model.editor.media_sources = [{
-                    src: $sce.trustAsResourceUrl($scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index].media),
-                    type: "audio/mp3"
-                }];
-            }
-            if (_ext == 'jpg' || _ext == 'png' || _ext == 'gif') {
-                $scope.model.editor.media_type = 'image';
+        var _current_page = $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index];
+        if (_current_page && _current_page.hasOwnProperty('media')) {
+            var _filename = _current_page.media;
+            if (_filename) {
+                var _ext = _filename.substr(_filename.length - 3);
+                if (_ext == 'mp4') {
+                    $scope.model.editor.media_type = 'video';
+                    $scope.model.editor.media_sources = [{
+                        src: $sce.trustAsResourceUrl(_current_page.media),
+                        type: "video/mp4"
+                    }];
+                }
+                if (_ext == 'webm') {
+                    $scope.model.editor.media_type = 'video';
+                    $scope.model.editor.media_sources = [{
+                        src: $sce.trustAsResourceUrl(_current_page.media),
+                        type: "video/webm"
+                    }];
+                }
+                if (_ext == 'mp3') {
+                    $scope.model.editor.media_type = 'audio';
+                    $scope.model.editor.media_sources = [{
+                        src: $sce.trustAsResourceUrl(_current_page.media),
+                        type: "audio/mp3"
+                    }];
+                }
+                if (_ext == 'jpg' || _ext == 'png' || _ext == 'gif') {
+                    $scope.model.editor.media_type = 'image';
+                }
             }
         }
     };
@@ -306,7 +331,7 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
 
 
     /**
-     * Сохранение изменний в варианте текстового ответа
+     * Сохранение изменний на странице
      */
     $scope.finish_changed_page_text = function() {
         $scope.model.editor.loading = true;
@@ -318,7 +343,7 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
                 $scope.$apply();
             },
             function(error) {
-                $log.error("Ошибка сохранения вопроса. ", error);
+                $log.error("Ошибка сохранения текущей страницы. ", error);
                 $scope.model.editor.loading = false;
             }
         );
@@ -381,7 +406,7 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
                     }
                 );
         }
-        if (type == 'text') {
+        if (type == 'text' || type == 'words_in_text') {
             var _variant = {
                 code_errors: {},
                 is_correct: true,
@@ -453,7 +478,10 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
     $scope.finish_changed_lesson = function() {
         $scope.model.editor.loading = true;
         if ($scope.model.editor.new_lesson == true) {
-            $data.new_lesson($scope.model.editor.current_lesson).then(function(data) {
+            // создаем новый урок
+            var _data = $scope.model.editor.current_lesson;
+            _data.course = $scope.model.editor.current_lesson.course.id;
+            $http.post('/api/lessons/', _data).then(function(data) {
                 if (data.hasOwnProperty('data')) {
                     if (data.data.hasOwnProperty('id')) {
                         $scope.main.go_editor_lesson(data.data.id);
@@ -462,6 +490,7 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
             }, function(error) {
                 $log.error('Ошибка создания нового урока', error);
             });
+
         } else {
             $scope.model.editor.current_lesson.check();
             $scope.model.editor.current_lesson.save().then(function() {
@@ -570,4 +599,4 @@ var EditCtrl = function($scope, $sce, $stateParams, $log, $data, $location, $mdD
 };
 
 
-module.exports = ['$scope', '$sce', '$stateParams', '$log', '$data', '$location', '$mdDialog', 'Upload', EditCtrl];
+module.exports = ['$scope', '$sce', '$http', '$stateParams', '$log', '$data', '$location', '$mdDialog', 'Upload', EditCtrl];

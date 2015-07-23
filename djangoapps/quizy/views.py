@@ -20,8 +20,8 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 
-from quizy.models import Lesson, Page, Variant, LessonEnroll
-from quizy.serializers import (EnrollSerializer, LessonSerializer,
+from quizy.models import Course, Lesson, Page, Variant, CourseEnroll, LessonEnroll
+from quizy.serializers import (CourseEnrollSerializer, LessonEnrollSerializer, LessonSerializer,
 PageSerializer, VariantSerializer)
 
 from users.account.models import Account
@@ -252,7 +252,7 @@ def lesson(request, lesson_pk=None):
     else:
         lesson = get_object_or_404(Lesson, pk=lesson_pk)
     enroll = get_enroll(request, lesson)
-    data = EnrollSerializer(enroll).data
+    data = LessonEnrollSerializer(enroll).data
     data.update(LessonSerializer(lesson).data)
     return Response(data)
 
@@ -265,7 +265,7 @@ def mylessons(request):
 
     enrolls = []
     for enroll in LessonEnroll.objects.filter(learner=request.user, is_archive=False):
-        enrolls.append(EnrollSerializer(enroll).data)
+        enrolls.append(LessonEnrollSerializer(enroll).data)
     return Response(enrolls, status=status.HTTP_200_OK)
 
 
@@ -287,7 +287,7 @@ def answers(request, enroll_pk=None):
 
             enroll.data = data
             enroll.save()
-            return Response(EnrollSerializer(enroll).data, status=status.HTTP_200_OK)
+            return Response(LessonEnrollSerializer(enroll).data, status=status.HTTP_200_OK)
 
     if enroll_pk == '0':
         return Response(status=status.HTTP_200_OK)
@@ -306,7 +306,7 @@ def play(request, enroll_pk=None):
     except LessonEnroll.DoesNotExist:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    return Response(EnrollSerializer(instance=enroll).data, status=status.HTTP_200_OK)
+    return Response(LessonEnrollSerializer(instance=enroll).data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'PUT'])
@@ -324,110 +324,8 @@ def demo_play(request, lesson_pk=None):
         if lesson.created_by == request.user:
             enroll = LessonEnroll(lesson=lesson, learner=request.user, created_by=request.user)
 
-    return Response(EnrollSerializer(instance=enroll).data, status=status.HTTP_200_OK)
+    return Response(LessonEnrollSerializer(instance=enroll).data, status=status.HTTP_200_OK)
 
-"""
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
-@permission_classes((AllowAny, ))
-def lessons(request, lesson_pk=None):
-    if not request.user.is_authenticated():
-        return Response([], status=status.HTTP_200_OK)
-
-    if request.method == 'GET' and request.user.is_authenticated():
-        lessons = []
-        if not lesson_pk:
-            lessons = Lesson.objects.filter(created_by=request.user)
-            if len(lessons) > 0:
-                jsonlessons = []
-                for l in lessons:
-                    jsonlessons.append(LessonSerializer(l).data)
-                return Response(jsonlessons, status=status.HTTP_200_OK)
-            else:
-                return Response([], status=status.HTTP_200_OK)
-        else:
-            try:
-                lesson = Lesson.objects.get(pk=lesson_pk, created_by=request.user)
-            except Lesson.DoesNotExist:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-            return Response(LessonSerializer(instance=lesson).data, status=status.HTTP_200_OK)
-
-    is_dirty = False
-    is_active = None
-    name = None
-    description = None
-    code_errors = None
-    is_correct = None
-
-    # create lesson
-    if request.method == 'POST' and request.user.is_authenticated() and not lesson_pk:
-        raw_data = request.body.decode("utf-8")
-
-        if raw_data:
-            req = json.loads(raw_data)
-            is_active = req.get("is_active")
-            name = req.get("name")
-            description = req.get("description")
-            code_errors = req.get("code_errors")
-            is_correct = req.get("is_correct")
-
-        lesson = Lesson.objects.create(created_by=request.user)
-        if lesson.is_active != is_active and is_active is not None:
-            lesson.is_active = is_active
-            is_dirty = True
-        if lesson.name != name and name is not None:
-            lesson.name = name
-            is_dirty = True
-        if lesson.description != description and description is not None:
-            lesson.description = description
-            is_dirty = True
-        if lesson.code_errors != code_errors and code_errors is not None:
-            lesson.code_errors = code_errors
-            is_dirty = True
-        if lesson.is_correct != is_correct and is_correct is not None:
-            lesson.is_correct = is_correct
-            is_dirty = True
-
-        if is_dirty is True:
-            lesson.save()
-        return Response(LessonSerializer(instance=lesson).data, status=status.HTTP_200_OK)
-
-    if request.method == 'DELETE' and request.user.is_authenticated() and lesson_pk:
-        lessons = Lesson.objects.filter(pk=lesson_pk, created_by=request.user)[:1]
-        if len(lessons) > 0:
-            lessons[0].delete()
-
-    if request.method == 'PUT' and request.user.is_authenticated() and lesson_pk:
-        req = json.loads(request.body.decode("utf-8"))
-        is_dirty = False
-        is_active = req.get("is_active")
-        name = req.get("name")
-        description = req.get("description")
-        code_errors = req.get("code_errors")
-        is_correct = req.get("is_correct")
-
-        lesson = get_object_or_404(Lesson, pk=lesson_pk, created_by=request.user)
-        if lesson.is_active != is_active:
-            lesson.is_active = is_active
-            is_dirty = True
-        if lesson.name != name:
-            lesson.name = name
-            is_dirty = True
-        if lesson.description != description:
-            lesson.description = description
-            is_dirty = True
-        if lesson.code_errors != code_errors and code_errors is not None:
-            lesson.code_errors = code_errors
-            is_dirty = True
-        if lesson.is_correct != is_correct and is_correct is not None:
-            lesson.is_correct = is_correct
-            is_dirty = True
-
-        if is_dirty is True:
-            lesson.save()
-        return Response(LessonSerializer(instance=lesson).data, status=status.HTTP_200_OK)
-
-    return Response([], status=status.HTTP_200_OK)
-"""
 
 @api_view(['POST'])
 def new_page(request, lesson_pk=None):
@@ -539,7 +437,7 @@ def lesson_archive(request, lesson_pk=None):
             is_archive=True)
         archives = []
         for a in lessonEnrolls:
-            archives.append(EnrollSerializer(instance=a).data)
+            archives.append(LessonEnrollSerializer(instance=a).data)
         return Response(archives, status=status.HTTP_200_OK)
 
     if request.method == 'POST' and lesson_pk is not None:
@@ -551,7 +449,7 @@ def lesson_archive(request, lesson_pk=None):
             lessonEnroll.is_archive = True
             lessonEnroll.date_archive = timezone.now()
             lessonEnroll.save()
-            return Response(EnrollSerializer(instance=lessonEnroll).data, status=status.HTTP_200_OK)
+            return Response(LessonEnrollSerializer(instance=lessonEnroll).data, status=status.HTTP_200_OK)
         else:
             return Response([], status=status.HTTP_200_OK)
 
@@ -609,19 +507,40 @@ def enroll_pupil(request, enroll_pk):
 
     if request.method == 'POST':
         data = json.loads(request.body.decode("utf-8"))
+        course_id = data.get('course_id')
+        auto_enroll = data.get('auto_enroll')
         lesson_id = data.get('lesson_id')
         email = data.get('email')
         if validateEmail(email) is False:
             return Response("Неверный формат email", status=status.HTTP_400_BAD_REQUEST)
-        lesson = get_object_or_404(Lesson, pk=lesson_id, created_by=request.user)
+
+        lesson = None
+        course = None
+        if lesson_id:
+            lesson = get_object_or_404(Lesson, pk=lesson_id)
+        if course_id:
+            course = get_object_or_404(Course, pk=course_id)
+
         pupil = Account.objects.filter(email__iexact=email)[:1]
-        if pupil:
+
+        if pupil and lesson:
             try:
                 enroll = LessonEnroll.objects.get(lesson=lesson, learner=pupil[0])
             except LessonEnroll.DoesNotExist:
                 enroll = LessonEnroll.objects.create(lesson=lesson, learner=pupil[0], created_by=request.user)
 
-            return Response(EnrollSerializer(enroll).data, status=status.HTTP_200_OK)
+            return Response(LessonEnrollSerializer(enroll).data, status=status.HTTP_200_OK)
+        elif pupil and course:
+            try:
+                enroll = CourseEnroll.objects.get(course=course, learner=pupil[0])
+            except CourseEnroll.DoesNotExist:
+                enroll = CourseEnroll.create(course, pupil[0], request.user)
+
+                if auto_enroll:
+                    enroll.auto_enroll = auto_enroll
+                    enroll.save()
+
+            return Response(CourseEnrollSerializer(enroll).data, status=status.HTTP_200_OK)
         else:
             return Response({'code': 404}, status=status.HTTP_200_OK)
 

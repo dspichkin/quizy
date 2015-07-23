@@ -4,7 +4,7 @@ var Page = require('../models/page');
 var Lesson = require('../models/lesson');
 var Attempt = require('../models/attempt');
 
-var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location) {
+var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $compile) {
 
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
@@ -44,6 +44,7 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location) {
             if ($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media) {
                 $scope.detect_media_type();
             }
+            make_word_in_text();
         }, function(error) {
             $log.error('Ошибка получения назначенных на меня уроков', error);
         });
@@ -55,6 +56,7 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location) {
             if ($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media) {
                 $scope.detect_media_type();
             }
+            make_word_in_text()
         }, function(error) {
             $log.error('Ошибка получения назначенных на меня уроков', error);
         });
@@ -73,6 +75,73 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location) {
         }
     };
 
+    var make_word_in_text = function() {
+        if ($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].type == 'words_in_text') {
+            /*
+            Формируем модель для отображения select
+            text - конечтный текст для отображения в шаблоне
+            select - список селектов
+            select = [
+                {
+                    selected - ответ выбранный пользователем
+                    options - варианты выбора
+                    options = [{
+                        answer: true,
+                        text: "xxx"
+                    }]
+                }
+            ]
+             */
+            $scope.words_in_text = {
+                text: null,
+                select: [],
+                input: []
+            };
+            var _variants = $scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].variants;
+            // проходим по все вариантам (сейчас всегда один)
+            for (var i = 0, len = _variants.length; i < len; i++) {
+                var _text = _variants[i].text;
+                // Формируем все SELECT
+                var _selects = _variants[i].right_answers_select;
+
+                for (var j = 0, lenj = _selects.length; j < lenj; j++) {
+                    var _words = _selects[j].words;
+                    $scope.words_in_text.select[j] = {
+                        options: _words
+                    };
+                    var _select_html = ' <select ng-model="words_in_text.select[' + j + '].selected"' +
+                        ' ng-options="item.text for item in words_in_text.select[' + j + '].options" ' +
+                        'ng-change="test()"></select>';
+
+                    _selects[j].source = _selects[j].source.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+                    var re = new RegExp(_selects[j].source, "g");
+                    _text = _text.replace(re, _select_html);
+                }
+                
+                // Формируем все INPUT
+                var _inputs = _variants[i].right_answers_input;
+
+                for (var j = 0, lenj = _inputs.length; j < lenj; j++) {
+                    var _words = _inputs[j].words;
+                    $scope.words_in_text.input[j] = {
+                        options: _words
+                    };
+                    var _input_html = ' <input ng-model="words_in_text.input[' + j + '].inputed"' +
+                        'ng-change="test()" />';
+
+                    _inputs[j].source = _inputs[j].source.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+                    var re = new RegExp(_inputs[j].source, "g");
+                    _text = _text.replace(re, _input_html);
+                }
+
+
+                $scope.words_in_text.text = _text;
+            }
+
+            
+            
+        }
+    }
     /**
      * Запись тесктового ответа
      * @param  {[type]} _id [description]
@@ -89,6 +158,20 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location) {
             $scope.model.play.next_question = false;
         }
     };
+
+    $scope.test = function() {
+        console.log("#####")
+        console.log("@@@@", $scope.words_in_text)
+    }
+
+    $scope.toTrustedHTML = function(html) {
+        //return $sce.trustAsHtml( html );
+        html = '<div>' + html + '</div>';
+        var e = $compile(html)($scope);
+        return $sce.trustAsHtml(html);
+    }
+
+
 
     var has_answer = function() {
         var _pages = $scope.model.play.attempt.lesson.pages;
@@ -320,4 +403,6 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location) {
 };
 
 
-module.exports = ['$scope', '$sce', '$http', '$stateParams', '$log', '$location', PlayCtrl];
+module.exports = ['$scope', '$sce', '$http', '$stateParams', '$log', '$location', '$compile', PlayCtrl];
+
+

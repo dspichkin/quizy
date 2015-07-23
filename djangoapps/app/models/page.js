@@ -10,29 +10,87 @@ function Page(data) {
     if (data == undefined) {
         console.log("Неверное создание объекта page");
     }
-    /*
-    if (data.type == 'pairs') {
-        var _raw_variants = data.variants;
-        var _new_variants = [];
-        for (var i = 0, len = _raw_variants.length; i < len; i++) {
-            if (_raw_variants[i].pair_type == "answer") {
-                var _answer = _raw_variants[i];
-                var _page;
-                for (var j = 0, len = _raw_variants.length; j < len; j++) {
-                    console.log(_raw_variants[j].id, _answer.pair)
-                    if (_raw_variants[j].id == _answer.pair) {
-                        _page = _raw_variants[j];
-                        _page.pair_object = _answer;
 
-                        //_new_variants.push(_page);
+    // Формируем для words_in_text исходные данные
+    if (data.type == 'words_in_text') {
+        var _parse_str = function(data, type) {
+            /*
+            Функция для парсинга списка ввиде  ["[[ccc, fff, 222]]", ...] или  ["((ccc, fff, 222))", ...]
+            в спискок формата
+                _selects = [{
+                    words: [{
+                        answer: true,
+                        text: "xxx"
+                    }, {
+                        answer: true,
+                        text: "yyy"
+                    }],
+                    source: "\(\(xxx, yyy,zzz\)\)"
+                }]
+            */
+            var _selects = [];
+
+            for (var j = 0, lenj = data.length; j < lenj; j++) {
+                var t1 = data[j].substring(2, data[j].length - 2);
+                var t2 = [];
+                if (t1.length > 0) {
+                    t2 = t1.split(',');
+                    var _words = [];
+                    // убираем пробелы
+                    for (var x = 0, lenx = t2.length; x < lenx; x++) {
+                        var _current_word = t2[x].trim();
+                        // если текущее слово начинаеться с * помечаем только его как правильно
+                        if (type == 'select') {
+                            if (t2[x].trim()[0] == '*') {
+                                _words.push({
+                                    text: _current_word.substring(1, _current_word.length),
+                                    answer: true
+
+                                });
+                            } else {
+                                _words.push({
+                                    text: _current_word,
+                                    answer: false
+                                });
+                            }
+                        } else {
+                            _words.push({
+                                text: _current_word,
+                                answer: true
+
+                            });
+                        }
+                    }
+                    if (t2.length > 0) {
+                        _selects.push({
+                            source: data[j],
+                            words: _words
+                        });
                     }
                 }
             }
+            return _selects;
+        };
+
+        var _raw_variants = data.variants;
+        // проходим по всем варианта сейчас только один
+        for (var i = 0, len = _raw_variants.length; i < len; i++) {
+            // подготавливаем данные
+            var _text = _raw_variants[i].text;
+            // ищем все селекты
+            var _sel = _text.match(/\(\(.*?\)\)/g);
+            // ищем все инпуты
+            var _inp = _text.match(/\[\[.*?\]\]/g);
+
+            if (_sel.length > 0) {
+                _raw_variants[i].right_answers_select = _parse_str(_sel, 'select');
+            }
+            if (_inp.length > 0) {
+                _raw_variants[i].right_answers_input = _parse_str(_inp);
+            }
+            // console.log('_raw_variants', _raw_variants[i])
         }
-        
-        data.variants = _new_variants;
     }
-    */
 
     _.assign(this, data);
 }

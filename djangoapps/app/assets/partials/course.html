@@ -3,7 +3,7 @@
 
                     
 		<div fab ripple fab-class="fab-add-lesson" icon="icon-add" fab-class-menu="fab-add-lesson-menu" icon="icon-add" menu-right-x="178" menu-y="0" menu-width="200" menu-height="52">
-		    <div><div ng-click="main.new_lesson()">Создать новый <b>урок</b></div></div>
+		    <div><div ng-click="main.new_lesson(model.course)">Создать новый <b>урок</b></div></div>
 		</div>
 
 
@@ -47,8 +47,8 @@
 		                    </div>
 		                </td>
 		                <td style="width: 200px;text-align:left">
-		                    <span ng-if="lesson.name">{{lesson.name}}</span>
-		                    <span ng-if="!lesson.name">Урок без имени</span>
+		                    <span ng-if="lesson.name">{{lesson.number}}. {{lesson.name}}</span>
+		                    <span ng-if="!lesson.name">{{lesson.number}}. Урок без имени</span>
 		                </td>
 		                <td style="min-width: 200px;text-align:left">
 		                    <span>{{lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>
@@ -58,7 +58,7 @@
 		                        <div ng-repeat="enroll in lesson.enrolls" class="enroll_pupil">
 		                            <div style="margin: 6px 0 0 0;width:200px;float:left;">
 		                                <div class="remove_enroll" ng-click="remove_enroll(enroll.id)"><i class="material-icons icon-remove-enroll">close</i></div>
-		                                <div class="enroll_email">{{enroll.learner.email}}</div> 
+		                                <div class="enroll_email" style="width: 160px;overflow: auto;">{{enroll.learner.email}}</div> 
 		                            </div>
 		                            <div class="enroll_result">
 		                                <div ng-class="{

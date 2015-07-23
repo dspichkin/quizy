@@ -20,8 +20,8 @@ function Course(data) {
 }
 
 // Унаследуем BaseObject
-Lesson.prototype = new BaseObject();
-Lesson.prototype.constructor = Course;
+Course.prototype = new BaseObject();
+Course.prototype.constructor = Course;
 
 var _code_errors = {
     200: "Не заполнено имя курса",
@@ -29,7 +29,7 @@ var _code_errors = {
 };
 
 
-_.assign(Lesson.prototype, {
+_.assign(Course.prototype, {
     create: function(lesson_id) {
         return $.ajax({
             url: "/api/courses/",
@@ -49,13 +49,6 @@ _.assign(Lesson.prototype, {
             data: this.serialize(),
             dataType: "json",
             type: "PUT"
-        });
-    },
-    new_page: function(variant) {
-        return $.ajax({
-            url: "/api/courses/" + this.id + "/new_page/",
-            data: variant,
-            type: "POST"
         });
     },
     remove_lesson: function(lesson_id) {
@@ -95,7 +88,8 @@ _.assign(Lesson.prototype, {
             url: "/api/course/" + this.id + "/upload/",
             type: "DELETE"
         });
-    },
+    }
+    /*
     check: function() {
         if (!this.name || this.name == "") {
             this.add_error('200');
@@ -108,17 +102,19 @@ _.assign(Lesson.prototype, {
             this.remove_error('201');
         }
 
-        if (this.lessons.length == 0) {
+        if (this.lessons && this.lessons.length == 0) {
              this.add_error('202');
         } else {
             this.remove_error('202');
         }
 
         var _has_error = false;
-        for (var i = 0, len = this.lessons.length; i < len; i++) {
-            this.lessons[i].check();
-            if (this.lessons[i].is_correct == false) {
-                _has_error = true;
+        if (this.lessons) {
+            for (var i = 0, len = this.lessons.length; i < len; i++) {
+                this.lessons[i].check();
+                if (this.lessons[i].is_correct == false) {
+                    _has_error = true;
+                }
             }
         }
         if (_has_error == true) {
@@ -135,6 +131,7 @@ _.assign(Lesson.prototype, {
             }
         }
     }
+    */
 
 });
 

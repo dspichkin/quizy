@@ -69,6 +69,18 @@
 
                 </div>
 
+                <div ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].type == 'words_in_text'" class="variant_text" style="width: 100%;padding: 0px 20px 10px 20px;">
+                    <ul>
+                        <li ng-repeat="item in model.play.attempt.lesson.pages[model.play.current_page_index].variants" class="variant">
+                            <div style="clear:both;margin: -17px 0 0 0;" compile="words_in_text.text" >
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+
+
+
 
                 <div ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].type == 'text'" class="variant_text" style="width: 100%;padding: 0px 20px 10px 20px;">
 

@@ -1,8 +1,8 @@
-                
+<!--                
 <div fab ripple fab-class="fab-add-lesson" icon="icon-add" fab-class-menu="fab-add-lesson-menu" icon="icon-add" menu-right-x="178" menu-y="0" menu-width="200" menu-height="52">
     <div><div ng-click="main.new_lesson()">Создать новый <b>урок</b></div></div>
 </div>
-
+-->
 
 
 
@@ -37,9 +37,8 @@
             <th class="table_th">
                 Краткое описание
             </th>
-            <th class="table_th" style="width: 400px;">
-                <div style="width:200px;float:left;">Назначение</div>
-                <div style="">Статистика</div>
+            <th class="table_th" style="width: 200px;">
+                <div style="width:200px;float:left;">Кол-во назначений</div>
             </th>
         </thead>
 
@@ -48,9 +47,12 @@
                 <td style="width: 170px;vertical-align: middle;position:relative;">
                     <div class="lesson_incorrect" ng-if="course.is_correct==false"></div>
                     <div class="lesson_correct" ng-if="course.is_correct==true"></div>
-                    <div class="shadow btn-round" ripple style="position: relative;" lesson-action lesson-id="lesson.id" edit-lesson="main.go_editor_lesson" enroll-lesson="lesson_enroll" play-lesson="main.go_test_play" edit-lesson="main.go_editor_lesson">
+
+                    <div class="shadow btn-round" ripple style="position: relative;" course-action course-id="course.id" enroll-course="course_enroll" edit-course="go_course_lessons">
                         <a class="icon-menu"  href="#"></a>
                     </div>
+                
+
                 </td>
                 <td style="width: 200px;text-align:left">
                     <span ng-if="course.name">{{course.name}}</span>
@@ -59,23 +61,13 @@
                         margin: 5px 0;" ng-click="go_course_lessons(course.id)">Уроки курса ...</div>
                 </td>
                 <td style="min-width: 200px;text-align:left">
-                    <span>{{course.description | htmlToPlaintext | limitTo: 25 }}{{course.description.length > 25 ? '...' : ''}}</span>
+                    <span>{{course.description | htmlToPlaintext | limitTo: 100 }}{{course.description.length > 100 ? '...' : ''}}</span>
                 </td>
-                <td class="td_enroll_stats" style="width:400px;text-align:left">
+                <td class="td_enroll_stats" style="width:200px;text-align:center">
                     <div style="max-height:100px;overflow: auto;">
-                        <div ng-repeat="enroll in course.enrolls" class="enroll_pupil">
-                            <div style="margin: 6px 0 0 0;width:200px;float:left;">
-                                <div class="remove_enroll" ng-click="remove_enroll(enroll.id)"><i class="material-icons icon-remove-enroll">close</i></div>
-                                <div class="enroll_email">{{enroll.learner.email}}</div> 
-                            </div>
-                            <div class="enroll_result">
-                                <div ng-class="{
-                                    'enroll_success': enroll.success == true,
-                                    'enroll_fail': enroll.success == false,
-                                    'enroll_undone': enroll.success == null}"></div>
-                                <div class="enroll_data">{{enroll.last_data | date:'yyyy-MM-dd'}} / {{enroll.number_of_attempt}}</div>
-                            </div> 
-                        </div>
+                        <div class="enroll_email">{{course.enroll_number.number}}</div>
+                        <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
+                        margin: 5px 0;">Назначения курса</div>
                     </div>
                 </td>
             </tr>
