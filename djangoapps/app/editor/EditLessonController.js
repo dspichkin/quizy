@@ -77,7 +77,7 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
             }
 
             $scope.model.editor.current_lesson = l;
-
+            console.log(l)
             $scope.detect_media_type();
             // проверяем на правильность во время загрузки
             var _c = $scope.model.editor.current_lesson.is_correct;

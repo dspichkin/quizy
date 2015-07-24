@@ -20,7 +20,7 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
         'radiobox_answer': null,
         'text_answer': null
     };
-
+    $scope.show_debug = false;
     $scope.main.make_short_header();
     $scope.main.active_menu = 'lessons';
 
@@ -44,7 +44,7 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
             if ($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media) {
                 $scope.detect_media_type();
             }
-            make_word_in_text();
+            $scope.answer_ready();
         }, function(error) {
             $log.error('Ошибка получения назначенных на меня уроков', error);
         });
@@ -56,7 +56,7 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
             if ($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media) {
                 $scope.detect_media_type();
             }
-            make_word_in_text()
+            $scope.answer_ready()
         }, function(error) {
             $log.error('Ошибка получения назначенных на меня уроков', error);
         });
@@ -70,12 +70,13 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
             load_enroll($stateParams.enroll_id);
         } else if ($stateParams.lesson_id) {
             load_lesson($stateParams.lesson_id);
+            $scope.show_debug = true;
         } else {
             return;
         }
     };
 
-    var make_word_in_text = function() {
+    var run_make_word_in_text = function() {
         if ($scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].type == 'words_in_text') {
             /*
             Формируем модель для отображения select
@@ -111,13 +112,13 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
                     };
                     var _select_html = ' <select ng-model="words_in_text.select[' + j + '].selected"' +
                         ' ng-options="item.text for item in words_in_text.select[' + j + '].options" ' +
-                        'ng-change="test()"></select>';
+                        'ng-change="change_words_in_text()"></select>';
 
                     _selects[j].source = _selects[j].source.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
                     var re = new RegExp(_selects[j].source, "g");
                     _text = _text.replace(re, _select_html);
                 }
-                
+
                 // Формируем все INPUT
                 var _inputs = _variants[i].right_answers_input;
 
@@ -127,7 +128,7 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
                         options: _words
                     };
                     var _input_html = ' <input ng-model="words_in_text.input[' + j + '].inputed"' +
-                        'ng-change="test()" />';
+                        'ng-change="change_words_in_text()" />';
 
                     _inputs[j].source = _inputs[j].source.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
                     var re = new RegExp(_inputs[j].source, "g");
@@ -137,9 +138,6 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
 
                 $scope.words_in_text.text = _text;
             }
-
-            
-            
         }
     }
     /**
@@ -159,18 +157,64 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
         }
     };
 
-    $scope.test = function() {
-        console.log("#####")
-        console.log("@@@@", $scope.words_in_text)
-    }
+    // обработчки изменнений в words_in_text
+    $scope.change_words_in_text = function() {
+        // проверяем если не отвеченные слова
+        var _has_all_answers = true;
+        // проходим по всем селектам и проверем есть ли selected
+        for (var i = 0, len = $scope.words_in_text.select.length; i < len; i++) {
+            if (!$scope.words_in_text.select[i].hasOwnProperty('selected')) {
+                _has_all_answers = false;
+                break;
+            }
+        }
 
+        // проходим по всем инпутам и проверем есть ли inputed и оно не пустое
+        if (_has_all_answers == true) {
+            for (var i = 0, len = $scope.words_in_text.input.length; i < len; i++) {
+                if (!$scope.words_in_text.input[i].hasOwnProperty('inputed')) {
+                    _has_all_answers = false;
+                    break;
+                } else {
+                    if ($scope.words_in_text.input[i].inputed == "") {
+                        _has_all_answers = false;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if ($scope.model.play.next_question != _has_all_answers) {
+            $scope.model.play.next_question = _has_all_answers;
+            // Записываем результат в текущую попытку для дальнейшего просчета
+            var _pages = $scope.model.play.attempt.lesson.pages;
+            var _step = $scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index];
+            if (_step) {
+                _step.answers = $scope.words_in_text;
+            } else {
+                _step = {
+                    'type': 'words_in_text',
+                    'page_id': _pages[$scope.model.play.current_page_index].id,
+                    'answers': $scope.words_in_text
+                };
+            }
+            $scope.model.play.attempt.answer_steps[$scope.model.play.current_page_index] = _step;
+
+            setTimeout(function() {
+                $scope.$digest();
+            });
+        }
+    };
+
+
+    /*
     $scope.toTrustedHTML = function(html) {
         //return $sce.trustAsHtml( html );
         html = '<div>' + html + '</div>';
         var e = $compile(html)($scope);
         return $sce.trustAsHtml(html);
     }
-
+    */
 
 
     var has_answer = function() {
@@ -216,10 +260,16 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
     };
 
     $scope.answer_ready = function() {
-        $scope.model.play.next_question = has_answer();
-        setTimeout(function() {
-            $scope.$apply();
-        });
+        if ($scope.model.play.current_page_index < $scope.model.play.attempt.lesson.pages.length) {
+            run_make_word_in_text();
+        }
+
+        if ($scope.model.play.next_question != has_answer()) {
+            $scope.model.play.next_question = has_answer();
+            setTimeout(function() {
+                $scope.$digest();
+            });
+        }
     };
 
     /**
@@ -256,13 +306,73 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
         }
     };
 
-    $scope.get_page_by_id = function(id) {
+    // возвращает страницу по его id используеться в выдочи результатов
+    $scope.get_page_by_id = function(page_id) {
         for (var i = 0, len = $scope.model.play.attempt.lesson.pages.length; i < len; i++) {
-            if ($scope.model.play.attempt.lesson.pages[i].id == id) {
+            if ($scope.model.play.attempt.lesson.pages[i].id == page_id) {
                 return $scope.model.play.attempt.lesson.pages[i];
             }
         }
     };
+
+    // возвращает true если найдена соотвествущая рефлексия
+    $scope.get_reflexy = function(page_id, variant_id) {
+        var _pages = $scope.model.play.attempt.lesson.pages;
+        for (var i = 0, len = _pages.length; i < len; i++) {
+            if (_pages[i].id == page_id) {
+                for (var j = 0, lenj = _pages[i].variants.length; j < lenj; j++) {
+                    if (_pages[i].variants[j].id == variant_id) {
+                        return true;
+                    }
+                }
+            }
+        }
+    };
+
+    // возвращает рефлексию ответа по его id используеться в выдочи результатов
+    $scope.get_reflexy_by_id = function(page_id, variant_id) {
+        var _pages = $scope.model.play.attempt.lesson.pages;
+        for (var i = 0, len = _pages.length; i < len; i++) {
+            if (_pages[i].id == page_id) {
+                for (var j = 0, lenj = _pages[i].variants.length; j < lenj; j++) {
+                    if (_pages[i].variants[j].id == variant_id) {
+                        return _pages[i].variants[j].reflexy;
+                    }
+                }
+            }
+        }
+    };
+
+    // возвращает вариант ответа по его id используеться в выдочи результатов
+    $scope.get_variant_by_id = function(page_id, variant_id) {
+        var _pages = $scope.model.play.attempt.lesson.pages;
+        for (var i = 0, len = _pages.length; i < len; i++) {
+            if (_pages[i].id == page_id) {
+                for (var j = 0, lenj = _pages[i].variants.length; j < lenj; j++) {
+                    if (_pages[i].variants[j].id == variant_id) {
+                        // console.log("! ", _pages[i].variants[j])
+                        return _pages[i].variants[j].text;
+                    }
+                }
+            }
+        }
+    };
+
+    // возвращает статус варианта ответа по его id используеться в выдочи результатов
+    $scope.id_correct_variant_by_id = function(page_id, variant_id) {
+        var _pages = $scope.model.play.attempt.lesson.pages;
+        for (var i = 0, len = _pages.length; i < len; i++) {
+            if (_pages[i].id == page_id) {
+                for (var j = 0, lenj = _pages[i].variants.length; j < lenj; j++) {
+                    if (_pages[i].variants[j].id == variant_id) {
+                        return _pages[i].variants[j].right_answer;
+                    }
+                }
+            }
+        }
+    };
+
+
 
     $scope.detect_media_type = function() {
         var _filename = $scope.model.play.attempt.lesson.pages[$scope.model.play.current_page_index].media;
@@ -371,9 +481,11 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
             }
         }
 
+        // Считаем результаты прохождения
         if ($scope.model.play.current_page_index == $scope.model.play.attempt.lesson.pages.length) {
             $scope.result = $scope.model.play.attempt.make_result();
             $scope.model.play.attempt.save();
+            console.log($scope.model.play.attempt.result.steps)
         }
 
         $scope.answer_ready();
@@ -385,16 +497,18 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
     };
 
     $scope.back = function() {
-        $scope.main.go_lessons_page();
-        /*
         if ($stateParams.enroll_id) {
-            $scope.main.go_lessons_page();
+            if ($scope.model.play.attempt.lesson.course.id) {
+                $scope.main.go_courses_page($scope.model.play.attempt.lesson.course.id);
+            } else {
+                $scope.main.go_courses_page();
+            }
         }
 
         if ($stateParams.lesson_id) {
            $scope.main.go_editor_lesson($stateParams.lesson_id);
         }
-        */
+
     };
 
     // =========================================

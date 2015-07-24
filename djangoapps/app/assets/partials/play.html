@@ -6,6 +6,20 @@
     display: inline-block;
     margin-top: -50px;">
 
+        <div ng-if="show_debug" class="shadow" style="position: absolute;
+            width: 200px;
+            height: 55px;
+            z-index: 100;
+            padding: 7px;
+            background-color: #FF8100;
+            top: -109px;
+            color: white;
+            right: 0;">
+            Тестовый запуск
+            <div ng-click="back()" style="text-decoration:underline;">Вернуться в редактор</div>
+        </div>
+
+
 
         <div ng-if="model.play.current_page_index < model.play.attempt.lesson.pages.length">
             <div class="shadow" style="float:left;width: 65%;background-color: white;text-align: left;
@@ -204,9 +218,35 @@
                         {{get_page_by_id(item.page_id).text | htmlToPlaintext | limitTo: 25 }}{{get_page_by_id(item.page_id).text.length > 25 ? '...' : ''}}
                     </span>
                     <span style="float: right;width: 52px;">
-                    <span ng-if="item.success==false" style="color: red;">Неверно</span>
-                    <span ng-if="item.success==true" style="color: green;">Верно</span>
+                        <span ng-if="item.success==false" style="color: red;">Неверно</span>
+                        <span ng-if="item.success==true" style="color: green;">Верно</span>
                     </span>
+
+                    <div ng-if="item.choiced_elements.length > 0" style="margin: 7px 0px 0 8px;">
+                        <div ng-repeat="r in item.choiced_elements" style="margin: 10px 0 0 0;">
+                            <div ng-if="get_reflexy(item.page_id, r.variant_id)">
+                                <p style="background-color: white;
+                                    display: block;
+                                    padding: 5px;
+                                    margin: 0;
+                                    z-index: 0;
+                                    border: 1px solid #c3c3c3;" >
+                                    {{r.variant_id}}
+                                    {{get_variant_by_id(item.page_id, r.variant_id)}}</p>
+                                <p style="
+                                    display: inline-block;
+                                    padding: 5px;
+                                    position: relative;
+                                    border: 1px solid #c3c3c3;
+                                    margin: -4px 0 0 14px;
+                                    z-index: 10;" ng-class="{
+                                        'reflexy_right': id_correct_variant_by_id(item.page_id, r.variant_id)==true,
+                                        'reflexy_error': id_correct_variant_by_id(item.page_id, r.variant_id)==false
+                                    }">
+                                        {{get_reflexy_by_id(item.page_id, r.variant_id)}}</p>
+                            </div>
+                        </div>
+                    </div>
                 </li>
             </ul>
 

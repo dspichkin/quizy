@@ -10,12 +10,13 @@ from django.shortcuts import render
 
 from rest_framework.routers import DefaultRouter
 
-from quizy.views import (PageViewSet, user_data,
+from quizy.views import (user_data,
     answers, play, get_mypupil, create_pupil,
     mylessons, demo_play,
     new_page, lesson_archive, enroll_pupil,
     lesson_picture_upload, page_picture_upload)
 
+from quizy.page import PageViewSet
 from quizy.materials import courses, lessons
 # LessonsViewSet,
 

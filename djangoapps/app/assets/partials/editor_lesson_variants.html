@@ -52,7 +52,8 @@
                                 ng-change="make_dirty_data()"
                                 ng-model-onblur ng-blur="finish_changed_variant(item.id)">
                         </md-input-container>
-                    
+
+                        
                         <button class="btn" style="width: 28px;
                             padding: 4px;
                             height: 28px;
@@ -60,6 +61,17 @@
                             ng-click="remove_variant(item.id)">
                             <i class="glyphicon glyphicon-remove"></i>
                         </button>
+                    </div>
+                    <div>
+                        <md-input-container style="text-align: left;
+                            width: 82%;
+                            margin: -30px 0px 0px 32px;">
+                            <label>Рефлексия ответа</label>
+
+                            <input class="variant_text" type="text" ng-model="item.reflexy"
+                                ng-change="make_dirty_data()"
+                                ng-model-onblur ng-blur="finish_changed_variant(item.id)">
+                        </md-input-container>
                     </div>
                 </li>
             </ul>
@@ -98,6 +110,18 @@
                             <i class="glyphicon glyphicon-remove"></i>
                         </button>
                     </div>
+                    <div>
+                        <md-input-container style="text-align: left;
+                            width: 82%;
+                            margin: -30px 0px 0px 32px;">
+                            <label>Рефлексия ответа</label>
+
+                            <input class="variant_text" type="text" ng-model="item.reflexy"
+                                ng-change="make_dirty_data()"
+                                ng-model-onblur ng-blur="finish_changed_variant(item.id)">
+                        </md-input-container>
+                    </div>
+
                 </li>
             </ul>
         </div>

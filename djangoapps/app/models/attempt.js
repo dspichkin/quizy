@@ -3,7 +3,18 @@
 var _ = require('lodash-node/compat');
 var BaseObject = require('./object');
 var Lesson = require('./lesson');
+/*
+так же сипользуеться для записи ответов
+должна содержать
+this.answer_step = [
+    {
+        answers: {},
+        page_id: x
+        type: 'xxxx'
+    }
+    ...]
 
+ */
 function Attempt(data) {
     this.current_step = 0;
     this.answer_steps = [];
@@ -59,15 +70,25 @@ _.assign(Attempt.prototype, {
             type: "PUT"
         });
     },
+    /**
+     * Считаем результат прохождения попытки
+     * @return {[type]} [description]
+     */
     make_result: function() {
+
         var last_question = false;
         var general_success = true;
+        // для записи результатов шагов
         var step_reflexy = [];
+
         if (this.lesson.pages.length == this.answer_steps.length) {
             last_question = true;
         } else {
             general_success = false;
         }
+
+        // для хранения выбранных элементов
+        var choiced_elements = [];
 
         if (last_question === true) {
             // проверяем кол-во страниц с кол-вом ответов
@@ -93,12 +114,12 @@ _.assign(Attempt.prototype, {
                         };
                     }
                 }
-
                 var _page_success = false;
                 // сравнивает ответ проверяем все ли правильыне ответы есть в данных ответов
                 if (_page_answer) {
                     _page_success = true;
                     if (this.lesson.pages[i].type == 'checkbox') {
+                        
                         // получем кол-во правильных ответов
                         var num_right_answer = 0;
                         for (var j = 0, lenj = this.lesson.pages[i].variants.length; j < lenj; j++) {
@@ -109,8 +130,13 @@ _.assign(Attempt.prototype, {
                         // получем кол-во правильных ответов из данных ответов
                         var num_answered_right_answer = 0;
                         for (var j = 0, lenj = _page_answer.item.answers.length; j < lenj; j++) {
+                            // считаем количество данных ответов
                             if (_page_answer.item.answers[j].answer == true) {
                                 num_answered_right_answer++;
+                                // запишем все выбранные ответы
+                                choiced_elements.push({
+                                    variant_id: _page_answer.item.answers[j].variant_id
+                                });
                             }
                         }
                         // сравниваем кол-во правильных ответов с данным кол-вом ответов
@@ -133,6 +159,12 @@ _.assign(Attempt.prototype, {
                     }
 
                     if (this.lesson.pages[i].type == 'radiobox') {
+                        // запишем все выбранные ответы
+                        for (var j = 0, lenj = _page_answer.item.answers.length; j < lenj; j++) {
+                            choiced_elements.push({
+                                variant_id: _page_answer.item.answers[j].variant_id
+                            });
+                        }
                         // проходим по всем варианта
                         for (var j = 0, lenj = this.lesson.pages[i].variants.length; j < lenj; j++) {
                             // получаем правильный ответ
@@ -186,14 +218,47 @@ _.assign(Attempt.prototype, {
                                     }
                                 }
                             }
-                            // console.log('this.lesson.pages[i] ', this.lesson.pages[i])
+                        }
+                    }
+
+                    if (this.lesson.pages[i].type == 'words_in_text') {
+                        var _answers = _page_answer.item.answers;
+                        // Проверяем все селекты
+                        for (var x = 0, lenx = _answers.select.length; x < lenx; x++) {
+                            if (_answers.select[x].hasOwnProperty('selected')) {
+                                if (_answers.select[x].selected.answer != true) {
+                                    _page_success = false;
+                                }
+                            } else {
+                                 _page_success = false;
+                            }
+                        }
+                        // Проверяем все интпуты
+                        for (var x = 0, lenx = _answers.input.length; x < lenx; x++) {
+                            if (_answers.input[x].hasOwnProperty('inputed')) {
+                                var _inputed_word_correct = false;
+                                for (var y = 0, leny = _answers.input[x].options.length; y < leny; y++) {
+                                    var _inpute_word = _answers.input[x].inputed.trim();
+                                    var _correct_word = _answers.input[x].options[y].text.trim();
+                                    if (_inpute_word == _correct_word) {
+                                        _inputed_word_correct = true;
+                                    }
+                                }
+                                if (_inputed_word_correct == false) {
+                                    _page_success = false;
+                                }
+                            } else {
+                                _page_success = false;
+                            }
                         }
                     }
                 }
-
+                //записываем результат прохождения шага
                 step_reflexy.push({
                     page_id: this.lesson.pages[i].id,
-                    success: _page_success
+                    success: _page_success,
+                    type: this.lesson.pages[i].type,
+                    choiced_elements: choiced_elements
                 });
             }
         }

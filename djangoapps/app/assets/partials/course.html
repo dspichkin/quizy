@@ -46,9 +46,13 @@
 		                        <a class="icon-menu"  href="#"></a>
 		                    </div>
 		                </td>
-		                <td style="width: 200px;text-align:left">
+		                <td style="width: 200px;text-align:left;">
+		                	<div style="max-height:40px;overflow:hidden;">
 		                    <span ng-if="lesson.name">{{lesson.number}}. {{lesson.name}}</span>
 		                    <span ng-if="!lesson.name">{{lesson.number}}. Урок без имени</span>
+		                    </div>
+		                    <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
+                       			 margin: 5px 0;" ng-click="main.go_editor_lesson(lesson.id)">Редактировать урок ...</div>
 		                </td>
 		                <td style="min-width: 200px;text-align:left">
 		                    <span>{{lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>

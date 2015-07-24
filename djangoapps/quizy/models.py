@@ -324,6 +324,7 @@ class Variant(models.Model):
 
     is_correct = models.BooleanField('правильность заполнения вопроса', default=True)
     code_errors = JSONField('коды ошибок', default={}, blank=True, null=True)
+    reflexy = models.TextField('текст рефлексии', null=True, blank=True)
 
     def __str__(self):
         if self.text:
