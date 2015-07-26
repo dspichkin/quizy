@@ -16,6 +16,7 @@ urlpatterns = patterns(
     url(r"^ajax-signup/$", views.ajax_signup, name="account_ajax_signup"),
     url(r"^ajax-login/$", views.ajax_login, name="account_ajax_login"),
     url(r"^ajax-logout/$", views.ajax_logout, name="account_ajax_logout"),
+    url(r"^ajax-recall/$", views.ajax_recall, name="account_ajax_recall"),
 
     url(r"^inactive/$", views.account_inactive, name="account_inactive"),
 

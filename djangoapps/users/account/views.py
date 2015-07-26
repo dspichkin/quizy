@@ -29,7 +29,7 @@ from .utils import (get_next_redirect_url, complete_signup,
                     passthrough_next_redirect_url)
 
 from .forms import ChangePasswordForm
-from .forms import LoginForm, ResetPasswordKeyForm
+from .forms import ResetPasswordKeyForm
 from .forms import ResetPasswordForm, SetPasswordForm, SignupForm, UserTokenForm
 # from .utils import sync_user_email_addresses
 # from .models import EmailAddress, EmailConfirmation
@@ -41,6 +41,9 @@ from . import app_settings
 from .adapter import get_adapter
 
 from .serializers import EmailConfirmationSerializer, UserSerializer
+
+from quizy.utils import send_mail
+
 
 try:
     from django.contrib.auth import update_session_auth_hash
@@ -90,6 +93,16 @@ def _ajax_response(request, response, form=None):
     return response
 
 
+def validateEmail(email):
+    from django.core.validators import validate_email
+    from django.core.exceptions import ValidationError
+    try:
+        validate_email(email)
+        return True
+    except ValidationError:
+        return False
+
+
 class RedirectAuthenticatedUserMixin(object):
     def dispatch(self, request, *args, **kwargs):
         # WORKAROUND: https://code.djangoproject.com/ticket/19316
@@ -125,26 +138,9 @@ class AjaxCapableProcessFormViewMixin(object):
         return _ajax_response(self.request, response, form=form)
 
 
-#class LoginView(TemplateView):
-#form_class = LoginForm
-#template_name = "account/login.html"
-#success_url = None
-#redirect_field_name = "next"
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny,))
 def ajax_login(request):
-    #def login(self, request, redirect_url=None):
-    #    ret = perform_login(request, self.user,
-    #                        email_verification=app_settings.EMAIL_VERIFICATION,
-    #                        redirect_url=redirect_url)
-    #    remember = app_settings.SESSION_REMEMBER
-    #    if remember is None:
-    #        remember = self.cleaned_data['remember']
-    #    if remember:
-    #        request.session.set_expiry(app_settings.SESSION_COOKIE_AGE)
-    #    else:
-    #        request.session.set_expiry(0)
-    #    return ret
 
     if request.method == 'POST':
         # self.object = self.request.user
@@ -166,7 +162,7 @@ def ajax_login(request):
             return Response(error, status=status.HTTP_200_OK)
         user_obj = None
         try:
-            user_obj = Account.objects.get(email=email)
+            user_obj = Account.objects.get(email__iexact=email)
         except Account.DoesNotExist:
             error['form_errors'] = {
                 "other": [u"Указанный Email не найден."]
@@ -187,6 +183,46 @@ def ajax_login(request):
             return Response(error, status=status.HTTP_200_OK)
 
         return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', 'POST'])
+@permission_classes((AllowAny,))
+def ajax_recall(request):
+
+    if request.method == 'POST':
+        error = {
+            'form_errors': {}
+        }
+        req = json.loads(request.body.decode("utf-8"))
+        email = req.get('email')
+        if not email:
+            error['form_errors'] = {
+                "login": [u"Это поле обязательно."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+
+        if validateEmail(email) is False:
+            error['form_errors'] = {
+                "login": [u"Не верный email."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+
+        user_obj = None
+        try:
+            user_obj = Account.objects.get(email__iexact=email)
+        except Account.DoesNotExist:
+            error['form_errors'] = {
+                "other": [u"Указанный Email не найден."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+
+        email_topic = u"myquiz.ru Запрос от пользователя на смену пароля"
+        email_msg = u"Поступил запрос на смену пароля от пользователя: %s\n" % (user_obj.email)
+        email_from = "info@myquizy.ru"
+        email_to = ['user783@gmail.com']
+        send_mail(email_topic, email_msg, email_from, email_to)
+
+        return Response("", status=status.HTTP_200_OK)
 
 
 class CloseableSignupMixin(object):
