@@ -10,7 +10,19 @@ from quizy.models import Course, Lesson, CourseEnroll, LessonEnroll, Page, Varia
 
 
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ['name', 'created_by', 'is_active', 'is_correct',]
+    list_display = ['name', 'created_by', 'is_active', 'is_correct', 'get_teacher']
+
+    class Media:
+        css = {
+            'all': (
+                'css/admin/course.css',
+            )
+        }
+
+    def get_teacher(self, obj):
+        return ", ".join([x.email for x in obj.teacher.all()])
+
+    get_teacher.short_description = u"Преподователи"
 
 
 class CourseEnrollAdmin(admin.ModelAdmin):
@@ -20,7 +32,7 @@ class CourseEnrollAdmin(admin.ModelAdmin):
 
 
 class LessonEnrollAdmin(admin.ModelAdmin):
-    list_display = ['learner', 'created_by', 'success', 'is_archive']
+    list_display = ['learner', 'created_by', 'lesson', 'success', 'is_archive']
     # list_editable = ['is_active']
     list_filter = ['lesson__name']
     search_fields = ('learner__username', 'learner__first_name', 'learner__last_name', 'learner__email')
@@ -40,10 +52,17 @@ class LessonAdmin(admin.ModelAdmin):
     # list_editable = ['is_active']
 
     # actions = ['delete_selected']
+    class Media:
+        css = {
+            'all': (
+                'css/admin/course.css',
+            )
+        }
 
-    #def num_learners(self, obj):
-    #    return obj.enrolls.filter(
-    #        Q(is_active=True)).count()
+    def get_teacher(self, obj):
+        return ", ".join([x.email for x in obj.teacher.all()])
+
+    get_teacher.short_description = u"Преподователи"
 
     def save_model(self, request, obj, form, change):
         if getattr(obj, 'created_by', None) is None:

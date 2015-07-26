@@ -64,7 +64,8 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/courses/",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/courses.html"
+                    templateUrl: "/assets/partials/courses/courses.html",
+                    controller: "TeacherCoursesCtrl"
                 }
             }
         })
@@ -72,7 +73,8 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/courses/:course_id/",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/course.html"
+                    templateUrl: "/assets/partials/courses/course.html",
+                    controller: "TeacherCourseCtrl"
                 }
             }
         })
@@ -80,7 +82,17 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/lessons/",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/lessons.html"
+                    templateUrl: "/assets/partials/lessons.html",
+                    controller: "PupilLessonsCtrl"
+                }
+            }
+        })
+        .state('pupils', {
+            url: "/pupils/",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/pupils.html",
+                    controller: "TeacherPupilCtrl"
                 }
             }
         })

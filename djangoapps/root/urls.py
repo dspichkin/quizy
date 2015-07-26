@@ -12,7 +12,7 @@ from rest_framework.routers import DefaultRouter
 
 from quizy.views import (user_data,
     answers, play, get_mypupil, create_pupil,
-    mylessons, demo_play,
+    mylessons, demo_play, pupils,
     new_page, lesson_archive, enroll_pupil,
     lesson_picture_upload, page_picture_upload)
 
@@ -42,6 +42,7 @@ urlpatterns = [
 
     url(r'^api/', include(router.urls), name='api'),
     url(r'^api/user', user_data, name='user'),
+    url(r'^api/pupils', pupils, name='pupils'),
     url(r'^api/answers/(\d+)/$', answers, name='answers'),
     url(r'^api/get_mypupil/$', get_mypupil, name='get_mypupil'),
     url(r'^api/create_pupil/$', create_pupil, name='create_pupil'),

@@ -102,6 +102,12 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         $scope.main.active_menu = 'courses';
     };
 
+    $scope.main.go_lesson_page = function() {
+        $location.path('/lessons/');
+        $scope.main.make_short_header();
+        $scope.main.active_menu = 'lessons';
+    };
+
     $scope.main.go_price = function() {
         $scope.main.reset_menu();
         $scope.main.active_menu = 'price';
@@ -114,8 +120,12 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         $scope.main.reset_menu();
     };
 
+    $scope.main.go_pupils_page = function() {
+        $location.path('/pupils/');
+        $scope.main.active_menu = 'pupils';
+    };
+
     $scope.main.new_lesson = function(course) {
-        console.log('course_id ', course)
         $scope.main.current_course = course;
         $location.path('/editor/lesson/');
         $scope.model.current_content_url = null;
@@ -159,13 +169,31 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
 
 
     $scope.main.run = function(callback) {
-
         var config = {
             headers: {
                 'Accept': 'application/json; indent=4'
             }
         };
 
+        $.ajax({
+            type: "GET",
+            url: '/api/user/',
+            async: false
+        }).then(function(data) {
+            $scope.user = data;
+            $scope.user.loaded = true;
+
+            if (callback) {
+                callback();
+            }
+        }, function(error) {
+            $log.error('Ошибка получения данных', error);
+            if (callback) {
+                callback();
+            }
+        });
+        
+        /*
         var userget = $http.get('/api/user/', config).then(function(data) {
             $scope.user = data.data;
             $scope.user.loaded = true;
@@ -180,6 +208,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
             $log.error('Ошибка получения данных', error);
         });
         //return userget;
+        */
 
     };
 

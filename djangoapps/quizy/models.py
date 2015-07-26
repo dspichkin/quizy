@@ -71,8 +71,17 @@ class Course(BaseModel):
 
     @property
     def enroll_number(self):
+        enrolls = {}
+        for c in LessonEnroll.objects.filter(lesson__course=self):
+            enrolls.update({
+                c.pk: c
+            })
+        for c in self.course_enrolls.filter(course=self):
+            enrolls.update({
+                c.pk: c
+            })
         return {
-            'number': self.course_enrolls.filter(course=self).count()
+            'number': len(enrolls.keys())
         }
 
     def get_first_lesson(self):

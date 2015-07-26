@@ -13,7 +13,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 
 from quizy.models import Course, Lesson
-from quizy.serializers import (CourseSerializer, LessonSerializer)
+from quizy.serializers.serializers import (CourseSerializer, LessonSerializer)
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -53,8 +53,8 @@ def lessons(request, lesson_pk=None):
             return Response(lessons, status=status.HTTP_200_OK)
         else:
             try:
-                lessons = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user), pk=lesson_pk)
-                lessonsjson = LessonSerializer(lessons).data
+                lesson = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk)
+                lessonsjson = LessonSerializer(lesson).data
             except Lesson.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             return Response(lessonsjson, status=status.HTTP_200_OK)
@@ -118,8 +118,11 @@ def lessons(request, lesson_pk=None):
         description = req.get("description")
         code_errors = req.get("code_errors")
         is_correct = req.get("is_correct")
+        try:
+            lesson = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk)
+        except Lesson.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        lesson = get_object_or_404(Lesson, pk=lesson_pk, created_by=request.user)
         if lesson.is_active != is_active:
             lesson.is_active = is_active
             is_dirty = True

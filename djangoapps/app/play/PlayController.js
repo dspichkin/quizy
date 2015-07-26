@@ -485,7 +485,6 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
         if ($scope.model.play.current_page_index == $scope.model.play.attempt.lesson.pages.length) {
             $scope.result = $scope.model.play.attempt.make_result();
             $scope.model.play.attempt.save();
-            console.log($scope.model.play.attempt.result.steps)
         }
 
         $scope.answer_ready();

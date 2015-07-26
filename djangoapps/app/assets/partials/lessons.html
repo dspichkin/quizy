@@ -1,7 +1,79 @@
 <div class="lesson" style="min-height:450px;text-align:center">
-<div class="shadow lesson_panel">
+	<div class="shadow lesson_panel">
 
-    <div ng-if="user.is_authenticated && user.account_type==1" class="lessons_teacher" ng-include="'/assets/partials/lessons_teacher.html'" ng-controller="LessonsTeacherCtrl"></div>
-    <div ng-if="user.is_authenticated && user.account_type==2" ng-include="'/assets/partials/lessons_pupil.html'" ng-controller="LessonsPupilCtrl"></div>
-</div>
+		<div class="lessons_pupil" ng-style="model.lessons.length > 0 && {'min-height': '50px'}">
+
+
+			<div ng-if="model.lessons.length == 0">
+				<md-button ng-click="find_teacher($event)" class="md-raised pull-right" style="background-color: #FF9E37;">Найти преподователя</md-button>
+
+			    <div style="padding: 100px;font-size: 20px;">
+			        <p>На вас пока не назначенно ни одного урока</p>
+			    </div>
+			</div>
+
+			<div ng-if="model.lessons.length > 0">
+				<div class="col-md-12 lessons_header">
+				    <div class="mylesson_title">Мои уроки</div>
+				    <!--
+				    <md-button ng-click="find_teacher($event)" class="md-raised pull-right" style="background-color: #FF9E37;margin: -46px 18px 0 0;">Найти преподователя</md-button>
+				    -->
+				</div>
+				<div ng-if="model.lessons.length > 0">
+				    <div style="padding: 0;">
+					    <table class="table lessons_list" style="margin-bottom: 0;">
+					        <thead style="background-color:#e3eaf1;height:60px">
+					            <th class="table_th">
+					            	Запуск
+					            </th>
+					            <th class="table_th">
+					                Название урока
+					            </th>
+					            <th class="table_th">
+					                Краткое описание урока
+					            </th>
+					            <th class="table_th">
+					                Кем назначен урок
+					            </th>
+					            <th class="table_th">
+					                Действия
+					            </th>
+					        </thead>
+
+					        <tbody>
+					            <tr ng-repeat="item in model.lessons" ng-style="item.success == null && {'background-color': '#E8F0F5'}">
+					                <td style="width: 170px;vertical-align: middle;position:relative;">
+					                    <div class="lesson_incorrect" ng-if="item.success==false"></div>
+					                    <div class="lesson_correct" ng-if="item.success==true"></div>
+					                    
+					                    <div style="display: flex;cursor: pointer;color:#337ab7" ng-click="play_lesson(item.id)"><i class="material-icons">play_arrow</i><span style="margin: 2px 0 0 6px;"> Выполнить</span></div>
+					                </td>
+					                <td style="width: 200px;text-align:left">
+					                    <span ng-if="item.lesson.name">{{item.lesson.name}}</span>
+					                    <span ng-if="!item.lesson.name">Урок без имени</span>
+					                </td>
+					                <td style="min-width: 200px;max-width: 250px;text-align:left">
+					                    <span>{{item.lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>
+					                </td>
+					                <td class="enroll_pupils" style="width: 220px;text-align:left;overflow:auto">
+					                    <span class="enroll_email" style="color:#2c8de1;text-decoration:underline;"> {{item.created_by.email}}</span> <span style="font-size:12px;">({{item.created_at | date:'yyyy-MM-dd HH:mm'}})</span> 
+					                </td>
+					                <td style="text-align:left;width: 100px;">
+					                	<div style="width:100%;border-bottom: 1px solid #c6c6c6;cursor: pointer;">Отвергнуть</div>
+					                	<div style="width:100%;cursor: pointer;">В архив</div>
+					                </td>
+					            </tr>
+					        </tbody>
+
+
+					    </table>
+
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
 </div>

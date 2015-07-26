@@ -6,7 +6,7 @@
   "scripts": {
     "build": "browserify djangoapps/app/app.js -o > djangoapps/app/assets/app.js",
     "watch": "watchify djangoapps/app/app.js -o djangoapps/app/assets/app.js --debug --verbose",
-    "build_for_compile": "browserify djangoapps/app/app.js -d -p [minifyify --map app.map.json --output app.map.json] > djangoapps/app/compiled/app.js"
+    "compile": "browserify djangoapps/app/app.js -d -p [minifyify --map app.map.json --output app.map.json] > djangoapps/app/assets/app.js"
   },
   "repository": {
     "type": "git",

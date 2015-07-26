@@ -1,0 +1,126 @@
+<div class="lesson" style="min-height:450px;text-align:center">
+    <div class="shadow lesson_panel">
+
+                    
+
+        <div class="col-md-12 lessons_header">
+            <div class="col-md-2 mylesson_title">Мои ученики</div>
+            <div class="col-md-8 pull-left search_panel" style="padding: 0 12px;
+                height: 60px;
+                overflow: hidden;">
+            </div>
+        </div>
+
+        <div class="col-md-12" style="padding: 0;">
+            <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
+                <thead style="background-color:#e3eaf1;height:60px">
+                    <th class="table_th" style="text-align:center;">
+                        Ученик
+                    </th>
+                    <th class="table_th" style="width: 400px;">
+                        <div style="">Назначение</div>
+                    </th>
+                </thead>
+
+                <tbody>
+                    <tr ng-repeat="pupil in model.pupils">
+                        <td style="width: 150px;text-align: left;position:relative;padding: 10px 0 10px 20px;">
+                            <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 13px;
+                                 overflow: hidden;width: 150px;">
+                                 {{pupil.email}}
+                            </div>
+                        </td>
+                        <td style="text-align:left;">
+                            <div style="font-weight:500;color: #00A2EA">назначенные курсы</div>
+                            <div class="enroll_pupil" ng-repeat="enroll in pupil.course_enrolls" style="display:block;width:100%;">
+                                <div style="margin: 0 0 0 0;
+                                        max-height: 50px;
+                                        overflow: hidden;">
+                                   
+                                    <div class="remove_enroll" ng-click="remove_enroll(enroll.id)" style="    float: left;">
+                                        <i class="material-icons icon-remove-enroll" style="font-size:12px;">close</i>
+                                    </div>
+                                    <div class="enroll_email" style="overflow: auto;">
+                                        {{enroll.course.name | htmlToPlaintext | limitTo: 100 }}{{enroll.course.length > 100 ? '...' : ''}}
+
+                                    </div> 
+                                </div>
+
+                                <div class="remove_enroll" ng-click="remove_enroll(enroll.id)" style="    float: left;margin: 0px 6px 0 0;">
+                                    <i class="material-icons icon-remove-enroll" style="font-size:12px;">mode_edit</i>
+                                </div>
+                                <div style="font-size: 12px;margin: 0 0 0 17px;">
+                                    <div ng-if="enroll.auto_enroll == true">автоназначение уроков</div>
+                                    <div ng-if="enroll.auto_enroll == false">ручное назначение уроков</div>
+                                </div> 
+                            </div>
+
+
+                            <div style="font-weight:500;color: #ff9e37">назначенные уроки</div>
+                            <div class="enroll_pupil" ng-repeat="enroll in pupil.lesson_enrolls" style="width:100%;">
+                                <div style="margin: 0 0 0 0;
+                                        width: 500px;
+                                        float: left;
+                                        max-height: 50px;
+                                        overflow: hidden;">
+                                   
+                                    <div style="font-size: 10px;
+                                        margin: 0 0 0 20px;">
+                                        {{enroll.lesson.course.name | htmlToPlaintext | limitTo: 50 }}{{enroll.lesson.course.name.length > 50 ? '...' : ''}}
+                                    </div>
+                                    <div class="remove_enroll" ng-click="remove_enroll(enroll.id)" style="    float: left;">
+                                        <i class="material-icons icon-remove-enroll" style="font-size:12px;">close</i>
+                                    </div>
+                                    <div class="enroll_email" style="overflow: auto;">
+                                        {{enroll.lesson.name | htmlToPlaintext | limitTo: 100 }}{{enroll.lesson.name.length > 100 ? '...' : ''}}
+
+                                    </div> 
+                                </div>
+                                <div class="enroll_result" style="width: 200px;margin: 8px 0 0 0;">
+                                        <div ng-class="{
+                                            'enroll_success': enroll.success == true,
+                                            'enroll_fail': enroll.success == false,
+                                            'enroll_undone': enroll.success == null}"></div>
+                                        <div class="enroll_data">
+                                            {{enroll.last_data | date:'yyyy-MM-dd'}} / {{enroll.number_of_attempt}}
+                                        </div>
+                                </div> 
+                            </div>
+                        </td>
+                        <!--
+                        <td style="min-width: 200px;text-align:left">
+                            
+                        </td>
+                        <td class="td_enroll_stats" style="width:400px;text-align:left">
+                        
+                            <div style="max-height:100px;overflow: auto;">
+                                <div ng-repeat="enroll in lesson.enrolls" class="enroll_pupil">
+                                    <div style="margin: 6px 0 0 0;width:200px;float:left;">
+                                        <div class="remove_enroll" ng-click="remove_enroll(enroll.id)"><i class="material-icons icon-remove-enroll">close</i></div>
+                                        <div class="enroll_email" style="width: 160px;overflow: auto;">{{enroll.learner.email}}</div> 
+                                    </div>
+                                    <div class="enroll_result">
+                                        <div ng-class="{
+                                            'enroll_success': enroll.success == true,
+                                            'enroll_fail': enroll.success == false,
+                                            'enroll_undone': enroll.success == null}"></div>
+                                        <div class="enroll_data">{{enroll.last_data | date:'yyyy-MM-dd'}} / {{enroll.number_of_attempt}}</div>
+                                    </div> 
+                                </div>
+                            </div>
+                           
+                        </td>
+                         -->
+                    </tr>
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+
+
+    </div>
+</div>

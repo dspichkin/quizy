@@ -14,17 +14,23 @@
   <div class="login-form">
     <h1>Вход</h1>
     <form id="login">
-        <p>
-            <input id="id_login" ng-class="{'input-error':form_errors.login.length}" autocomplete="off" name="login" placeholder="E-mail" type="text"
-            ng-model="model.login.email">
+        <p style="text-align: left;">
+            <md-input-container style="">
+                <label>Укажите вашу почту</label>
+
+                <input id="id_login" ng-class="{'input-error':form_errors.login.length}" autocomplete="off"  type="text" ng-model="model.login.email" name="login">
+            </md-input-container>
         </p>
 
         <ul class="errorlist" ng-show="model.login.form_errors.login">
             <li ng-repeat="error in model.login.form_errors.login">{{error}}</li>
         </ul>
 
-        <p>
-            <input id="id_password" ng-class="{'input-error':form_errors.password.length}" autocomplete="off" name="password" placeholder="Пароль" type="password" ng-model="model.login.password">
+        <p style="text-align: left;">
+            <md-input-container style="">
+                <label>Укажите ваш пароль</label>
+                <input id="id_password" ng-class="{'input-error':form_errors.login.length}" autocomplete="off"  type="password" ng-model="model.login.password" name="password">
+            </md-input-container>
         </p>
         <ul class="errorlist" ng-how="model.login.form_errors.password">
             <li ng-repeat="error in model.login.form_errors.password">{{error}}</li>
@@ -38,7 +44,7 @@
 
         
 
-        <md-button type="submit" ng-click="submit($event)">Вход</md-button>
+        <md-button type="submit" class="btn-secondary" ng-click="submit($event)">Вход</md-button>
 
         <a class="button secondaryAction" href="{% url 'account_reset_password' %}">Забыли пароль?</a>
 
