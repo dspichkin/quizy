@@ -8,16 +8,16 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
 
     };
 
+
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
             if (!$scope.user || !$scope.user.is_authenticated) {
-                $scope.main.reset_menu();
-                $location.path('/');
-                return;
+                $scope.main.go_home_page();
             }
         });
-    } else if ($scope.user.account_type == 2) {
-        $location.path('/');
+        return;
+    } else if ($scope.user.account_type != 1) {
+        $scope.main.go_home_page();
         return;
     }
 

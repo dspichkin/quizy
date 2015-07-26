@@ -10,15 +10,19 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
 
     };
 
+
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
             if (!$scope.user || !$scope.user.is_authenticated) {
-                $scope.main.reset_menu();
-                $location.path('/');
-                return;
+                $scope.main.go_home_page();
             }
         });
+        return;
+    } else if ($scope.user.account_type != 2) {
+        $scope.main.go_home_page();
+        return;
     }
+
 
     $scope.main.make_short_header();
     $scope.main.active_menu = 'lessons';

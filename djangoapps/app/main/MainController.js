@@ -229,12 +229,59 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                         email: '',
                         password: '',
                         form_errors: {},
-                        loading: false
+                        loading: false,
+                        show_recall: false
                     };
                     $scope.form_errors = {};
-                    $scope.closeDialog = function() {
+                    $scope.closeDialog = function($event) {
                         $mdDialog.hide();
                     };
+
+                    $scope.show_recall = function($event) {
+                        $event.preventDefault();
+                        $scope.model.login.show_recall = true;
+                    };
+
+                    $scope.recall = function($event) {
+                        $event.preventDefault();
+                        $scope.model.login.show_recall = true;
+                        $scope.model.login.loading = true;
+
+                        var _data = {
+                            'email': $scope.model.login.email
+                        };
+                        
+
+                        $.post('/accounts/ajax-recall/', JSON.stringify(_data)).then(
+                            function(data) {
+                                $scope.model.login.email = null;
+                                $scope.model.login.loading = false;
+                                console.log(data)
+                                if (data.hasOwnProperty('form_errors')) {
+                                    if (data.form_errors) {
+                                        $scope.model.login.form_errors = data.form_errors;
+                                        $scope.$apply();
+                                        return;
+                                    }
+                                } else {
+                                    $location.path('/');
+                                    $scope.main.run(function() {
+                                        $mdDialog.hide()
+                                    });
+                                }
+                            }, function(e) {
+                                $scope.model.login.email = null;
+                                $scope.user.loaded = true;
+                                $log.error(e);
+                            }
+                        );
+                    }
+
+                    $scope.cancel_recall = function($event) {
+                        $event.preventDefault();
+                        $scope.model.login.show_recall = false;
+                    }
+
                     $scope.submit = function($event) {
                         $event.preventDefault();
                         $scope.model.login.loading = true;
@@ -267,6 +314,9 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                 }
             });
     };
+
+
+
 
 
     $scope.main.logout = function($event) {

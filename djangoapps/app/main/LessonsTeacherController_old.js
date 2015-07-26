@@ -21,15 +21,19 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
 
     };
 
+
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
             if (!$scope.user || !$scope.user.is_authenticated) {
-                $scope.main.reset_menu();
-                $location.path('/');
-                return;
+                $scope.main.go_home_page();
             }
         });
+        return;
+    } else if ($scope.user.account_type != 2) {
+        $scope.main.go_home_page();
+        return;
     }
+
 
 
     $scope.main.make_short_header();

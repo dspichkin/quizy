@@ -6,15 +6,17 @@ var Attempt = require('../models/attempt');
 
 var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $compile) {
 
-    if (!$scope.user || !$scope.user.is_authenticated) {
+
+     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
             if (!$scope.user || !$scope.user.is_authenticated) {
-                $scope.main.reset_menu();
-                $location.path('/');
-                return;
+                $scope.main.go_home_page();
             }
         });
+        return;
     }
+
+
     //для хранения радиобокс ответа
     $scope.tempdata = {
         'radiobox_answer': null,
