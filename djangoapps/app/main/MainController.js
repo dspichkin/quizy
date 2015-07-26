@@ -16,7 +16,6 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
     var t = '<button class="md-raised pull-right md-button md-default-theme" ng-transclude="" ng-click="new_lesson()" style="background-color: #FF9E37;    margin: -8px 43px 0 0px;" tabindex="0"><span class="ng-scope">Обработать заявки</span><div class="md-ripple-container"></div></button>';
     $scope.model = {
         selected_menu: null,
-        current_content_url: 'assets/partials/main.html',
         menu: {
             positionTop: '0px',
             positionLoginTextTop: '0px',
@@ -41,7 +40,8 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
 
 
     $scope.main = {
-        active_menu: 'main'
+        active_menu: 'main',
+        current_course: null
     };
 
     $scope.main.reset_menu = function() {
@@ -91,21 +91,16 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
     };
 
 
-    /**
-     * Приготовить страницу уроков
-     * @return {[type]} [description]
-     */
-    //$scope.main.make_lesson_page = function() {
-    //    $scope.model.current_content_url = null;
-    //    short_header();
-    //};
 
-    $scope.main.go_lessons_page = function() {
-        $location.path('/lessons/');
+    $scope.main.go_courses_page = function(course_id) {
+        if (course_id) {
+            $location.path('/courses/' + course_id + '/');
+        } else {
+            $location.path('/courses/');
+        }
         $scope.main.make_short_header();
-        $scope.main.active_menu = 'lessons';
+        $scope.main.active_menu = 'courses';
     };
-    
 
     $scope.main.go_price = function() {
         $scope.main.reset_menu();
@@ -115,9 +110,17 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
 
     $scope.main.go_description = function() {
         $location.path('/');
-        $scope.model.current_content_url = 'assets/partials/help.html';
         $scope.main.active_menu = 'description';
         $scope.main.reset_menu();
+    };
+
+    $scope.main.new_lesson = function(course) {
+        console.log('course_id ', course)
+        $scope.main.current_course = course;
+        $location.path('/editor/lesson/');
+        $scope.model.current_content_url = null;
+        $scope.main.make_short_header();
+        $scope.main.active_menu = 'lessons';
     };
 
     $scope.main.go_editor_lesson = function(lesson_id) {
@@ -126,7 +129,6 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         } else {
             $location.path('/editor/lesson/');
         }
-        $scope.model.current_content_url = null;
         $scope.main.make_short_header();
         $scope.main.active_menu = 'lessons';
     };

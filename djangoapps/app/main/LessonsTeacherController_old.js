@@ -2,9 +2,10 @@
 
 var _ = require('lodash-node');
 var Lesson = require('../models/lesson');
+var Course = require('../models/course');
 
-var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $location) {
-    $scope.model.lesson = {
+var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $location, $filter, ngTableParams) {
+    $scope.model = {
         lessons: [],
         lessons_for_me: [],
         archive: [],
@@ -37,13 +38,22 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
 
 
 
+
+
+
     $scope.load_lesson = function(callback) {
         if ($scope.user.account_type == 1) {
             $http.get('/api/lessons/').then(function(data) {
-                $scope.model.lesson.lessons = [];
+                $scope.model.lessons = [];
                 for (var i = 0, len = data.data.length; i < len; i++) {
-                    $scope.model.lesson.lessons.push(new Lesson(data.data[i]));
+                    $scope.model.lessons.push(new Lesson(data.data[i]));
                 }
+
+
+                //console.log("!", $scope.model.lessons)
+
+
+                /*
                 $http.get('/api/archive/').then(function(data) {
                     $scope.model.lesson.archive = [];
                     for (var i = 0, len = data.data.length; i < len; i++) {
@@ -60,6 +70,7 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
                 }, function(error) {
                     $log.error('Ошибка получения архива уроков', error);
                 });
+                */
             }, function(error) {
                 $log.error('Ошибка получения уроков', error);
             });
@@ -301,4 +312,6 @@ var LessonsCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
 
 };
 
-module.exports = ['$scope', '$mdDialog', '$http', '$data', '$timeout', '$log', '$location', LessonsCtrl];
+module.exports = ['$scope', '$mdDialog', '$http', '$data', '$timeout', '$log', '$location', '$filter', 'ngTableParams', LessonsCtrl];
+
+

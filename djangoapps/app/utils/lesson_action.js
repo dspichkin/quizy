@@ -32,7 +32,7 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                     html_menu += '  <div class="shadow content" style="top:' + y + 'px;left:' + x + 'px;width:0;height:0;opacity:0;" ng-click="test()">';
                     html_menu += '      <div class="header">';
                     html_menu += '          <div class="header_close" ng-click="close_action()"></div>';
-                    html_menu += '          <div class="header_delete"></div>';
+                    //html_menu += '          <div class="header_delete"></div>';
                     html_menu += '          <div class="header_title">Меню урока</div>';
                     html_menu += '      </div>';
                     html_menu += '      <div class="action_menu_items" style="opacity: 0">';

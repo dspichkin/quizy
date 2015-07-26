@@ -26,6 +26,11 @@ require('sortable');
 require('ng-file-upload');
 
 require('angular-dragdrop');
+require('videogular');
+require('vg-controls');
+require('vg-overlay-play');
+require('vg-poster');
+
 
 require('./editor/filters');
 require('./controllers');
@@ -38,6 +43,10 @@ angular.module('quizy', [
         'ngMdIcons',
         'angular-sortable-view',
         'angular-parallax',
+        "com.2fdevs.videogular",
+        "com.2fdevs.videogular.plugins.controls",
+        "com.2fdevs.videogular.plugins.overlayplay",
+        "com.2fdevs.videogular.plugins.poster",
 
         'ngDragDrop',
         'ngFileUpload',

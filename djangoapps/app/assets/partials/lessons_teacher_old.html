@@ -26,16 +26,16 @@
 </div>
 
 <div class="col-md-12" style="padding: 0;">
-    <table class="table lessons_list" style="width:100%;margin:0">
+    <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
         <thead style="background-color:#e3eaf1;height:60px">
             <th class="table_th">
-                Действия над уроком
+                Действия
             </th>
             <th class="table_th">
-                Название урока
+                Название
             </th>
             <th class="table_th">
-                Краткое описание урока
+                Краткое описание
             </th>
             <th class="table_th" style="width: 400px;">
                 <div style="width:200px;float:left;">Назначение</div>
@@ -44,7 +44,7 @@
         </thead>
 
         <tbody>
-            <tr ng-repeat="lesson in model.lesson.lessons">
+            <tr ng-repeat="lesson in model.courses">
                 <td style="width: 170px;vertical-align: middle;position:relative;">
                     <div class="lesson_incorrect" ng-if="lesson.is_correct==false"></div>
                     <div class="lesson_correct" ng-if="lesson.is_correct==true"></div>
@@ -77,6 +77,7 @@
                     </div>
                 </td>
             </tr>
+
         </tbody>
 
 

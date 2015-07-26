@@ -1,4 +1,4 @@
-<div class="lesson_content">
+<div class="lesson_content" style="margin: 90px 20px 20px 20px;">
         
 
 
@@ -13,8 +13,14 @@
                 </div>
             </div>
 
+            <div class="activity" style="right: 100px;top: 16px;position: absolute;">
+                <div ng-show="model.editor.loading">Сохранение...</div>
+                <div ng-show="model.editor.unsaved">Изменения не сохранены...</div>
+            </div>
+
             
             <div ng-if="model.editor.current_lesson.pages.length > 0" style="clear: both;">
+                
                 <div style="width:100%;padding: 10px 20px 10px 20px;">
                     <md-input-container  style="text-align: left;">
                         <label>Вопрос</label>
@@ -26,17 +32,64 @@
                     </md-input-container>
                 </div>
 
-                <div style="width:100%;padding: 10px 20px 10px 20px;height: 188px;text-align: left;display: inline-table;">
+                <div style="width:100%;padding: 10px 20px 10px 20px;text-align: left;display: inline-table;">
                     <div>
-                        <div ripple class="shadow btn-primary" accept="image/*" ngf-accept="'image/*'" ngf-select ngf-change="page_picture_upload($files, $event)">Картинка вопроса
+                        <div ripple class="shadow btn-primary" accept="image/jpeg,image/png,image/gif,video/mp4,audio/mp3" ngf-accept="'*.png,*.jpg,*.mp3,*.mp4'" ngf-select ngf-change="page_picture_upload($files, $event)">Медиа вопроса
                              <div style="height:2px;width:100%;background-color:red;"
                              ng-style="{width: progressUpload}"></div>
                         </div>
                     </div>
-                    <div class="remove_question_picture" ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].picture" ng-click="remove_question_picture()">Удалить картику</div>
-                    <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].picture">
-                        <md-card class="picture_lesson" ng-if="model.editor.current_lesson.picture" style="max-width: 200px;">
-                            <img ng-src="{{model.editor.current_lesson.pages[model.editor.current_page_index].picture}}" class="md-card-image" alt="Картинка вопроса">
+                    <div class="remove_question_picture" ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].media" ng-click="remove_question_media()" style="text-decoration:underline;color: #4988C9;">Удалить медиа</div>
+                    <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].media">
+                        <md-card class="picture_lesson" style="width: 400px;margin-top: 70px;">
+                            <img ng-if="model.editor.media_type == 'image'" ng-src="{{model.editor.current_lesson.pages[model.editor.current_page_index].media}}" class="md-card-image" alt="Картинка вопроса">
+                            
+                            <div ng-if="model.editor.media_type == 'video'" class="md-card-image" style="width:400px;">
+                                <videogular>
+                                    <vg-media vg-src="model.editor.media_sources" vg-type="video">
+                                    </vg-media>
+                                    <vg-controls>
+                                        <vg-play-pause-button></vg-play-pause-button>
+                                        <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+                                        <vg-scrub-bar>
+                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                        </vg-scrub-bar>
+                                        <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                                        <vg-volume>
+                                            <vg-mute-button></vg-mute-button>
+                                            <vg-volume-bar></vg-volume-bar>
+                                        </vg-volume>
+                                        <vg-fullscreen-button></vg-fullscreen-button>
+                                    </vg-controls>
+ 
+                                    <vg-overlay-play></vg-overlay-play>
+                                    <vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
+                                </videogular>
+                            </div>
+
+                            <div ng-if="model.editor.media_type == 'audio'" class="md-card-image" style="width:400px;">
+                                <videogular>
+                                    <vg-media vg-src="model.editor.media_sources" vg-type="audio">
+                                    </vg-media>
+                                    <vg-controls>
+                                        <vg-play-pause-button></vg-play-pause-button>
+                                        <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+                                        <vg-scrub-bar>
+                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                        </vg-scrub-bar>
+                                        <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                                        <vg-volume>
+                                            <vg-mute-button></vg-mute-button>
+                                            <vg-volume-bar></vg-volume-bar>
+                                        </vg-volume>
+                                    </vg-controls>
+ 
+                                    <vg-overlay-play></vg-overlay-play>
+                                    <vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
+                                </videogular>
+                            </div>
+
+
                         </md-card>
                     </div>
                 </div>
@@ -63,22 +116,26 @@
                     position: relative;
                     margin-bottom: 40px;
                 "> СТРАНИЦЫ УРОКА
-                    <div fab ripple class="fab-add-page" fab-class="fab-add-page" fab-class-menu="fab-add-page-menu" icon="icon-add" menu-right-x="58" menu-y="21" menu-width="380" menu-height="204">
+                    <div fab ripple class="fab-add-page" fab-class="fab-add-page" fab-class-menu="fab-add-page-menu" icon="icon-add" menu-right-x="58" menu-y="21" menu-width="380" menu-height="255">
                         <div><div ng-click="add_page('text')">
                             <i class="type-text-image" style="float: left;margin-right:10px"></i>
                             Страница с текстовым вопросом</div>
                         </div>
                         <div><div ng-click="add_page('checkbox')">
-                            <i class="type-radiobox-image" style="float: left;margin-right:10px"></i>
+                            <i class="type-checkbox-image" style="float: left;margin-right:10px"></i>
                             Страница с выбором нескольких ответов</div>
                         </div>
                         <div><div ng-click="add_page('radiobox')">
-                            <i class="type-checkbox-image" style="float: left;margin-right:10px"></i>
+                            <i class="type-radiobox-image" style="float: left;margin-right:10px"></i>
                             Страница с выбором одного ответа</div>
                         </div>
                         <div><div ng-click="add_page('pairs')">
                             <i class="type-pairs-image" style="float: left;margin-right:10px"></i>
                             Страница с подбором пары</div>
+                        </div>
+                        <div><div ng-click="add_page('words_in_text')">
+                            <i class="type-pairs-image" style="float: left;margin-right:10px"></i>
+                            Страница с подбором слов в тексте</div>
                         </div>
                     </div>
 

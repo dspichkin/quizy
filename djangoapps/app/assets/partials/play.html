@@ -1,10 +1,24 @@
-<div class="play">
+<div class="play_div">
     
     <div class="play_panel" style="
     height: 100%;
     width: 90%;
     display: inline-block;
     margin-top: -50px;">
+
+        <div ng-if="show_debug" class="shadow" style="position: absolute;
+            width: 200px;
+            height: 55px;
+            z-index: 100;
+            padding: 7px;
+            background-color: #FF8100;
+            top: -109px;
+            color: white;
+            right: 0;">
+            Тестовый запуск
+            <div ng-click="back()" style="text-decoration:underline;">Вернуться в редактор</div>
+        </div>
+
 
 
         <div ng-if="model.play.current_page_index < model.play.attempt.lesson.pages.length">
@@ -17,9 +31,69 @@
 
                 <div class="question_text"ng-bind-html="model.play.attempt.lesson.pages[model.play.current_page_index].text"></div>
 
-                <div class="question_picture" style="max-width: 200px;margin: 0 0 20px 0;" ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].picture">
-                    <img  style="width: 200px;" ng-src="{{model.play.attempt.lesson.pages[model.play.current_page_index].picture}}" />
+                <div class="question_picture" style="width: 100%;margin: 0 0 20px 0;" ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].media">
+                    
+                    <img ng-if="model.play.media_type == 'image'" ng-src="{{model.play.current_lesson.pages[model.play.current_page_index].media}}" class="md-card-image" alt="Картинка вопроса" style="width:400px;margin: 0 auto;"/>
+
+                    <div ng-if="model.play.media_type == 'video'" class="md-card-image" style="width:400px;margin: 0 auto;">
+                        <videogular>
+                            <vg-media vg-src="model.play.media_sources" vg-type="video">
+                            </vg-media>
+                            <vg-controls>
+                                <vg-play-pause-button></vg-play-pause-button>
+                                <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+                                <vg-scrub-bar>
+                                    <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                </vg-scrub-bar>
+                                <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                                <vg-volume>
+                                    <vg-mute-button></vg-mute-button>
+                                    <vg-volume-bar></vg-volume-bar>
+                                </vg-volume>
+                                <vg-fullscreen-button></vg-fullscreen-button>
+                            </vg-controls>
+
+                            <vg-overlay-play></vg-overlay-play>
+                            <vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
+                        </videogular>
+                    </div>
+
+                    <div ng-if="model.play.media_type == 'audio'" class="md-card-image" style="width:400px;margin:0 auto;">
+                        <videogular>
+                            <vg-media vg-src="model.play.media_sources" vg-type="audio">
+                            </vg-media>
+                            <vg-controls>
+                                <vg-play-pause-button></vg-play-pause-button>
+                                <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+                                <vg-scrub-bar>
+                                    <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                </vg-scrub-bar>
+                                <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                                <vg-volume>
+                                    <vg-mute-button></vg-mute-button>
+                                    <vg-volume-bar></vg-volume-bar>
+                                </vg-volume>
+                            </vg-controls>
+
+                            <vg-overlay-play></vg-overlay-play>
+                            <vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
+                        </videogular>
+                    </div>
+
+
                 </div>
+
+                <div ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].type == 'words_in_text'" class="variant_text" style="width: 100%;padding: 0px 20px 10px 20px;">
+                    <ul>
+                        <li ng-repeat="item in model.play.attempt.lesson.pages[model.play.current_page_index].variants" class="variant">
+                            <div style="clear:both;margin: -17px 0 0 0;" compile="words_in_text.text" >
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+
+
 
 
                 <div ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].type == 'text'" class="variant_text" style="width: 100%;padding: 0px 20px 10px 20px;">
@@ -58,7 +132,7 @@
                 </div>
 
 
-                <div ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].type == 'checkbox'" class="variant_checkbox">
+                <div ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].type == 'checkbox'" class="variant_checkbox" style="display: inline-block;margin: 20px 0 30px 0;">
                     <ul class="checkbox_variants">
                         <li ng-repeat="item in model.play.attempt.lesson.pages[model.play.current_page_index].variants" class="variant">
                             <div style="clear:both;">
@@ -144,9 +218,35 @@
                         {{get_page_by_id(item.page_id).text | htmlToPlaintext | limitTo: 25 }}{{get_page_by_id(item.page_id).text.length > 25 ? '...' : ''}}
                     </span>
                     <span style="float: right;width: 52px;">
-                    <span ng-if="item.success==false" style="color: red;">Неверно</span>
-                    <span ng-if="item.success==true" style="color: green;">Верно</span>
+                        <span ng-if="item.success==false" style="color: red;">Неверно</span>
+                        <span ng-if="item.success==true" style="color: green;">Верно</span>
                     </span>
+
+                    <div ng-if="item.choiced_elements.length > 0" style="margin: 7px 0px 0 8px;">
+                        <div ng-repeat="r in item.choiced_elements" style="margin: 10px 0 0 0;">
+                            <div ng-if="get_reflexy(item.page_id, r.variant_id)">
+                                <p style="background-color: white;
+                                    display: block;
+                                    padding: 5px;
+                                    margin: 0;
+                                    z-index: 0;
+                                    border: 1px solid #c3c3c3;" >
+                                    {{r.variant_id}}
+                                    {{get_variant_by_id(item.page_id, r.variant_id)}}</p>
+                                <p style="
+                                    display: inline-block;
+                                    padding: 5px;
+                                    position: relative;
+                                    border: 1px solid #c3c3c3;
+                                    margin: -4px 0 0 14px;
+                                    z-index: 10;" ng-class="{
+                                        'reflexy_right': id_correct_variant_by_id(item.page_id, r.variant_id)==true,
+                                        'reflexy_error': id_correct_variant_by_id(item.page_id, r.variant_id)==false
+                                    }">
+                                        {{get_reflexy_by_id(item.page_id, r.variant_id)}}</p>
+                            </div>
+                        </div>
+                    </div>
                 </li>
             </ul>
 

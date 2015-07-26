@@ -1,20 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""quizy URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/1.8/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
-Including another URLconf
-    1. Add an import:  from blog import urls as blog_urls
-    2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
-"""
 
 import time
 
@@ -25,11 +10,14 @@ from django.shortcuts import render
 
 from rest_framework.routers import DefaultRouter
 
-from quizy.views import (PageViewSet, user_data,
+from quizy.views import (user_data,
     answers, play, get_mypupil, create_pupil,
     mylessons, demo_play,
-    lessons, new_page, lesson_archive, enroll_pupil,
+    new_page, lesson_archive, enroll_pupil,
     lesson_picture_upload, page_picture_upload)
+
+from quizy.page import PageViewSet
+from quizy.materials import courses, lessons
 # LessonsViewSet,
 
 
@@ -63,6 +51,7 @@ urlpatterns = [
     # url(r'^api/lessons/$', get_lessons, name='get_lessons'),
     url(r'^api/play/(\d+)?/?$', play, name='run_play'),
     url(r'^api/demo/play/(\d+)?/?$', demo_play, name='run_demo_play'),
+    url(r'^api/courses/(\d+)?/?$', courses, name='get_courses'),
     url(r'^api/lessons/(\d+)?/?$', lessons, name='get_lessons'),
     url(r'^api/lessons/(\d+)/new_page/$', new_page, name='new_page'),
     url(r'^api/lessons/(\d+)/upload/$', lesson_picture_upload, name='lesson_picture_upload'),
