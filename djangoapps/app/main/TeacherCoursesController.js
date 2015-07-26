@@ -1,8 +1,21 @@
 'use strict';
+function getUrlVars(url)
+{
+    var vars = [], hash;
+    var hashes = url.slice(url.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
 
 var _ = require('lodash-node');
 var Course = require('../models/course');
-var CoursesCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $location) {
+var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeout, $log, $location) {
     $scope.model = {
         courses: [],
         lessons_for_me: [],
@@ -28,17 +41,52 @@ var CoursesCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
     $scope.main.active_menu = 'courses';
 
 
-    $scope.load_courses = function(callback) {
+    $scope.load_courses = function(url, callback) {
         if ($scope.user.account_type == 1) {
-            $http.get('/api/courses/').then(function(data) {
-                $scope.model.courses = [];
-                for (var i = 0, len = data.data.length; i < len; i++) {
-                    $scope.model.courses.push(new Course(data.data[i]));
+            var _page = $location.search().page;
+            if (!url) {
+                var url = '/api/courses/';
+                if (_page) {
+                    url += '?page=' + _page;
                 }
+            } else {
+                _page = getUrlVars(url).page;
+            }
+            if (!_page) {
+                _page = 1;
+            }
+
+
+            $http.get(url).then(function(data) {
+                $scope.model.courses = [];
+                var page_length = 10;
+                for (var i = 0, len = data.data.results.length; i < len; i++) {
+                    $scope.model.courses.push(new Course(data.data.results[i]));
+                }
+                var from_page = _page * page_length - page_length;
+                if (!from_page) {
+                    from_page = 1;
+                }
+                var to_page = _page * page_length;
+                if (to_page > data.data.count) {
+                    to_page = data.data.count;
+                }
+                $scope.model.page = {
+                    next: data.data.next,
+                    count: data.data.count,
+                    previous: data.data.previous,
+                    from_page: from_page,
+                    to_page: to_page
+                };
+
             }, function(error) {
                 $log.error('Ошибка получения курсов', error);
             });
         }
+    };
+
+    $scope.go_page = function(url) {
+        $location.path(url);
     };
 
     $scope.go_course_lessons = function(course_id) {
@@ -168,6 +216,6 @@ var CoursesCtrl = function($scope, $mdDialog, $http, $data, $timeout, $log, $loc
 
 };
 
-module.exports = ['$scope', '$mdDialog', '$http', '$data', '$timeout', '$log', '$location', CoursesCtrl];
+module.exports = ['$scope', '$stateParams', '$mdDialog', '$http', '$data', '$timeout', '$log', '$location', CoursesCtrl];
 
 

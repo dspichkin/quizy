@@ -6,6 +6,7 @@ import re
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -14,6 +15,7 @@ from rest_framework.decorators import api_view, permission_classes
 
 from quizy.models import Course, Lesson
 from quizy.serializers.serializers import (CourseSerializer, LessonSerializer)
+from quizy.pagination import CourseListPagination
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -23,12 +25,15 @@ def courses(request, course_pk=None):
         return Response([], status=status.HTTP_200_OK)
 
     if request.method == 'GET' and request.user.is_authenticated():
-        courses = []
         if not course_pk:
             # возвращаем список всех курсов и уроков
             qs = Course.objects.filter(Q(created_by=request.user) | Q(teacher=request.user))
-            courses = CourseSerializer(qs, many=True).data
-            return Response(courses, status=status.HTTP_200_OK)
+
+            paginator = CourseListPagination()
+            result_page = paginator.paginate_queryset(qs, request)
+            serializer = CourseSerializer(result_page, many=True)
+            return paginator.get_paginated_response(serializer.data)
+
         else:
             try:
                 course = Course.objects.get(Q(created_by=request.user) | Q(teacher=request.user), pk=course_pk)
