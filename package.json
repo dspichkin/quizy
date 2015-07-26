@@ -6,7 +6,8 @@
   "scripts": {
     "build": "browserify djangoapps/app/app.js -o > djangoapps/app/assets/app.js",
     "watch": "watchify djangoapps/app/app.js -o djangoapps/app/assets/app.js --debug --verbose",
-    "compile": "browserify djangoapps/app/app.js -d -p [minifyify --map app.map.json --output app.map.json] > djangoapps/app/assets/app.js"
+    "compile_old": "browserify djangoapps/app/app.js -d -p [minifyify --map app.map.json --output app.map.json --uglify [ --compress [ --dead_code--comparisons 0 ] ]] > djangoapps/app/assets/app.js",
+    "compile": "browserify djangoapps/app/app.js -o | uglifyjs -c > djangoapps/app/assets/app.js"
   },
   "repository": {
     "type": "git",
@@ -55,6 +56,7 @@
     "browserify-shim": "^3.8.2",
     "jquery": "^2.1.3",
     "minifyify": "",
+    "browserify-ngannotate": "",
     "archiver": ""
   },
   "devDependencies": {
