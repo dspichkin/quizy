@@ -230,8 +230,7 @@
                                     padding: 5px;
                                     margin: 0;
                                     z-index: 0;
-                                    border: 1px solid #c3c3c3;" >
-                                    {{r.variant_id}}
+                                    border: 1px solid #c3c3c3;" ng-if="get_variant_by_id(item.page_id, r.variant_id)">
                                     {{get_variant_by_id(item.page_id, r.variant_id)}}</p>
                                 <p style="
                                     display: inline-block;
@@ -242,7 +241,7 @@
                                     z-index: 10;" ng-class="{
                                         'reflexy_right': id_correct_variant_by_id(item.page_id, r.variant_id)==true,
                                         'reflexy_error': id_correct_variant_by_id(item.page_id, r.variant_id)==false
-                                    }">
+                                    }" ng-if="get_reflexy_by_id(item.page_id, r.variant_id)">
                                         {{get_reflexy_by_id(item.page_id, r.variant_id)}}</p>
                             </div>
                         </div>
@@ -252,7 +251,12 @@
 
             <div>
                 <div class="btn-primary" ng-if="model.play.attempt.result.success==false" ng-click="repeat()">Повторить</div>
-                <div class="btn-primary" ng-click="back()">Вернуться</div>
+                <div ng-if="user.is_authenticated && user.account_type==1">
+                    <div class="btn-primary" ng-click="back()">Вернуться</div>
+                </div>
+                <div ng-if="user.is_authenticated && user.account_type==2" style="display: inline;">
+                    <div class="btn-primary" ng-click="main.go_lesson_page()">Вернуться</div>
+                </div>
             </div>
         </div>
 

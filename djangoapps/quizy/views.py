@@ -2,27 +2,24 @@
 
 import json
 import os
-import re
 
 # from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
-from django.conf import settings
-from django.core.mail import EmailMessage
 from django.utils import timezone
+from django.db.models import Q
 
-from sorl.thumbnail import get_thumbnail
 
-from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import detail_route
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 
-from quizy.models import Course, Lesson, Page, Variant, CourseEnroll, LessonEnroll
-from quizy.serializers import (CourseEnrollSerializer, LessonEnrollSerializer, LessonSerializer,
+from quizy.models import Course, Lesson, Page, CourseEnroll, LessonEnroll
+from quizy.serializers.serializers import (CourseEnrollSerializer, LessonEnrollSerializer, LessonSerializer,
 PageSerializer, VariantSerializer)
+
+from quizy.serializers.pupil import PupilSerializer
 
 from users.account.models import Account
 from users.account.serializers import UserSerializer, AdminSerializer
@@ -89,7 +86,7 @@ def mylessons(request):
         return Response([], status=status.HTTP_200_OK)
 
     enrolls = []
-    for enroll in LessonEnroll.objects.filter(learner=request.user, is_archive=False):
+    for enroll in LessonEnroll.objects.filter(learner=request.user, is_archive=False).order_by('-created_at'):
         enrolls.append(LessonEnrollSerializer(enroll).data)
     return Response(enrolls, status=status.HTTP_200_OK)
 
@@ -234,7 +231,6 @@ def page_picture_upload(request, page_pk=None):
                 page.media = None
 
         f = request.FILES.get('file')
-        print "11 ", f
         if f and f._size < 30 * 1024 * 1024:
             page.media = f
             page.save()
@@ -284,13 +280,60 @@ def lesson_archive(request, lesson_pk=None):
 @api_view(['GET'])
 @permission_classes((AllowAny,))
 def get_mypupil(request):
+    """
+    запрос для получения адресов
+    используеться при назначение
+    """
     if not request.user.is_authenticated():
         return Response([], status=status.HTTP_200_OK)
-    rawpupils = Account.objects.get(pk=request.user.pk).pupils.exclude(pk=request.user.pk)
-    pupils_email = []
-    for p in rawpupils:
-        pupils_email.append(p.email)
-    return Response(pupils_email, status=status.HTTP_200_OK)
+
+    attr_email = request.GET.get('email')
+    # проходим по всем назначенным курсам и урока ищем учеников
+    dic_pupils = {}
+    for ce in CourseEnroll.objects.filter(Q(created_by=request.user) | Q(course__teacher=request.user)):
+        dic_pupils.update({
+            ce.learner.pk: ce.learner
+        })
+    for le in LessonEnroll.objects.filter(Q(created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user)):
+        dic_pupils.update({
+            le.learner.pk: le.learner
+        })
+
+    pupils = []
+    for key, value in dic_pupils.items():
+        if attr_email is not None:
+            if attr_email in value.email:
+                pupils.append(value.email)
+        else:
+            pupils.append(value.email)
+
+    return Response(pupils, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def pupils(request):
+    """
+    Запрос на страницы мои ученики
+    """
+    if not request.user.is_authenticated():
+        return Response([], status=status.HTTP_200_OK)
+    # проходим по всем назначенным курсам и урока ищем учеников
+    dic_pupils = {}
+    for ce in CourseEnroll.objects.filter(Q(created_by=request.user) | Q(course__teacher=request.user)):
+        dic_pupils.update({
+            ce.learner.pk: ce.learner
+        })
+
+    for le in LessonEnroll.objects.filter(Q(created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user)):
+        dic_pupils.update({
+            le.learner.pk: le.learner
+        })
+    pupils = []
+    for key, value in dic_pupils.items():
+        pupils.append(PupilSerializer(value).data)
+
+    return Response(pupils, status=status.HTTP_200_OK)
 
 """
 def validateEmail(email):
@@ -299,6 +342,7 @@ def validateEmail(email):
             return True
     return False
 """
+
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
@@ -371,7 +415,7 @@ def enroll_pupil(request, enroll_pk):
 
     if request.method == 'DELETE' and enroll_pk:
         try:
-            enroll = LessonEnroll.objects.get(pk=enroll_pk, lesson__created_by=request.user)
+            enroll = LessonEnroll.objects.get(Q(lesson__created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user), pk=enroll_pk)
             enroll.delete()
         except LessonEnroll.DoesNotExist:
             return Response("", status=status.HTTP_400_BAD_REQUEST)

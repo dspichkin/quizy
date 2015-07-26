@@ -9,7 +9,7 @@ from rest_framework import status
 
 
 from quizy.models import Page, Variant
-from quizy.serializers import (PageSerializer, VariantSerializer)
+from quizy.serializers.serializers import (PageSerializer, VariantSerializer)
 
 
 class PageViewSet(viewsets.ModelViewSet):

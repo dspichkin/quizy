@@ -9,7 +9,6 @@ select:-webkit-autofill {
 
 .login-form,
 .signup-form {
-    background-color: #C3CCCC;
     padding: 0px 15px 30px 15px;
     text-align: center;
     font-size: 12px;
@@ -29,6 +28,13 @@ select:-webkit-autofill {
         font-size: 30px;
     }
     input {
+        font-size: 19px;
+        &.input-error {
+            border-color: #ff7373;
+        }
+    }
+    /*
+    input {
         background-color: #FFFFFF;
         height: 50px;
         font-size: 17px;
@@ -46,6 +52,7 @@ select:-webkit-autofill {
             border-color: #ff7373;
         }
     }
+    */
     .btn {
         margin: 10px auto 0;
         width: 125px;
