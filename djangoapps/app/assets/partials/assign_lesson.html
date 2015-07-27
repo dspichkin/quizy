@@ -27,7 +27,7 @@
             <md-input-container>
                 <label>Введите email ученика:</label>
                 <input type="text" ng-model="model.modal_enroll.inputed_address" md-maxlength="100"
-                ng-change="change_inputed_address()" data-ng-model-options="{debounce: 150}">
+                ng-change="change_inputed_address()" data-ng-model-options="{debounce: 350}">
             </md-input-container>
             <div ng-if="model.modal_enroll.show_error" style="color:red;">
                 <p>{{model.modal_enroll.error_message}}</p>

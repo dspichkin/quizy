@@ -36,6 +36,7 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
                     data.data[i].created_at = Date.parse(data.data[i].created_at);
                     $scope.model.lessons.push(data.data[i]);
                 }
+                console.log($scope.model.lessons)
 
                 //console.log($scope.model.lessons)
             }, function(error) {
@@ -49,6 +50,40 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
     };
 
 
+    $scope.reject_lesson = function($event, lesson_id) {
+        $mdDialog.show({
+            targetEvent: $event,
+            templateUrl: '/assets/partials/confirm/confirm_reject_lesson.html',
+            disableParentScroll: true,
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.model['modal'] = {
+                    loading: false
+                };
+                console.log('lesson_id', lesson_id)
+                $scope.closeDialog = function() {
+                    $mdDialog.hide();
+                };
+
+                $scope.submit = function($event) {
+                    $scope.model.modal.loading = true;
+                    $.post('/api/reject_lesson/' + lesson_id + '/').then(function(data) {
+                        $scope.model.modal.loading = false;
+                        $scope.load_lesson();
+                        $mdDialog.hide();
+                    }, function(error) {
+                        $scope.model.modal.loading = false;
+                        $log.error(error);
+                        $scope.load_lesson();
+                        $mdDialog.hide();
+                    });
+                };
+
+            }
+        });
+    }
 
 
 

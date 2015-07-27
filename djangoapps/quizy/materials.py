@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import json
-import os
-import re
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -15,7 +13,7 @@ from rest_framework.decorators import api_view, permission_classes
 
 from quizy.models import Course, Lesson
 from quizy.serializers.serializers import (CourseSerializer, LessonSerializer)
-from quizy.pagination import CourseListPagination
+from quizy.pagination import ListPagination
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -29,7 +27,7 @@ def courses(request, course_pk=None):
             # возвращаем список всех курсов и уроков
             qs = Course.objects.filter(Q(created_by=request.user) | Q(teacher=request.user))
 
-            paginator = CourseListPagination()
+            paginator = ListPagination()
             result_page = paginator.paginate_queryset(qs, request)
             serializer = CourseSerializer(result_page, many=True)
             return paginator.get_paginated_response(serializer.data)
@@ -43,6 +41,7 @@ def courses(request, course_pk=None):
             return Response(coursejson, status=status.HTTP_200_OK)
 
 
+@csrf_exempt
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 @permission_classes((AllowAny, ))
 def lessons(request, lesson_pk=None):

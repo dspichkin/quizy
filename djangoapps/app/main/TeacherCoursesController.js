@@ -3,7 +3,7 @@ function getUrlVars(url)
 {
     var vars = [], hash;
     var hashes = url.slice(url.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
+    for (var i = 0; i < hashes.length; i++)
     {
         hash = hashes[i].split('=');
         vars.push(hash[0]);
@@ -43,7 +43,7 @@ var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeo
 
     $scope.load_courses = function(url, callback) {
         if ($scope.user.account_type == 1) {
-            var _page = $location.search().page;
+            var _page;
             if (!url) {
                 var url = '/api/courses/';
                 if (_page) {
@@ -98,7 +98,7 @@ var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeo
         $scope.assign_course_id = course_id;
         $mdDialog.show({
             targetEvent: $event,
-            templateUrl: '/assets/partials/course/assign_course.html',
+            templateUrl: '/assets/partials/courses/assign_course.html',
             disableParentScroll: true,
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
@@ -112,8 +112,12 @@ var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeo
                     show_create_account: false
                 };
 
-                $scope.get_mypupils = function() {
-                    $.get('/api/get_mypupil/').then(function(data) {
+                $scope.get_mypupils = function(email) {
+                    var url = '/api/get_mypupil/';
+                        if (email) {
+                            url = '/api/get_mypupil/?email=' + email;
+                        }
+                    $.get(url).then(function(data) {
                         $scope.model.modal_enroll.mypupils = data;
                         $scope.$digest();
                     },
@@ -138,6 +142,8 @@ var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeo
                 };
                 $scope.submit_disabled = true;
                 $scope.change_inputed_address = function() {
+                    $scope.get_mypupils($scope.model.modal_enroll.inputed_address);
+
                     if ($scope.model.modal_enroll.inputed_address != "") {
                         $scope.submit_disabled = false;
                     } else {

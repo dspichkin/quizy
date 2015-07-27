@@ -58,6 +58,9 @@
 		                    <span>{{lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>
 		                </td>
 		                <td class="td_enroll_stats" style="width:400px;text-align:left">
+		                	<div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
+                       			 margin: 0;" ng-click="lesson_enroll($event, lesson.id)">Назначить ...</div>
+
 		                    <div style="max-height:100px;overflow: auto;">
 		                        <div ng-repeat="enroll in lesson.enrolls" class="enroll_pupil">
 		                            <div style="margin: 6px 0 0 0;width:200px;float:left;">

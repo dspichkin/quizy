@@ -83,9 +83,17 @@ class LessonEnrollSerializer(serializers.ModelSerializer):
         exclude = ("data",)
 
 
+class EnrollForCourseSerializer (serializers.ModelSerializer):
+    learner = UserSerializer(read_only=True)
+
+    class Meta:
+        model = LessonEnroll
+        exclude = ("data",)
+
+
 class LessonForCourseSerializer(serializers.ModelSerializer):
     pages = PageSerializer(many=True, read_only=True)
-    enrolls = LessonEnrollSerializer(many=True, read_only=True)
+    enrolls = EnrollForCourseSerializer(many=True, read_only=True)
     code_errors = JSONField()
     material_type = serializers.CharField(source='type')
 

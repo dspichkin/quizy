@@ -73,7 +73,7 @@
                 </md-input-container>
             </div>
 
-            <div style="width:100%;padding: 10px 20px 10px 20px;height: 188px;text-align: left;display: inline-table;">
+            <div style="width:100%;padding: 10px 20px 10px 20px;height: 188px;text-align: left;display: inline-table;" ng-if="model.editor.new_lesson == false">
                 <div>
                     <div ripple class="shadow btn-primary" accept="image/*" ngf-accept="'image/*'" ngf-select ngf-change="upload($files, $event)">Картинка урока
                          <div style="height:2px;width:100%;background-color:red;"
