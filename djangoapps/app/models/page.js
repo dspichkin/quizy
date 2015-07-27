@@ -82,10 +82,10 @@ function Page(data) {
             // ищем все инпуты
             var _inp = _text.match(/\[\[.*?\]\]/g);
 
-            if (_sel.length > 0) {
+            if (_sel && _sel.length > 0) {
                 _raw_variants[i].right_answers_select = _parse_str(_sel, 'select');
             }
-            if (_inp.length > 0) {
+            if (_inp && _inp.length > 0) {
                 _raw_variants[i].right_answers_input = _parse_str(_inp);
             }
             // console.log('_raw_variants', _raw_variants[i])

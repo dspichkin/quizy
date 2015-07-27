@@ -13,8 +13,8 @@ from rest_framework.routers import DefaultRouter
 from quizy.views import (user_data,
     answers, play, get_mypupil, create_pupil,
     mylessons, demo_play, pupils,
-    new_page, lesson_archive, enroll_pupil,
-    lesson_picture_upload, page_picture_upload)
+    new_page, lesson_archive, enroll_pupil, enroll_course_pupil,
+    reject_lesson, lesson_picture_upload, page_picture_upload)
 
 from quizy.page import PageViewSet
 from quizy.materials import courses, lessons
@@ -47,6 +47,7 @@ urlpatterns = [
     url(r'^api/get_mypupil/$', get_mypupil, name='get_mypupil'),
     url(r'^api/create_pupil/$', create_pupil, name='create_pupil'),
     url(r'^api/enroll_pupil/(\d+)?/?$', enroll_pupil, name='enroll_pupil'),
+    url(r'^api/enroll_course_pupil/(\d+)?/?$', enroll_course_pupil, name='enroll_course_pupil'),
 
 
     # url(r'^api/lessons/$', get_lessons, name='get_lessons'),
@@ -56,6 +57,7 @@ urlpatterns = [
     url(r'^api/lessons/(\d+)?/?$', lessons, name='get_lessons'),
     url(r'^api/lessons/(\d+)/new_page/$', new_page, name='new_page'),
     url(r'^api/lessons/(\d+)/upload/$', lesson_picture_upload, name='lesson_picture_upload'),
+    url(r'^api/reject_lesson(\d+)/$', reject_lesson, name='reject_lesson'),
     url(r'^api/mylessons/$', mylessons, name='mylessons'),
 
     url(r'^api/pages/(\d+)/upload/$', page_picture_upload, name='page_picture_upload'),

@@ -20,6 +20,7 @@ from quizy.serializers.serializers import (CourseEnrollSerializer, LessonEnrollS
 PageSerializer, VariantSerializer)
 
 from quizy.serializers.pupil import PupilSerializer
+from quizy.pagination import ListPagination
 
 from users.account.models import Account
 from users.account.serializers import UserSerializer, AdminSerializer
@@ -329,19 +330,18 @@ def pupils(request):
         dic_pupils.update({
             le.learner.pk: le.learner
         })
+
     pupils = []
     for key, value in dic_pupils.items():
-        pupils.append(PupilSerializer(value).data)
+        pupils.append(value)
+        # pupils.append(PupilSerializer(value).data)
 
-    return Response(pupils, status=status.HTTP_200_OK)
+    paginator = ListPagination()
+    result_page = paginator.paginate_queryset(pupils, request)
+    serializer = PupilSerializer(result_page, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
-"""
-def validateEmail(email):
-    if len(email) > 7:
-        if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email) is not None:
-            return True
-    return False
-"""
+    # return Response(pupils, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -359,13 +359,19 @@ def create_pupil(request):
 
     lesson = get_object_or_404(Lesson, pk=lesson_id, created_by=request.user)
     pupil, created = Account.objects.get_or_create(email__iexact=email)
+    if created:
+        pupil.email = email
+        pupil.username = email
+        pupil.account_type = 2
+        pupil.save()
+
     try:
         LessonEnroll.objects.get(lesson=lesson, learner=pupil)
     except LessonEnroll.DoesNotExist:
         LessonEnroll.objects.create(lesson=lesson, learner=pupil, created_by=request.user)
 
     request.user.pupils.add(pupil)
-    return Response("", status=status.HTTP_200_OK)
+    return Response(UserSerializer(pupil).data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST', 'DELETE'])
@@ -380,6 +386,8 @@ def enroll_pupil(request, enroll_pk):
         auto_enroll = data.get('auto_enroll')
         lesson_id = data.get('lesson_id')
         email = data.get('email')
+        if course_id is None and lesson_id is None:
+            return Response("Неверный формат course или lesson", status=status.HTTP_400_BAD_REQUEST)
         if validateEmail(email) is False:
             return Response("Неверный формат email", status=status.HTTP_400_BAD_REQUEST)
 
@@ -423,3 +431,25 @@ def enroll_pupil(request, enroll_pk):
 
     return Response(status=status.HTTP_200_OK)
 
+
+@api_view(['GET', 'POST', 'DELETE'])
+@permission_classes((AllowAny,))
+def enroll_course_pupil(request, enroll_pk):
+    if not request.user.is_authenticated():
+        return Response(status=status.HTTP_200_OK)
+
+    if request.method == 'DELETE' and enroll_pk:
+        try:
+            enroll = CourseEnroll.objects.get(Q(created_by=request.user) | Q(course__teacher=request.user), pk=enroll_pk)
+            enroll.delete()
+        except CourseEnroll.DoesNotExist:
+            return Response("", status=status.HTTP_400_BAD_REQUEST)
+        return Response("", status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def reject_lesson(request, enroll_pk):
+    return Response(status=status.HTTP_200_OK)

@@ -77,7 +77,6 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
             }
 
             $scope.model.editor.current_lesson = l;
-            console.log(l)
             $scope.detect_media_type();
             // проверяем на правильность во время загрузки
             var _c = $scope.model.editor.current_lesson.is_correct;
@@ -179,7 +178,7 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
         var _course_id = $scope.model.editor.current_lesson.course.id;
         $mdDialog.show({
             targetEvent: $event,
-            templateUrl: '/assets/partials/confirm_delete_lesson.html',
+            templateUrl: '/assets/partials/confirm/confirm_delete_lesson.html',
             disableParentScroll: true,
             clickOutsideToClose: true,
             scope: $scope,        // use parent scope in template
@@ -203,7 +202,7 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
     $scope.delete_current_page = function($event) {
         $mdDialog.show({
               targetEvent: $event,
-              templateUrl: '/assets/partials/confirm_delete_page.html',
+              templateUrl: '/assets/partials/confirm/confirm_delete_page.html',
               disableParentScroll: true,
               clickOutsideToClose: true,
                 scope: $scope,        // use parent scope in template
@@ -572,6 +571,7 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
     };
 
     $scope.remove_lesson_picture = function() {
+        console.log($scope.model.editor.current_lesson)
         $scope.model.editor.current_lesson.remove_lesson_media().then(function() {
             $scope.reload_lesson();
             setTimeout(function() {

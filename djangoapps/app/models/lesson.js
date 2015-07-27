@@ -14,8 +14,10 @@ function Lesson(data) {
 
     _.assign(this, data);
     this.pages = [];
-    for (var i = 0, len = data.pages.length; i < len; i++) {
-        this.pages.push(new Page(data.pages[i]));
+    if (data.pages) {
+        for (var i = 0, len = data.pages.length; i < len; i++) {
+            this.pages.push(new Page(data.pages[i]));
+        }
     }
 }
 
@@ -91,7 +93,7 @@ _.assign(Lesson.prototype, {
             }
         }
     },
-    remove_lesson_picture: function() {
+    remove_lesson_media: function() {
         return $.ajax({
             url: "/api/lessons/" + this.id + "/upload/",
             type: "DELETE"
@@ -129,10 +131,12 @@ _.assign(Lesson.prototype, {
         }
 
         if (_has_error == false) {
-            if (Object.keys(this.code_errors).length > 0) {
-                this.is_correct = false;
-            } else {
-                this.is_correct = true;
+            if (this.code_errors) {
+                if (Object.keys(this.code_errors).length > 0) {
+                    this.is_correct = false;
+                } else {
+                    this.is_correct = true;
+                }
             }
         }
     }

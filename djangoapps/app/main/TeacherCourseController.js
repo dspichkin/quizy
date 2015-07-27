@@ -66,18 +66,18 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
                         var url = '/api/get_mypupil/';
                         if (email) {
                             url = '/api/get_mypupil/?email=' + email;
-                        } 
+                        }
                         $.get(url).then(function(data) {
                             $scope.model.modal_enroll.mypupils = data;
-                            $scope.$apply();
-                        }, 
+                            $scope.$digest();
+                        },
                         function(error) {
                             $scope.model.modal_enroll.show_error = true;
                             $scope.model.modal_enroll.error_message = "Invalid request";
-                            $scope.$apply();
+                            $scope.$digest();
                             $log.error(error);
                         });
-                    }
+                    };
 
                     $scope.select_pupil = function($index) {
                         $scope.model.modal_enroll.inputed_address = $scope.model.modal_enroll.mypupils[$index];
@@ -92,7 +92,7 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
                     };
                     $scope.submit_disabled = true;
                     $scope.change_inputed_address = function() {
-                         $scope.get_mypupils($scope.model.modal_enroll.inputed_address);
+                        $scope.get_mypupils($scope.model.modal_enroll.inputed_address);
 
                         if ($scope.model.modal_enroll.inputed_address != "") {
                             $scope.submit_disabled = false;
@@ -108,6 +108,7 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
                         $scope.model.modal_enroll.loading = true;
                         $.post('/api/enroll_pupil/', JSON.stringify(_data)).then(function(data) {
                             $scope.model.modal_enroll.loading = false;
+
                             if (data.hasOwnProperty('code')) {
                                 if (data.code == 404) {
                                     $scope.model.modal_enroll.show_error = true;

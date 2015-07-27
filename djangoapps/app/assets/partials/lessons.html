@@ -5,8 +5,9 @@
 
 
 			<div ng-if="model.lessons.length == 0">
+				<!--
 				<md-button ng-click="find_teacher($event)" class="md-raised pull-right" style="background-color: #FF9E37;">Найти преподователя</md-button>
-
+				-->
 			    <div style="padding: 100px;font-size: 20px;">
 			        <p>На вас пока не назначенно ни одного урока</p>
 			    </div>
@@ -59,8 +60,8 @@
 					                    <span class="enroll_email" style="color:#2c8de1;text-decoration:underline;"> {{item.created_by.email}}</span> <span style="font-size:12px;">({{item.created_at | date:'yyyy-MM-dd HH:mm'}})</span> 
 					                </td>
 					                <td style="text-align:left;width: 100px;">
-					                	<div style="width:100%;border-bottom: 1px solid #c6c6c6;cursor: pointer;">Отвергнуть</div>
-					                	<div style="width:100%;cursor: pointer;">В архив</div>
+					                	<div ng-if="item.success==null" style="width:100%;margin: 10px;cursor: pointer;" ng-click="reject_lesson($event, item.id)">Отвергнуть</div>
+					                	<div ng-if="item.success!=null" style="width:100%;cursor: pointer;">В архив</div>
 					                </td>
 					            </tr>
 					        </tbody>
