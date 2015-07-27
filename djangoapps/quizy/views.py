@@ -6,7 +6,6 @@ import os
 # from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
-from django.utils import timezone
 from django.db.models import Q
 
 
@@ -15,18 +14,15 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 
-from quizy.models import Course, Lesson, Page, CourseEnroll, LessonEnroll
+from quizy.models import (Course, Lesson, Page, CourseEnroll, LessonEnroll)
 from quizy.serializers.serializers import (CourseEnrollSerializer, LessonEnrollSerializer, LessonSerializer,
-PageSerializer, VariantSerializer)
+PageSerializer)
 
 from quizy.serializers.pupil import PupilSerializer
 from quizy.pagination import ListPagination
 
 from users.account.models import Account
 from users.account.serializers import UserSerializer, AdminSerializer
-
-
-
 
 
 @api_view(['GET'])
@@ -78,58 +74,6 @@ def lesson(request, lesson_pk=None):
     data = LessonEnrollSerializer(enroll).data
     data.update(LessonSerializer(lesson).data)
     return Response(data)
-
-
-# назначеные на меня уроки
-@api_view(['GET'])
-def mylessons(request):
-    if not request.user.is_authenticated():
-        return Response([], status=status.HTTP_200_OK)
-
-    enrolls = []
-    for enroll in LessonEnroll.objects.filter(learner=request.user, is_archive=False).order_by('-created_at'):
-        enrolls.append(LessonEnrollSerializer(enroll).data)
-    return Response(enrolls, status=status.HTTP_200_OK)
-
-
-@api_view(['GET', 'PUT'])
-def answers(request, enroll_pk=None):
-    if not request.user.is_authenticated():
-        return Response([], status=status.HTTP_200_OK)
-
-    if request.method == 'PUT' and request.user.is_authenticated() and enroll_pk and enroll_pk != '0':
-        enroll = get_object_or_404(LessonEnroll, pk=enroll_pk)
-        if enroll.learner == request.user:
-            data = json.loads(request.body.decode("utf-8"))
-            result = data.get('result')
-            if result:
-                if not enroll.success:
-                    enroll.success = result.get('success')
-                enroll.number_of_attempt += 1
-                enroll.last_data = timezone.now()
-
-            enroll.data = data
-            enroll.save()
-            return Response(LessonEnrollSerializer(enroll).data, status=status.HTTP_200_OK)
-
-    if enroll_pk == '0':
-        return Response(status=status.HTTP_200_OK)
-
-    return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET', 'PUT'])
-@permission_classes((AllowAny, ))
-def play(request, enroll_pk=None):
-    if not request.user.is_authenticated():
-        return Response([], status=status.HTTP_200_OK)
-
-    try:
-        enroll = LessonEnroll.objects.get(pk=enroll_pk, learner=request.user)
-    except LessonEnroll.DoesNotExist:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    return Response(LessonEnrollSerializer(instance=enroll).data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'PUT'])
@@ -246,7 +190,7 @@ def page_picture_upload(request, page_pk=None):
                 page.save()
         return Response("OK", status=status.HTTP_200_OK)
 
-
+"""
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny,))
 def lesson_archive(request, lesson_pk=None):
@@ -276,7 +220,7 @@ def lesson_archive(request, lesson_pk=None):
             return Response([], status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
-
+"""
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
@@ -449,7 +393,3 @@ def enroll_course_pupil(request, enroll_pk):
     return Response(status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
-@permission_classes((AllowAny,))
-def reject_lesson(request, enroll_pk):
-    return Response(status=status.HTTP_200_OK)

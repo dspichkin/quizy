@@ -217,21 +217,13 @@ class LessonEnroll(BaseModel):
     def has_permission(self):
         return self.is_active and bool(self.paid_until) and timezone.now() <= self.paid_until
 
-
+"""
 class Attempt(models.Model):
     enroll = models.ForeignKey(LessonEnroll, related_name='attempts',
                                related_query_name='attempt', default=0)
 
-    is_best = models.BooleanField(default=False, editable=False)
-    is_last = models.BooleanField(default=False, editable=False)
-
-    points = models.IntegerField(default=0)
-    num = models.PositiveIntegerField(default=1)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    duration = models.IntegerField(default=0)
 
     data = JSONField(default='{}')
 
@@ -241,7 +233,7 @@ class Attempt(models.Model):
 
     def __unicode__(self):
         return '%s / %s Attempt #%d' % (self.lesson, self.learner, self.num)
-
+"""
 
 TASK_ERRORS = {
     '100': 'Нет ни одного вопроса',
@@ -352,4 +344,31 @@ class Variant(models.Model):
 
     # def save(self, *args, **kwargs):
     #    super(Variant, self).save(*args, **kwargs)
+
+
+class Statistic(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    lesson = models.ForeignKey('Lesson', related_name='statistics',
+                            verbose_name='урок', blank=True, null=True, on_delete=models.SET_NULL)
+    learner = models.ForeignKey('account.Account', related_name='statistics',
+                                verbose_name='обучаемый', blank=True, null=True, on_delete=models.SET_NULL)
+    number_of_attempt = models.IntegerField('кол-во попыток', default=0)
+    success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Статистика'
+        verbose_name_plural = 'Статистика'
+
+    def __str__(self):
+        if self.lesson:
+            return self.lesson
+        lesson = None
+        if self.lesson:
+            lesson = self.lesson
+        learner = None
+        if self.learner:
+            learner = self.learner
+        if lesson and learner:
+            return u"%s %s" % (learner, lesson)
+
 

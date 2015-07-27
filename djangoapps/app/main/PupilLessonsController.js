@@ -28,7 +28,7 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
     $scope.main.active_menu = 'lessons';
 
 
-    $scope.load_lesson = function(callback) {
+    $scope.load_lessons = function(callback) {
         if ($scope.user.account_type == 2) {
             $http.get('/api/mylessons/').then(function(data) {
                 $scope.model.lessons = [];
@@ -36,8 +36,6 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
                     data.data[i].created_at = Date.parse(data.data[i].created_at);
                     $scope.model.lessons.push(data.data[i]);
                 }
-                console.log($scope.model.lessons)
-
                 //console.log($scope.model.lessons)
             }, function(error) {
                 $log.error('Ошибка получения назначенных на меня уроков', error);
@@ -71,12 +69,12 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
                     $scope.model.modal.loading = true;
                     $.post('/api/reject_lesson/' + lesson_id + '/').then(function(data) {
                         $scope.model.modal.loading = false;
-                        $scope.load_lesson();
+                        $scope.load_lessons();
                         $mdDialog.hide();
                     }, function(error) {
                         $scope.model.modal.loading = false;
                         $log.error(error);
-                        $scope.load_lesson();
+                        $scope.load_lessons();
                         $mdDialog.hide();
                     });
                 };
@@ -86,9 +84,23 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
     }
 
 
+    $scope.to_archive = function($event, lesson_id) {
+        $.post('/api/reject_lesson/' + lesson_id + '/').then(function(data) {
+            $scope.load_lessons();
+            $mdDialog.hide();
+        }, function(error) {
+            $scope.model.modal.loading = false;
+            $log.error(error);
+            $scope.load_lessons();
+            $mdDialog.hide();
+        });
+    }
+
+
+
 
     // =============================
-    $scope.load_lesson();
+    $scope.load_lessons();
 
 }
 

@@ -49,19 +49,24 @@
 					                    
 					                    <div style="display: flex;cursor: pointer;color:#337ab7" ng-click="play_lesson(item.id)"><i class="material-icons">play_arrow</i><span style="margin: 2px 0 0 6px;"> Выполнить</span></div>
 					                </td>
-					                <td style="width: 200px;text-align:left">
-					                    <span ng-if="item.lesson.name">{{item.lesson.name}}</span>
+					                <td style="width: 200px;text-align:left;padding: 17px 0 0 0;">
+					                    <span ng-if="item.lesson.name">{{item.lesson.name | htmlToPlaintext | limitTo: 25 }}{{item.lesson.name.length >= 25 ? '...' : ''}}</span>
 					                    <span ng-if="!item.lesson.name">Урок без имени</span>
 					                </td>
-					                <td style="min-width: 200px;max-width: 250px;text-align:left">
-					                    <span>{{item.lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>
+					                <td style="min-width: 200px;max-width: 250px;text-align:left;padding: 17px 0 0 0;">
+					                    <span>{{item.lesson.description | htmlToPlaintext | limitTo: 25 }}{{item.lesson.description.length >= 25 ? '...' : ''}}</span>
 					                </td>
-					                <td class="enroll_pupils" style="width: 220px;text-align:left;overflow:auto">
-					                    <span class="enroll_email" style="color:#2c8de1;text-decoration:underline;"> {{item.created_by.email}}</span> <span style="font-size:12px;">({{item.created_at | date:'yyyy-MM-dd HH:mm'}})</span> 
+					                <td class="enroll_pupils" style="width: 270px;text-align:left;">
+					                	<div style="width: 270px;text-align:left;overflow:auto;height: 20px;margin: 10px;">
+					                    	<div class="enroll_email" style="color:#2c8de1;text-decoration:underline;float: left;margin: 0 10px 0 0;"> {{item.created_by.email | limitTo: 15 }}
+					                    	{{item.created_by.email.length >= 15 ? '...' : ''}} 
+					                    	</div>
+					                    	<div> ({{item.created_at | date:'yyyy-MM-dd HH:mm'}})</div> 
+					                    </div>
 					                </td>
 					                <td style="text-align:left;width: 100px;">
 					                	<div ng-if="item.success==null" style="width:100%;margin: 10px;cursor: pointer;" ng-click="reject_lesson($event, item.id)">Отвергнуть</div>
-					                	<div ng-if="item.success!=null" style="width:100%;cursor: pointer;">В архив</div>
+					                	<div ng-if="item.success!=null" style="width:100%;margin: 10px;cursor: pointer;"  ng-click="to_archive($event, item.id)">В архив</div>
 					                </td>
 					            </tr>
 					        </tbody>

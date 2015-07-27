@@ -5,7 +5,8 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 
 
-from quizy.models import Course, Lesson, CourseEnroll, LessonEnroll, Page, Variant
+from quizy.models import (Course, Lesson, CourseEnroll, LessonEnroll, Page, Variant,
+    Statistic)
 # from quizy.forms import LessonForm
 
 
@@ -78,6 +79,10 @@ class VariantAdmin(admin.ModelAdmin):
     pass
 
 
+class StatisticAdmin(admin.ModelAdmin):
+    list_display = ['lesson', 'learner', 'created_at', 'success']
+
+
 admin.site.unregister(Group)
 admin.site.register(Course, CourseAdmin)
 admin.site.register(CourseEnroll, CourseEnrollAdmin)
@@ -85,3 +90,5 @@ admin.site.register(LessonEnroll, LessonEnrollAdmin)
 admin.site.register(Lesson, LessonAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(Variant, VariantAdmin)
+admin.site.register(Statistic, StatisticAdmin)
+
