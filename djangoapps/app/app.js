@@ -20,12 +20,11 @@ require('angular-aria');
 require('angular-material');
 require('angular-material-icons');
 
-require('angular-parallax');
+//require('angular-parallax');
 
-require('sortable');
 require('ng-file-upload');
 
-require('angular-dragdrop');
+//require('angular-dragdrop');
 require('videogular');
 require('vg-controls');
 require('vg-overlay-play');
@@ -35,20 +34,19 @@ require('vg-poster');
 require('./editor/filters');
 require('./controllers');
 require('./directives');
-
+//'ngDragDrop',
+//'angular-parallax',
 angular.module('quizy', [
         'ngSanitize',
         'ui.router',
         'ngMaterial',
         'ngMdIcons',
-        'angular-sortable-view',
-        'angular-parallax',
+
         "com.2fdevs.videogular",
         "com.2fdevs.videogular.plugins.controls",
         "com.2fdevs.videogular.plugins.overlayplay",
         "com.2fdevs.videogular.plugins.poster",
 
-        'ngDragDrop',
         'ngFileUpload',
         'quizy.Controllers',
         'quizy.Directives',

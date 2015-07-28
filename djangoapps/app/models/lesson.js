@@ -33,7 +33,7 @@ var _code_errors = {
 
 
 _.assign(Lesson.prototype, {
-    create: function(lesson_id) {
+    create: function() {
         return $.ajax({
             url: "/api/lessons/",
             data: this.serialize(),
@@ -70,6 +70,7 @@ _.assign(Lesson.prototype, {
     serialize: function() {
         return JSON.stringify({
             id: this.id,
+            course: this.course.id,
             is_active: this.is_active,
             is_correct: this.is_correct,
             created_at: this.created_at,
@@ -137,6 +138,21 @@ _.assign(Lesson.prototype, {
                 } else {
                     this.is_correct = true;
                 }
+            }
+        }
+    },
+    /**
+     * Мешаем пары для отображения
+     * @return {[type]} [description]
+     */
+    shuffle_pairs: function() {
+        function shuffle(o) {
+            for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+            return o;
+        }
+        for (var i = 0, len = this.pages.length; i < len; i++) {
+            if (this.pages[i].type == 'pairs') {
+                this.pages[i].variants = shuffle(this.pages[i].variants);
             }
         }
     }

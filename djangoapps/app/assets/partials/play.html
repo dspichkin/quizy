@@ -250,11 +250,11 @@
             </ul>
 
             <div>
-                <div class="btn-primary" ng-if="model.play.attempt.result.success==false" ng-click="repeat()">Повторить</div>
-                <div ng-if="user.is_authenticated && user.account_type==1">
+                <div class="btn-primary" ng-if="model.play.attempt.result.success==false" ng-click="repeat()" style="display: inline-block;">Повторить</div>
+                <div ng-if="user.is_authenticated && user.account_type==1" style="display: inline-block;">
                     <div class="btn-primary" ng-click="back()">Вернуться</div>
                 </div>
-                <div ng-if="user.is_authenticated && user.account_type==2" style="display: inline;">
+                <div ng-if="user.is_authenticated && user.account_type==2" style="display: inline-block;">
                     <div class="btn-primary" ng-click="main.go_lesson_page()">Вернуться</div>
                 </div>
             </div>

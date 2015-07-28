@@ -29,6 +29,7 @@ function Attempt(data) {
 
     if (this.hasOwnProperty('lesson')) {
         this.lesson = new Lesson(this.lesson);
+        this.lesson.shuffle_pairs();
     }
     if (!this.id) {
         this.id = 0;
