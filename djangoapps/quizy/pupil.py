@@ -72,9 +72,7 @@ def play(request, enroll_pk=None):
 @permission_classes((AllowAny,))
 def reject_lesson(request, enroll_pk):
     enroll = get_object_or_404(LessonEnroll, pk=enroll_pk)
-    print "!!!!", enroll.learner
     if enroll.learner == request.user:
-        print "!!!!"
         Statistic.objects.create(lesson=enroll.lesson,
             learner=enroll.learner, number_of_attempt=enroll.number_of_attempt,
             success=enroll.success)

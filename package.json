@@ -20,11 +20,6 @@
   },
   "browser": {
     "jquery": "./djangoapps/app/vendor/jquery.min.js",
-    "sortable": "./djangoapps/app/vendor/angular-sortable-view.min.js",
-    "rangy": "./djangoapps/app/vendor/textAngular-rangy.min.js",
-    "textAngular-sanitize": "./djangoapps/app/vendor/textAngular-sanitize.min.js",
-    "textAngular": "./djangoapps/app/vendor/textAngular.min.js",
-    "angular-parallax": "./djangoapps/app/vendor/angular-parallax.js",
     "videogular": "./djangoapps/app/vendor/videogular.min.js",
     "vg-controls": "./djangoapps/app/vendor/vg-controls.min.js",
     "vg-overlay-play": "./djangoapps/app/vendor/vg-overlay-play.min.js",

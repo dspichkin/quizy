@@ -102,18 +102,30 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
         });
     };
 
+
     // todo:  сделать loading на созание нового урока
     // создаем новый урок
     if (!$stateParams.lesson_id) {
+        // создаем новый урок
+        $scope.model.editor.new_lesson = true;
+
         if (!$scope.main.current_course) {
             $location.path('/');
             return;
         } else {
-            $scope.model.editor.current_lesson = {
+            $scope.model.editor.current_lesson = new Lesson({
                 course: $scope.main.current_course
-            };
+            });
         }
-        $scope.model.editor.new_lesson = true;
+
+        $scope.model.editor.current_lesson.create().then(function(data) {
+            $scope.$apply(function() {
+                $location.path('/editor/lesson/' + data.id + '/');
+                $scope.main.make_short_header();
+            });
+        }, function(error) {
+            $log.error('Ошибка создания нового урока', error);
+        });
     } else {
         $scope.model.editor.new_lesson = false;
         $scope.reload_lesson();
@@ -164,11 +176,42 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
     };
 
 
-    $scope.finish_moving = function($item, $partFrom, $partTo, $indexFrom, $indexTo) {
-        for (var i = 0, len = $scope.model.editor.current_lesson.pages.length; i < len; i++) {
-            if ($scope.model.editor.current_lesson.pages[i].id == $item.id) {
-                $scope.model.editor.current_page_index = i;
+    var move_in_array = function(array, old_index, new_index) {
+        if (new_index >= array.length) {
+            var k = new_index - array.length;
+            while ((k--) + 1) {
+                this.push(undefined);
             }
+        }
+        array.splice(new_index, 0, array.splice(old_index, 1)[0]);
+        return array; // for testing purposes
+    };
+
+    $scope.page_up = function(page_id) {
+        var _page = $scope.model.editor.current_lesson.pages;
+        var _current_page_index = null;
+        for (var i = 0, len = $scope.model.editor.current_lesson.pages.length; i < len; i++) {
+            if ($scope.model.editor.current_lesson.pages[i].id == page_id) {
+                _current_page_index = i;
+            }
+        }
+        if (_current_page_index > 0) {
+            move_in_array(_page, _current_page_index, _current_page_index - 1);
+
+        }
+        re_number_pages();
+    };
+    $scope.page_down = function(page_id) {
+        var _page = $scope.model.editor.current_lesson.pages;
+        var _current_page_index = null;
+        for (var i = 0, len = $scope.model.editor.current_lesson.pages.length; i < len; i++) {
+            if ($scope.model.editor.current_lesson.pages[i].id == page_id) {
+                _current_page_index = i;
+            }
+        }
+        if (_current_page_index < _page.length) {
+            move_in_array(_page, _current_page_index, _current_page_index + 1);
+
         }
         re_number_pages();
     };
@@ -476,6 +519,7 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
      */
     $scope.finish_changed_lesson = function() {
         $scope.model.editor.loading = true;
+        /*
         if ($scope.model.editor.new_lesson == true) {
             // создаем новый урок
             var _data = $scope.model.editor.current_lesson;
@@ -490,13 +534,15 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
                 $log.error('Ошибка создания нового урока', error);
             });
 
-        } else {
+        } else 
+        */
+        if ($scope.model.editor.new_lesson == false) {
             $scope.model.editor.current_lesson.check();
             $scope.model.editor.current_lesson.save().then(function() {
                 $scope.model.editor.loading = false;
                 $scope.model.editor.is_dirty_data = false;
                 $scope.$apply();
-            }, function() {
+            }, function(error) {
                 $log.error("Ошибка сохранения урока. ", error);
                 $scope.model.editor.loading = false;
             });
@@ -571,7 +617,6 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
     };
 
     $scope.remove_lesson_picture = function() {
-        console.log($scope.model.editor.current_lesson)
         $scope.model.editor.current_lesson.remove_lesson_media().then(function() {
             $scope.reload_lesson();
             setTimeout(function() {
