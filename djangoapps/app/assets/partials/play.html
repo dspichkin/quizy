@@ -33,7 +33,7 @@
 
                 <div class="question_picture" style="width: 100%;margin: 0 0 20px 0;" ng-if="model.play.attempt.lesson.pages[model.play.current_page_index].media">
                     
-                    <img ng-if="model.play.media_type == 'image'" ng-src="{{model.play.current_lesson.pages[model.play.current_page_index].media}}" class="md-card-image" alt="Картинка вопроса" style="width:400px;margin: 0 auto;"/>
+                    <img ng-if="model.play.media_type == 'image'" ng-src="{{model.play.attempt.lesson.pages[model.play.current_page_index].media}}" class="md-card-image" alt="Картинка вопроса" style="width:400px;margin: 0 auto;"/>
 
                     <div ng-if="model.play.media_type == 'video'" class="md-card-image" style="width:400px;margin: 0 auto;">
                         <videogular>
