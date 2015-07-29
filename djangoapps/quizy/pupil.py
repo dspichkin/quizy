@@ -5,7 +5,7 @@ import json
 # from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -28,6 +28,7 @@ def mylessons(request):
     return Response(enrolls, status=status.HTTP_200_OK)
 
 
+@csrf_exempt
 @api_view(['GET', 'PUT'])
 def answers(request, enroll_pk=None):
     if not request.user.is_authenticated():
