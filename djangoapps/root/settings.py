@@ -70,8 +70,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-CSRF_COOKIE_HTTPONLY = True
-
 ROOT_URLCONF = 'root.urls'
 
 TEMPLATE_CONTEXT_PROCESSORS = (
