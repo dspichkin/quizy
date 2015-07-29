@@ -59,6 +59,7 @@ def lessons(request, lesson_pk=None):
             try:
                 lesson = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk)
                 lessonsjson = LessonSerializer(lesson).data
+                print lessonsjson
             except Lesson.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             return Response(lessonsjson, status=status.HTTP_200_OK)

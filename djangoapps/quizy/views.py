@@ -7,6 +7,7 @@ import os
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
+from django.middleware import csrf
 
 
 from rest_framework.response import Response
@@ -75,6 +76,7 @@ def lesson(request, lesson_pk=None):
     data.update(LessonSerializer(lesson).data)
     return Response(data)
 
+# from django.views.decorators.csrf import csrf_exempt
 
 @api_view(['GET', 'PUT'])
 @permission_classes((AllowAny, ))
@@ -90,8 +92,9 @@ def demo_play(request, lesson_pk=None):
     if request.method == 'GET':
         # if lesson.created_by == request.user or :
         enroll = LessonEnroll(lesson=lesson, learner=request.user, created_by=request.user)
-
-    return Response(LessonEnrollSerializer(instance=enroll).data, status=status.HTTP_200_OK)
+        enroll = LessonEnrollSerializer(instance=enroll).data
+        enroll.update({'csrfmiddlewaretoken': csrf.get_token(request)})
+    return Response(enroll, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
