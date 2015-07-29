@@ -52,14 +52,13 @@ angular.module('quizy', [
         'quizy.Directives',
         'quizy.filters'])
     .service('$data', require('./editor/EditDataService.js'))
-    .config(['$httpProvider', function($httpProvider) {
-        $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-        $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-    }])
     .config(states.config)
     .run(states.run);
 
-
+//.config(['$httpProvider', function($httpProvider) {
+//    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+//    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+//}])
 
 
 

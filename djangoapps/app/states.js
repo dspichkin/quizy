@@ -202,6 +202,8 @@ var run = function($state, $rootScope, $location) {
             return window.location = '/admin' + toParams.url;
         }
     });
+
+    $http.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
 };
 
 module.exports = {
