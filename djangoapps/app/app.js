@@ -62,7 +62,7 @@ angular.module('quizy', [
 //}])
 
 
-
+/*
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -92,3 +92,4 @@ $.ajaxSetup({
         }
     }
 });
+*/

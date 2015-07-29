@@ -3,7 +3,8 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
     $scope.user = {
         username: 'guest',
         is_authenticated: false,
-        loaded: false
+        loaded: false,
+        csrfmiddlewaretoken: null
     };
 
     window.scope = $scope;

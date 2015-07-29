@@ -46,6 +46,7 @@ Attempt.prototype.constructor = Attempt;
 _.assign(Attempt.prototype, {
     serialize: function() {
         var data = {
+            csrfmiddlewaretoken: this.csrfmiddlewaretoken,
             id: this.id,
             current_step: this.current_step,
             answer_steps: this.answer_steps
@@ -65,8 +66,19 @@ _.assign(Attempt.prototype, {
         }
     },
     save: function() {
+        var self = this;
         return $.ajax({
             url: "/api/answers/" + this.id + "/",
+            dataType: "json",
+            beforeSend: function(xhr, settings) {
+                console.log("Before Send", self.csrfmiddlewaretoken);
+                if (self.csrfmiddlewaretoken) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", self.csrfmiddlewaretoken);
+                        console.log("####")
+                    }
+                }
+            },
             data: this.serialize(),
             type: "PUT"
         });
