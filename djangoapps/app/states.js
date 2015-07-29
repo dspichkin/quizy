@@ -177,7 +177,7 @@ var DJANGO_ACCOUNT_URLS = [
 ];
  */
 
-var run = function($state, $rootScope, $location) {
+var run = function($state, $rootScope, $location, $http, $cookies) {
     $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
         if (toState.name === 'djangoAccounts') {
             var url = toParams.url, redirected = false;
@@ -208,7 +208,7 @@ var run = function($state, $rootScope, $location) {
 
 module.exports = {
     'config': ['$stateProvider', '$urlRouterProvider', '$locationProvider', config],
-    'run': ['$state', '$rootScope', '$location', run]
+    'run': ['$state', '$rootScope', '$location', '$http', '$cookies', run]
 };
 
 

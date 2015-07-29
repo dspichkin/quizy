@@ -19,6 +19,12 @@
     ]
   },
   "browser": {
+    "angular": "./djangoapps/app/vendor/angular.min.js",
+    "angular-sanitize": "./djangoapps/app/vendor/angular-sanitize.min.js",
+    "angular-cookies": "./djangoapps/app/vendor/angular-cookies.min.js",
+    "angular-route": "./djangoapps/app/vendor/angular-route.min.js",
+    "angular-aria": "./djangoapps/app/vendor/angular-aria.min.js",
+    "angular-animate": "./djangoapps/app/vendor/angular-animate.min.js",
     "jquery": "./djangoapps/app/vendor/jquery.min.js",
     "videogular": "./djangoapps/app/vendor/videogular.min.js",
     "vg-controls": "./djangoapps/app/vendor/vg-controls.min.js",
@@ -38,11 +44,6 @@
   "author": "Denis Y.Spichkin",
   "license": "Commercial",
   "dependencies": {
-    "angular": "^1",
-    "angular-sanitize": "1.2",
-    "angular-ui-router": "0.2",
-    "angular-animate": "^1",
-    "angular-aria": "^1",
     "angular-material": "",
     "angular-material-icons": "",
     "ng-file-upload": "",
