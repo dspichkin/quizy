@@ -6,6 +6,7 @@ import json
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -55,6 +56,7 @@ def answers(request, enroll_pk=None):
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+@ensure_csrf_cookie
 @api_view(['GET', 'PUT'])
 @permission_classes((AllowAny, ))
 def play(request, enroll_pk=None):
