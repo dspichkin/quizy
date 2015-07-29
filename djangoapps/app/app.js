@@ -37,6 +37,7 @@ require('./directives');
 //'ngDragDrop',
 //'angular-parallax',
 angular.module('quizy', [
+        'ngCookies',
         'ngSanitize',
         'ui.router',
         'ngMaterial',
