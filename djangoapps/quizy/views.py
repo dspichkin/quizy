@@ -76,7 +76,6 @@ def lesson(request, lesson_pk=None):
     data.update(LessonSerializer(lesson).data)
     return Response(data)
 
-# from django.views.decorators.csrf import csrf_exempt
 
 @api_view(['GET', 'PUT'])
 @permission_classes((AllowAny, ))

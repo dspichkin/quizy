@@ -203,7 +203,10 @@ var run = function($state, $rootScope, $location, $http, $cookies) {
         }
     });
 
-    $http.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
+    if ($cookies['csrftoken']) {
+        $http.defaults.headers.post['X-CSRFToken'] = $cookies['csrftoken'];
+        $http.defaults.headers.put['X-CSRFToken'] = $cookies['csrftoken'];
+    }
 };
 
 module.exports = {

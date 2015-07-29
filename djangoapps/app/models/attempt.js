@@ -71,11 +71,9 @@ _.assign(Attempt.prototype, {
             url: "/api/answers/" + this.id + "/",
             dataType: "json",
             beforeSend: function(xhr, settings) {
-                console.log("Before Send", self.csrfmiddlewaretoken);
                 if (self.csrfmiddlewaretoken) {
                     if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type) && !this.crossDomain) {
                         xhr.setRequestHeader("X-CSRFToken", self.csrfmiddlewaretoken);
-                        console.log("####")
                     }
                 }
             },
