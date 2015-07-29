@@ -36,9 +36,6 @@
     "angular": {
       "depends": "jquery:jQuery",
       "exports": "angular"
-    },
-    "textAngular": {
-      "depends": ["rangy:rangy"]
     }
   },
   "author": "Denis Y.Spichkin",
