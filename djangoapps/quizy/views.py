@@ -7,7 +7,6 @@ import os
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.middleware import csrf
 
 
 from rest_framework.response import Response
@@ -15,9 +14,9 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 
-from quizy.models import (Course, Lesson, Page, CourseEnroll, LessonEnroll)
+from quizy.models import (Course, Lesson, Page, CourseEnroll, LessonEnroll, Statistic)
 from quizy.serializers.serializers import (CourseEnrollSerializer, LessonEnrollSerializer, LessonSerializer,
-PageSerializer)
+PageSerializer, StatisticSerializer)
 
 from quizy.serializers.pupil import PupilSerializer
 from quizy.pagination import ListPagination
@@ -80,6 +79,9 @@ def lesson(request, lesson_pk=None):
 @api_view(['GET', 'PUT'])
 @permission_classes((AllowAny, ))
 def demo_play(request, lesson_pk=None):
+    """
+    Тестовый запуск урока в админке редактирования
+    """
     if not request.user.is_authenticated():
         return Response([], status=status.HTTP_200_OK)
 
@@ -89,10 +91,8 @@ def demo_play(request, lesson_pk=None):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'GET':
-        # if lesson.created_by == request.user or :
         enroll = LessonEnroll(lesson=lesson, learner=request.user, created_by=request.user)
         enroll = LessonEnrollSerializer(instance=enroll).data
-        enroll.update({'csrfmiddlewaretoken': csrf.get_token(request)})
     return Response(enroll, status=status.HTTP_200_OK)
 
 
@@ -192,37 +192,6 @@ def page_picture_upload(request, page_pk=None):
                 page.save()
         return Response("OK", status=status.HTTP_200_OK)
 
-"""
-@api_view(['GET', 'POST'])
-@permission_classes((AllowAny,))
-def lesson_archive(request, lesson_pk=None):
-    if not request.user.is_authenticated():
-        return Response([], status=status.HTTP_200_OK)
-
-    if request.method == 'GET' and lesson_pk is None:
-
-        lessonEnrolls = LessonEnroll.objects.filter(learner=request.user,
-            is_archive=True)
-        archives = []
-        for a in lessonEnrolls:
-            archives.append(LessonEnrollSerializer(instance=a).data)
-        return Response(archives, status=status.HTTP_200_OK)
-
-    if request.method == 'POST' and lesson_pk is not None:
-        lessonEnrolls = LessonEnroll.objects.filter(lesson=lesson_pk, learner=request.user,
-            is_archive=False)
-
-        if len(lessonEnrolls) > 0:
-            lessonEnroll = lessonEnrolls[0]
-            lessonEnroll.is_archive = True
-            lessonEnroll.date_archive = timezone.now()
-            lessonEnroll.save()
-            return Response(LessonEnrollSerializer(instance=lessonEnroll).data, status=status.HTTP_200_OK)
-        else:
-            return Response([], status=status.HTTP_200_OK)
-
-    return Response(status=status.HTTP_400_BAD_REQUEST)
-"""
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
@@ -395,3 +364,35 @@ def enroll_course_pupil(request, enroll_pk):
     return Response(status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def statistic(request):
+    """
+    Запрос на статтистику по ученикам
+    """
+    if not request.user.is_authenticated():
+        return Response([], status=status.HTTP_200_OK)
+    pupils = Statistic.objects.filter(Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user))
+
+    dic_pupils = {}
+    for p in pupils:
+        if (p.learner.id in dic_pupils):
+            enrolls = dic_pupils[p.learner.id].get('enrolls', [])
+            enrolls.append(StatisticSerializer(p).data)
+            dic_pupils[p.learner.id]['enrolls'] = enrolls
+        else:
+            dic_pupils[p.learner.id] = {
+                'learner': UserSerializer(p.learner).data,
+                'enrolls': [StatisticSerializer(p).data]
+            }
+            # print "111 ", dic_pupils[p.learner.id]
+
+    a = []
+    for key, value in dic_pupils.items():
+        a.append(value)
+    paginator = ListPagination()
+    result_page = paginator.paginate_queryset(a, request)
+
+
+    # return Response(dic_pupils, status=status.HTTP_200_OK)
+    return paginator.get_paginated_response(result_page)

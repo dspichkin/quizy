@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
+import json
 
 from uuid import uuid1
 from random import randrange
 
 from django.utils import timezone
 from django.db import models
+from django.conf import settings
 
 from sorl.thumbnail import ImageField
 
@@ -99,6 +101,10 @@ def lesson_picture_upload(obj, fn):
 
 
 class Lesson(BaseModel):
+    LESSON_TYPE_CHOICES = (
+        ('inside', 'внутренний'),
+        ('outside', 'внешний'),
+    )
 
     is_active = models.BooleanField('активен?', default=True)
 
@@ -120,8 +126,11 @@ class Lesson(BaseModel):
 
     picture = ImageField(upload_to=lesson_picture_upload, blank=True, null=True)
 
+    lesson_type = models.CharField('тип урока', max_length=10, default='inside', choices=LESSON_TYPE_CHOICES)
+    path_content = models.CharField('путь к контенту', max_length=255, blank=True, null=True)
+
     class Meta:
-        ordering = ('created_by', 'number')
+        ordering = ('number', )
         verbose_name = 'Урок'
         verbose_name_plural = 'Уроки'
         app_label = 'quizy'
@@ -132,8 +141,23 @@ class Lesson(BaseModel):
         return u"Урок без именени"
 
     @property
-    def type(self):
-        return 'lesson'
+    def content(self):
+        if self.lesson_type != 'inside':
+            path = os.path.join(settings.BASE_DIR, 'app', 'assets', 'lessons', self.path_content)
+            json_path = os.path.join(path, 'index.json')
+            data = json.load(open(json_path))
+            return {
+                'controller': data.get('controller'),
+                'template': data.get('template'),
+                'path': '/assets/lessons/%s/' % self.path_content
+            }
+        else:
+            return {}
+
+    def set_code_errors(self, code_errors):
+        if self.lesson_type == 'inside':
+            self.code_errors = code_errors
+            self.save()
 
 
 class CourseEnroll(BaseModel):
@@ -182,17 +206,16 @@ class LessonEnroll(BaseModel):
                                 verbose_name='обучаемый')
     created_by = models.ForeignKey('account.Account', related_name='lesson_enrolls_created',
                                 verbose_name='кто создал назначение')
-    course = models.ForeignKey('CourseEnroll', related_name='lesson_enrolls',
-                            verbose_name='курс', blank=True, null=True)
+    # course = models.ForeignKey('CourseEnroll', related_name='lesson_enrolls',
+    #                        verbose_name='курс', blank=True, null=True)
     lesson = models.ForeignKey('Lesson', related_name='enrolls',
                             verbose_name='урок', blank=True, null=True)
 
     data = JSONField('результат прохождения', default={}, blank=True, null=True)
-    last_data = models.DateTimeField('дата последней попытки', null=True, blank=True)
+    # last_data = models.DateTimeField('дата последней попытки', null=True, blank=True)
     number_of_attempt = models.IntegerField('кол-во попыток', default=0)
     success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
-    is_archive = models.BooleanField('урок в архиве', default=False)
-    date_archive = models.DateTimeField('дата перемещения в архиве', null=True, blank=True)
+    date_success = models.DateTimeField('дата последней успешной попытки', null=True, blank=True)
     #  TODO: собирать статистику по прохождению
 
     class Meta:
@@ -347,6 +370,12 @@ class Variant(models.Model):
 
 
 class Statistic(models.Model):
+    REASON_CHOICES = (
+        ('success', 'Успешно выполено'),
+        ('reject', 'Отказался выполнять'),
+        ('done_time', 'Время вышло'),
+        ('not_done', 'Не приступал'),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     lesson = models.ForeignKey('Lesson', related_name='statistics',
                             verbose_name='урок', blank=True, null=True, on_delete=models.SET_NULL)
@@ -354,21 +383,12 @@ class Statistic(models.Model):
                                 verbose_name='обучаемый', blank=True, null=True, on_delete=models.SET_NULL)
     number_of_attempt = models.IntegerField('кол-во попыток', default=0)
     success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
+    reason = models.CharField('причина перемещеня в статистику', max_length=10, choices=REASON_CHOICES, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Статистика'
         verbose_name_plural = 'Статистика'
 
-    def __str__(self):
-        if self.lesson:
-            return self.lesson
-        lesson = None
-        if self.lesson:
-            lesson = self.lesson
-        learner = None
-        if self.learner:
-            learner = self.learner
-        if lesson and learner:
-            return u"%s %s" % (learner, lesson)
+    
 
 

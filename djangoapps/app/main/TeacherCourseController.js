@@ -175,6 +175,20 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
         $location.path('/play/' + enroll_id + '/');
     };
 
+    /**
+     * Возвращает тип урока
+     * @param  {[type]} lesson_id [description]
+     * @return {[type]}           [description]
+     */
+    $scope.get_lesson_type = function(lesson_id) {
+        var _lessons = $scope.model.course.lessons;
+        for (var i = 0, len = _lessons.length; i < len; i++) {
+            if (lesson_id == _lessons[i].id) {
+                return _lessons[i].lesson_type;
+            }
+        }
+    };
+
 
     // =============================
     $scope.load_course();

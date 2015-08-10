@@ -34,9 +34,11 @@ require('vg-poster');
 require('./editor/filters');
 require('./controllers');
 require('./directives');
+
+require('./utils/utils')
 //'ngDragDrop',
 //'angular-parallax',
-angular.module('quizy', [
+window.app = angular.module('quizy', [
         'ngCookies',
         'ngSanitize',
         'ui.router',
@@ -56,6 +58,9 @@ angular.module('quizy', [
     .config(states.config)
     .run(states.run);
 
+app.config(function($controllerProvider) {
+    app.controllerProvider = $controllerProvider;
+})
 //.config(['$httpProvider', function($httpProvider) {
 //    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
 //    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';

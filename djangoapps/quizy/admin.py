@@ -33,7 +33,7 @@ class CourseEnrollAdmin(admin.ModelAdmin):
 
 
 class LessonEnrollAdmin(admin.ModelAdmin):
-    list_display = ['learner', 'created_by', 'lesson', 'success', 'is_archive']
+    list_display = ['learner', 'created_by', 'lesson', 'success', 'date_success']
     # list_editable = ['is_active']
     list_filter = ['lesson__name']
     search_fields = ('learner__username', 'learner__first_name', 'learner__last_name', 'learner__email')
@@ -42,7 +42,7 @@ class LessonEnrollAdmin(admin.ModelAdmin):
 
 class LessonAdmin(admin.ModelAdmin):
     search_fields = ['course', 'name', 'created_by']
-    list_filter = ['course']
+    list_filter = ['lesson_type', 'course']
     # fieldsets = (
     #    (None, {
     #        'fields': ('course', 'name', 'description', 'number', 'is_active', 'picture', 'is_correct', 'created_by')
@@ -80,7 +80,7 @@ class VariantAdmin(admin.ModelAdmin):
 
 
 class StatisticAdmin(admin.ModelAdmin):
-    list_display = ['lesson', 'learner', 'created_at', 'success']
+    list_display = ['lesson', 'learner', 'created_at', 'success', 'reason']
 
 
 admin.site.unregister(Group)

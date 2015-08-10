@@ -98,7 +98,7 @@ def lessons(request, lesson_pk=None):
             lesson.description = description
             is_dirty = True
         if lesson.code_errors != code_errors and code_errors is not None:
-            lesson.code_errors = code_errors
+            lesson.set_code_errors(code_errors)
             is_dirty = True
         if lesson.is_correct != is_correct and is_correct is not None:
             lesson.is_correct = is_correct
@@ -137,7 +137,7 @@ def lessons(request, lesson_pk=None):
             lesson.description = description
             is_dirty = True
         if lesson.code_errors != code_errors and code_errors is not None:
-            lesson.code_errors = code_errors
+            lesson.set_code_errors(code_errors)
             is_dirty = True
         if lesson.is_correct != is_correct and is_correct is not None:
             lesson.is_correct = is_correct

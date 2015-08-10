@@ -1,19 +1,7 @@
 'use strict';
-function getUrlVars(url)
-{
-    var vars = [], hash;
-    var hashes = url.slice(url.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++)
-    {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
 
 
-var _ = require('lodash-node');
+
 var Course = require('../models/course');
 var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeout, $log, $location) {
     $scope.model = {
@@ -50,7 +38,7 @@ var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeo
                     url += '?page=' + _page;
                 }
             } else {
-                _page = getUrlVars(url).page;
+                _page = utils.getUrlVars(url).page;
             }
             if (!_page) {
                 _page = 1;

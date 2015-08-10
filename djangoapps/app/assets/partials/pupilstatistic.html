@@ -1,0 +1,81 @@
+<div class="lesson" style="min-height:450px;text-align:center">
+	<div class="shadow lesson_panel">
+		<div ng-if="user && user.is_authenticated && user.account_type == 2" class="lessons_pupil" ng-style="model.lessons.length > 0 && {'min-height': '50px'}">
+
+			<div class="col-md-12" style="padding: 0;">
+		    <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
+		        <thead style="background-color:#e3eaf1;height:60px">
+		            <th class="table_th">
+		                Урок
+		            </th>
+		            <th class="table_th">
+		                Описание
+		            </th>
+		            <th class="table_th">
+		                Дата перемещения в статистику
+		            </th>
+		            <th class="table_th">
+		                Результат
+		            </th>
+		        </thead>
+
+		        <tbody>
+		            <tr ng-repeat="enroll in model.enrolls">
+		                <td style="width: 250px;text-align: left;position:relative;">
+		                    <div class="lesson_incorrect" ng-if="enroll.success==false"></div>
+		                    <div class="lesson_correct" ng-if="enroll.success==true"></div>
+		                    
+		                    <div ng-if="enroll.lesson.course.name" style="font-size:9px">{{enroll.lesson.course.name | htmlToPlaintext | limitTo: 25}}{{enroll.lesson.course.name.length > 25 ? '...' : ''}}</div>
+
+		                    <span ng-if="enroll.lesson.name">{{enroll.lesson.name | htmlToPlaintext | limitTo: 25}}{{enroll.lesson.name.length > 25 ? '...' : ''}}</span>
+		                    <span ng-if="!enroll.lesson.name">{Урок без имени</span>
+		                    </div>
+		                    
+		                </td>
+		                <td style="width: 300px;text-align:left;position:relative;">
+		                    <span ng-if="enroll.lesson.name">{{enroll.lesson.description | htmlToPlaintext | limitTo: 45}}{{enroll.lesson.description.length > 45 ? '...' : ''}}</span>
+		                    </div>
+		                    
+		                </td>
+		                <td style="width: 200px;text-align:center;">
+		                	<div style="max-height:40px;overflow:hidden;">
+		                    <span>{{enroll.created_at | date:'yyyy-MM-dd'}}</span>
+		                    </div>
+		                </td>
+		                <td style="min-width: 100px;text-align:left">
+		                    <span ng-if="enroll.success == 'success'">Успешно выполнено</span>
+		                    <span ng-if="enroll.success == 'done_time'">Просроченно</span>
+		                    <span ng-if="enroll.reason == 'not_done'">Не приступал</span>
+		                    <span ng-if="enroll.reason == 'reject'">Отказался</span>
+		                </td>
+		            </tr>
+
+		        </tbody>
+
+
+		    </table>
+
+		</div>
+		</div>
+	</div>
+
+	<div style="text-align: right;margin: 20px 60px 20px 20px;" ng-if="model.enrolls.length > 0">
+	    <div style="display: inline-flex;">
+		    <div style="display: inline-block;
+		    margin: 6px 7px 0 0;
+		    font-size: 23px;font-weight: 300;">
+		        <span ng-bind-html="model.page.from_page"></span>-<span ng-bind-html="model.page.to_page"></span> из <span ng-bind-html="model.page.count"></span>
+		    </div>
+		    <div ng-if="model.page.previous" ng-click="load_statistic(model.page.previous)" style="display: inline-block;border: 1px solid #c3c3c3;
+		    padding: 4px 0 0 0;">
+		        <i class="material-icons" style="font-size: 32px;">navigate_before</i>
+		    </div>
+		    <div ng-if="model.page.next" ng-click="load_statistic(model.page.next)" style="display: inline-block;border: 1px solid #c3c3c3;
+		    padding: 4px 0 0 0;margin: 0 0px 0px 8px;">
+		        <i class="material-icons" style="font-size: 32px;">navigate_next</i>
+		    </div>
+	    </div>
+	</div>
+
+
+</div>

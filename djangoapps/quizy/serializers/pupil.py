@@ -7,7 +7,8 @@ from rest_framework import serializers
 
 from users.account.serializers import UserSerializer
 from users.account.models import Account
-from quizy.models import Course, Lesson, CourseEnroll, LessonEnroll
+from quizy.models import (Course, Lesson, CourseEnroll, LessonEnroll,
+    Statistic)
 
 
 class CourseForPupilSerializer(serializers.ModelSerializer):
@@ -47,3 +48,11 @@ class PupilSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
+
+
+class MyStatisticSerializer(serializers.ModelSerializer):
+    lesson = LessonForPupilSerializer(read_only=True)
+    learner = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Statistic

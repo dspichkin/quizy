@@ -9,4 +9,5 @@ module.exports = angular.module('quizy.Directives', [])
     .directive('courseAction', require('./utils/course_action.js'))
     .directive('drag', require('./utils/drag.js'))
     .directive('compile', require('./utils/compile.js'))
+    .directive('dynamicCtrl', require('./utils/dynamic_ctrl.js'))
 

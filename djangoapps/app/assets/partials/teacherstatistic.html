@@ -1,0 +1,96 @@
+<div class="lesson" style="min-height:450px;text-align:center">
+	<div class="shadow lesson_panel">
+		<div ng-if="user && user.is_authenticated && user.account_type == 1" class="lessons_pupil" ng-style="model.lessons.length > 0 && {'min-height': '50px'}">
+
+			<div class="col-md-12" style="padding: 0;">
+            <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
+                <thead style="background-color:#e3eaf1;height:60px">
+                    <th class="table_th" style="text-align:left;">
+                        Ученик
+                    </th>
+                    <th class="table_th" style="width: 400px;">
+                        <div style="">Назначение</div>
+                    </th>
+                </thead>
+
+                <tbody>
+                    <tr ng-repeat="pupil in model.pupils">
+                        <td style="width: 150px;text-align: left;position:relative;padding: 10px 0 10px 20px;">
+                            <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 13px;
+                                 overflow: hidden;width: 150px;">
+                                 {{pupil.learner.email}}
+                            </div>
+                        </td>
+                        <td style="text-align:left;">
+                            <div style="max-height: 200px;overflow-y: auto;">
+                                <div class="enroll_pupil" ng-repeat="enroll in pupil.enrolls" style="width:100%;">
+                                    <div style="margin: 0 0 0 0;
+                                            width: 500px;
+                                            float: left;
+                                            max-height: 50px;
+                                            overflow: hidden;">
+                                       
+                                        <div style="font-size: 10px;
+                                            margin: 0 0 0 20px;">
+                                            {{enroll.lesson.course.name | htmlToPlaintext | limitTo: 50 }}{{enroll.lesson.course.name.length > 50 ? '...' : ''}}
+                                        </div>
+                                        <div class="remove_enroll" ng-click="remove_enroll(enroll.id)" style="    float: left;">
+                                            <i class="material-icons icon-remove-enroll" style="font-size:12px;">close</i>
+                                        </div>
+                                        <div class="enroll_email" style="overflow: auto;">
+                                            {{enroll.lesson.name | htmlToPlaintext | limitTo: 100 }}{{enroll.lesson.name.length > 100 ? '...' : ''}}
+
+                                        </div> 
+                                    </div>
+                                    <div class="enroll_result" style="width: 300px;margin: 8px 0 0 0;">
+                                            <div ng-class="{
+                                                'enroll_success': enroll.success == true,
+                                                'enroll_fail': enroll.success == false,
+                                                'enroll_undone': enroll.success == null}"></div>
+                                            <div class="enroll_data" style="font-size:12px;margin: 7px 9px 0px 21px;">
+                                                / {{enroll.number_of_attempt}}  ({{enroll.created_at | date:'yyyy-MM-dd'}})
+
+                                                <span ng-if="enroll.reason=='success'">Успешно выполено</span>
+                                                <span ng-if="enroll.reason=='reject'">Отказался выполнять</span>
+                                                <span ng-if="enroll.reason=='done_time'">Время вышло</span>
+                                                <span ng-if="enroll.reason=='not_done'">Не приступал</span>
+                                            </div>
+
+                                    </div> 
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+
+		</div>
+		</div>
+	</div>
+
+	<div style="text-align: right;margin: 20px 60px 20px 20px;" ng-if="model.pupils.length > 0">
+	    <div style="display: inline-flex;">
+		    <div style="display: inline-block;
+		    margin: 6px 7px 0 0;
+		    font-size: 23px;font-weight: 300;">
+		        <span ng-bind-html="model.page.from_page"></span>-<span ng-bind-html="model.page.to_page"></span> из <span ng-bind-html="model.page.count"></span>
+		    </div>
+		    <div ng-if="model.page.previous" ng-click="load_statistic(model.page.previous)" style="display: inline-block;border: 1px solid #c3c3c3;
+		    padding: 4px 0 0 0;">
+		        <i class="material-icons" style="font-size: 32px;">navigate_before</i>
+		    </div>
+		    <div ng-if="model.page.next" ng-click="load_statistic(model.page.next)" style="display: inline-block;border: 1px solid #c3c3c3;
+		    padding: 4px 0 0 0;margin: 0 0px 0px 8px;">
+		        <i class="material-icons" style="font-size: 32px;">navigate_next</i>
+		    </div>
+	    </div>
+	</div>
+
+
+</div>

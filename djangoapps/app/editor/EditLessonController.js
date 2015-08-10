@@ -50,8 +50,15 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
 
     $scope.reload_lesson = function(callback) {
         $data.get_lesson($stateParams.lesson_id).then(function(data) {
+            // Определения типа урока
+            if (data.data.lesson_type != 'inside') {
+                $scope.main.reset_menu();
+                $location.path('/');
+            }
+
             var _is_correct = data.data.is_correct;
             var l = new Lesson(data.data);
+
             // изменяет variants для pairs
             for (var x = 0, lenx = l.pages.length; x < lenx; x++) {
 
