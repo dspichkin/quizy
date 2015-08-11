@@ -1,0 +1,81 @@
+<div class="editor" style="min-height:600px;text-align:center;">
+    <div class="editor_panel" style="height: 100%;
+        display: inline-block;
+        margin-top: -50px;">
+
+        <div class="" ng-if="user.is_authenticated">
+
+
+                    
+            <div style="display: inline-block;background-color: #E9E8E8;position: relative;">
+
+                <div ng-if="model.editor.current_lesson.is_correct == false"  class="errors" style="margin: 24px 36px 0px 0px;
+                position: absolute;
+                right: 0;
+                top: 36px;
+                font-size: 14px;
+                padding: 0px 20px;
+                max-width: 500px;
+                height: 42px;
+                text-align: left;
+                overflow: hidden;
+                ">
+                    <div>
+                    <div class="error_text" ng-repeat="(code, text) in model.editor.current_lesson.code_errors" style="max-width: 500px;">
+                        {{text | limitTo: 65 }}{{text.length > 65 ? '...' : ''}}
+                    </div>
+                    
+                    <div class="error_text" ng-repeat="(code, text) in model.editor.current_lesson.pages[model.editor.current_page_index].code_errors" style="max-width: 500px;">
+                        {{text | limitTo: 65 }}{{text.length > 65 ? '...' : ''}}
+                    </div>
+                    </div>
+                </div>
+
+                <div style="    margin: 0px 0px;
+                    font-size: 19px;
+                    font-weight: 500;
+                    color: black;
+                    width: 100%;
+                    padding: 3px 0px 2px 37px;
+                    text-align: left;
+                    height: 50px;
+                    position: absolute;
+                    background-color: white;">
+                    <div class="editor_menu_tabs" style="position: absolute;
+                        left: 0px;
+                        top: 10px;">
+                            <div class="btn-secondary shadow" ripple ng-click="go_current_course(model.editor.current_lesson.course.id)" style="color:black;">СПИСОК УРОКОВ КУРСА</div>
+                        </div>
+                    <div style="max-width: 300px;
+                        overflow: hidden;
+                        position: absolute;
+                        left: 232px;
+                        top: 7px;">
+                        {{model.editor.current_lesson.course.name}}
+                    </div>
+                </div>
+                
+
+                <div class="editor_menu_tabs" style="height: 48px;
+    display: block;
+    position: absolute;
+    top: 78px;
+    left: 27px;;">
+                    <div class="editor_menu_tab_item" ripple ng-click="show_editor_common()" style="background-color: white;height: 32px;font-weight: 400;padding: 4px 11px;" ng-class="{'editor_menu_tab_item_active': current_menu=='common'}"
+                    ng-if="model.editor.new_lesson == false">
+                        <span>Настройки урока</span>
+                        <!-- <div ng-class="{'active_menu': current_menu=='common'}"></div> -->
+                    </div>
+                    <div class="editor_menu_tab_item" ripple ng-click="show_editor_content()" style="background-color: white;height: 32px;font-weight: 400;padding: 4px 11px;" ng-class="{'editor_menu_tab_item_active': current_menu=='content'}"
+                    ng-if="model.editor.new_lesson == false">
+                        <span>Содержимое урока</span>
+                        <!-- <div ng-class="{'active_menu': current_menu=='content'}"></div> -->
+                    </div>
+                </div>
+                <div>
+                    <div ng-include="get_template_content()"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

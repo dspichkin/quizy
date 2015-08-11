@@ -148,7 +148,9 @@ class Lesson(BaseModel):
             data = json.load(open(json_path))
             return {
                 'controller': data.get('controller'),
+                'teacher_controller': data.get('teacher_controller'),
                 'template': data.get('template'),
+                'teacher_template': data.get('teacher_template'),
                 'path': '/assets/lessons/%s/' % self.path_content
             }
         else:
@@ -217,6 +219,7 @@ class LessonEnroll(BaseModel):
     success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
     date_success = models.DateTimeField('дата последней успешной попытки', null=True, blank=True)
     #  TODO: собирать статистику по прохождению
+    required_attention = models.NullBooleanField('требуется внимание со стороны преподователя', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Назначение на урок'

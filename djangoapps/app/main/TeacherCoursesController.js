@@ -145,7 +145,7 @@ var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeo
                         auto_enroll: $scope.model.modal_enroll.auto_enroll
                     };
                     $scope.model.modal_enroll.loading = true;
-                    $.post('/api/enroll_pupil/', JSON.stringify(_data)).then(function(data) {
+                    $.post('/api/enroll/', JSON.stringify(_data)).then(function(data) {
                         $scope.model.modal_enroll.loading = false;
                         if (data.hasOwnProperty('code')) {
                             if (data.code == 404) {

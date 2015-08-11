@@ -1,4 +1,6 @@
 {
-    "template": "index.html",
-    "controller": "lessonController.js"
+    "template": "pupil_index.html",
+    "controller": "lessonPupilController.js",
+    "teacher_controller": "lessonTeacherController.js",
+    "teacher_template": "teacher_index.html"
 }

@@ -127,8 +127,17 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/editor/lesson/:lesson_id/",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/editor_lesson.html",
+                    templateUrl: "/assets/partials/editor/editor_lesson.html",
                     controller: 'EditLessonCtrl'
+                }
+            }
+        })
+        .state('outside_lesson', {
+            url: "/outside/lesson/:enroll_id/",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/editor/editor_lesson_outside.html",
+                    controller: 'EditOutsideLessonCtrl'
                 }
             }
         })
@@ -136,7 +145,7 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/editor/lesson/",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/editor_lesson.html",
+                    templateUrl: "/assets/partials/editor/editor_lesson.html",
                     controller: 'EditLessonCtrl'
                 }
             }

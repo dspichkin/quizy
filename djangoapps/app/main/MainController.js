@@ -143,6 +143,14 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         $scope.main.make_short_header();
         $scope.main.active_menu = 'lessons';
     };
+    $scope.main.go_editor_outside_lesson = function(lesson_id) {
+        if (lesson_id) {
+            $location.path('/outside/lesson/' + lesson_id + '/');
+            $scope.main.make_short_header();
+            $scope.main.active_menu = 'lessons';
+        }
+        
+    };
 
     $scope.main.go_play = function(enroll_id) {
         if (lesson_id) {

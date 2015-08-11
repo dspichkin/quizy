@@ -94,7 +94,7 @@ var TeacherPupilCtrl = function($scope, $mdDialog, $http, $data, $log, $location
     };
 
     $scope.remove_enroll = function(enroll_id) {
-        $http.delete('/api/enroll_pupil/' + enroll_id + '/').then(function(data) {
+        $http.delete('/api/enroll/' + enroll_id + '/').then(function(data) {
             $scope.load_pupils();
         }, function(error) {
             $log.error(error);

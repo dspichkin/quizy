@@ -1,0 +1,180 @@
+<div>
+    <div class="page_body" style="padding: 20px 0;text-align: left;">
+
+        <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'words_in_text'" class="variant_words_in_text" style="margin: 0px 20px 20px 20px;">
+        
+        <ul style="margin: 0;padding: 0;">
+            <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" class="variant">
+                <div style="clear:both;margin: -17px 0 0 0;">
+                    <md-input-container style="text-align: left;">
+                    <label>Введите текст</label>
+                        <textarea style="width:100%; height:200px;resize: none;" 
+                            ng-model="item.text"
+                            ng-change="make_dirty_data()"
+                            ng-blur="finish_changed_page_text()"
+                        ></textarea>
+                    </md-input-container>
+                </div>
+            </li>
+        </ul>
+
+
+        <div style="max-width: 580px;"><b>Инструкция</b>.<p> Слова которые должны быть выбранны из списка укажите в круглых скобках через запятую. Правильное слово должно содеражать * в начале  <b>((xxx, *yyy, zzz))</b>.</p><p> Слова которые должны быть введены вручную укажите в квадратных скобках <b>[[xxx,yyy,zzz]]</b>.</p></div>
+
+        </div>
+
+
+        <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'radiobox'" class="variant_radiobox">
+            
+            <button class="btn btn-primary add_variant" ng-click="add_variant('radiobox')" style="margin: 0 0 20px 20px;">
+            Добавить вариант ответа</button>
+
+            <ul class="radio_variants">
+                <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" class="variant">
+                    <div style="clear:both;margin: -17px 0 0 0;
+                        display: inline-block;
+                        width: 100%;">
+                        <input class="variant_text_radio" 
+                            type="radio"
+                            ng-model="item.right_answer"
+                            name="radiobox"
+                            ng-value="true" 
+                            ng-checked="item.right_answer == true"
+                            ng-change="finish_changed_variant(item.id)"
+                            style="float: left;margin: 34px 25px 0px 0;"
+                            >
+                        <md-input-container style="text-align: left;
+                            width: 82%;
+                            float: left;">
+                            <label>Вариант ответа</label>
+
+                            <input class="variant_text" type="text" ng-model="item.text"
+                                ng-change="make_dirty_data()"
+                                ng-model-onblur ng-blur="finish_changed_variant(item.id)">
+                        </md-input-container>
+
+                        
+                        <button class="btn" style="width: 28px;
+                            padding: 4px;
+                            height: 28px;
+                            margin: 28px 0px 0 25px;"
+                            ng-click="remove_variant(item.id)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <md-input-container style="text-align: left;
+                            width: 82%;
+                            margin: -30px 0px 0px 32px;">
+                            <label>Рефлексия ответа</label>
+
+                            <input class="variant_text" type="text" ng-model="item.reflexy"
+                                ng-change="make_dirty_data()"
+                                ng-model-onblur ng-blur="finish_changed_variant(item.id)">
+                        </md-input-container>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'checkbox'" class="variant_checkbox">
+            <button class="btn btn-primary add_variant " ng-click="add_variant('checkbox')" style="margin: 0 0 0 20px;">
+            Добавить вариант ответа</button>
+
+
+            <ul class="checkbox_variants">
+                <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" class="variant">
+                    <div style="clear:both;margin: 10px 0 0 0;
+                        display: inline-block;
+                        width: 100%;">
+                        <md-checkbox ng-model="item.right_answer" aria-label="Checkbox 1" value="{{item.right_answer}}" 
+                            ng-init="item.right_answer == true"
+                            ng-true-value="true"
+                            ng-false-value="false"
+                            ng-change="finish_changed_variant(item.id)"
+                            style="float: left;margin: 30px 16px 0px 0px;">
+                        </md-checkbox>
+
+                        <md-input-container style="text-align: left;
+                            width: 82%;
+                            float: left;">
+                            <label>Вариант ответа</label>
+                            <input class="variant_text" type="text" ng-model="item.text"
+                                ng-change="make_dirty_data()"
+                                ng-model-onblur ng-blur="finish_changed_variant(item.id)">
+                        </md-input-container>
+                        <button class="btn" style="width: 28px;
+                            padding: 4px;
+                            height: 28px;
+                            margin: 28px 0px 0 25px;"
+                            ng-click="remove_variant(item.id)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <md-input-container style="text-align: left;
+                            width: 82%;
+                            margin: -30px 0px 0px 32px;">
+                            <label>Рефлексия ответа</label>
+
+                            <input class="variant_text" type="text" ng-model="item.reflexy"
+                                ng-change="make_dirty_data()"
+                                ng-model-onblur ng-blur="finish_changed_variant(item.id)">
+                        </md-input-container>
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+        <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'text'" class="variant_text" style="padding:20px;">
+            
+            <ul>
+                <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" class="variant">
+                    <div style="clear:both;margin: -17px 0 0 0;">
+                        <md-input-container style="text-align: left;">
+                        <label>Правильный ответ</label>
+                            <input class="variant_text" type="text" 
+                            ng-model="item.text"
+                            ng-change="make_dirty_data()"
+                            ng-model-onblur ng-blur="finish_changed_page_text()">
+                        </md-input-container>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'pairs'" class="variant_pairs">
+            <button class="btn btn-primary add_variant" ng-click="add_variant('pairs')" style="margin: 0 0 20px 20px;">
+            Добавить пару</button>
+
+            <ul class="checkbox_pairs">
+                <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" ng-if="item.pair_type == 'question'" class="variant">
+                    <div style="clear:both;margin: -17px 0 0 0;
+                        display: inline-block;
+                        width: 100%;">
+                        <md-input-container style="text-align: left;width:43%;float: left;">
+                            <label>Левая половиная ответа</label>
+
+                                <input class="variant_pair_page" style="width:100%;"
+                                    type="text"
+                                    ng-model="item.text"
+                                    ng-change="make_dirty_data()"
+                                    ng-model-onblur ng-blur="finish_changed_variant(item.id)">
+                        </md-input-container>
+                        <md-input-container style="text-align: left;width:45%;float: left;margin: 0px 0px 0 10px;">
+                            <label>Правая половиная ответа</label>
+                            <input class="variant_pair_answer" style="width:100%;" type="text"
+                                ng-model="item.pair_object.text"
+                                ng-if="item.pair_object.pair_type == 'answer'"
+                                ng-change="make_dirty_data()"
+                                ng-model-onblur ng-blur="finish_changed_variant(item.id)">
+                        </md-input-container>
+                        <button class="btn" style="width: 28px;padding: 4px;height: 28px;margin: 28px 0px 0px 20px;"
+                            ng-click="remove_variant(item.id)">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

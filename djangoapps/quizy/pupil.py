@@ -7,6 +7,7 @@ from datetime import timedelta
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -123,3 +124,27 @@ def mystatistic(request):
     serializer = MyStatisticSerializer(result_page, many=True)
 
     return paginator.get_paginated_response(serializer.data)
+
+
+@api_view(['PUT'])
+def enroll_pupil(request, enroll_pk):
+    """
+    Сохраняет данные для назначения со стороны ученика
+    """
+    if not request.user.is_authenticated():
+        return Response([], status=status.HTTP_200_OK)
+
+    if enroll_pk:
+        try:
+            enroll = LessonEnroll.objects.get(learner=request.user, pk=enroll_pk)
+        except LessonEnroll.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'PUT':
+        data = json.loads(request.body.decode("utf-8"))
+        enroll.data = data
+        enroll.required_attention = True
+        enroll.save()
+
+    enroll = LessonEnrollSerializer(instance=enroll).data
+    return Response(enroll, status=status.HTTP_200_OK)

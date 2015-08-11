@@ -39,6 +39,17 @@ class LessonEnrollAdmin(admin.ModelAdmin):
     search_fields = ('learner__username', 'learner__first_name', 'learner__last_name', 'learner__email')
     readonly_fields = ['created_at', 'updated_at']
 
+    class Media:
+        css = {
+            'all': (
+                'css/run_ace.css',
+            )
+        }
+        js = (
+            'js/ace/ace.js',
+            'js/run_ace.js',
+        )
+
 
 class LessonAdmin(admin.ModelAdmin):
     search_fields = ['course', 'name', 'created_by']

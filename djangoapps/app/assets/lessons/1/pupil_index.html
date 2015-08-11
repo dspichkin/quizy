@@ -1,0 +1,102 @@
+<div dynamic-ctrl="getController()">
+<div class="play_div" ng-controller="PlayInsideCtrl">
+    
+    <div class="play_panel" style="
+    height: 100%;
+    width: 90%;
+    display: inline-block;
+    margin-top: -50px;">
+
+
+        <div>
+            <div class="shadow" style="float:left;width: 65%;background-color: white;text-align: left;
+    padding: 20px;min-height: 400px;position: relative;">
+
+
+    			<div>
+    				<h3>Задание</h3>
+    				<p>Описание задание того что нужно сделать</p>
+    				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ipsum metus, mollis et mi vel, scelerisque cursus mi. Donec non dignissim est. Phasellus ultrices sed lorem quis imperdiet. Nullam quis nunc vehicula, feugiat eros et, sagittis eros.</p>
+    			</div>
+
+    			<div ng-if="model.lesson_dialog.active == false">
+					<h3>Урок остановлен</h3>
+				</div>
+
+				<div ng-if="get_answer_pupil()">
+					<div ripple class="btn-secondary shadow" style="position:relative" ng-click="add_answer_pupil()" >Добавить ответ</div>
+				</div>
+
+    			<div ng-repeat="step in model.lesson_dialog.data.steps.slice().reverse()">
+
+    				<div ng-if="step.type=='pupil' && step.mode != 'edit'" style="width: 100%;text-align: left;">
+
+		    			<div style="margin: 20px 10px 20px 10px;
+							    width: 500px;
+							    background-color: rgba(2, 99, 90, 0.18);
+							    padding: 20px;
+							    text-align: left;
+	    						display: inline-block;">
+	    					<p style="float:right">Ученик</p>
+	    					<p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Удалить</p>
+	    					<p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Редактировать</p>
+		    			 	<p>Номер сообщения: {{step.number}}</p>
+
+		    			 	{{step.text}}
+		    			</div>
+	    			</div>
+	    			<div ng-if="step.type=='pupil' && step.mode == 'edit'" style="width: 100%;text-align: left;">
+
+	    				<div ng-if="$first == true">
+		    				<div  ng-if="$first == true" class="btn-primary shadow" ng-click="save_step(step.number)"> Сохранить</div>
+		    				<div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)"> Удалить</div>
+		    			</div>
+
+	    				<textarea style="resize: none;height: 200px;margin: 20px 10px 20px 10px;width: 500px;padding:10px;" ng-model="model.lesson_dialog.temptext">
+	    					
+	    				</textarea>
+	    			</div>
+
+	    			<div ng-if="step.type=='teacher'" style="width: 100%;text-align: right;">
+		    			<div style="margin: 20px 10px 20px 10px;
+							    width: 500px;
+							    background-color: rgba(99, 38, 2, 0.18);
+							    padding: 20px;
+							    text-align: left;
+							    display: inline-block;">
+							<p style="float:right">Преподователь</p>
+		    			 	<p>Номер сообщения: {{step.number}}</p>
+		    			 	{{step.text}}
+		    			</div>
+	    			</div>
+    			</div>
+
+
+
+
+
+    		</div>
+
+
+    		<div class="shadow" style="float: left;
+                width: 25%;
+                background-color: white;
+                min-height: 300px;
+                margin: 0 0 20px 20px;
+                padding: 25px;
+                text-align: left;">
+                <p style="font-size: 12px;">Прохождение урока</p>
+                <p style="font-size: 26px;font-weight: 500;">{{model.inside_play.attempt.lesson.name}}</p>
+                <p>{{model.inside_play.attempt.lesson.description}}</p>
+                <div ng-if="model.inside_play.attempt.lesson.picture">
+                    <img ng-src="{{model.inside_play.attempt.lesson.picture}}" style="width: 100%;">
+                </div>
+            </div>
+
+
+
+    	</div>
+    </div>
+</div>
+
+

@@ -7,7 +7,7 @@ var Attempt = require('../models/attempt');
 var PlayCtrl = function($scope, $stateParams, $http, $compile) {
 
 
-     if (!$scope.user || !$scope.user.is_authenticated) {
+    if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
             if (!$scope.user || !$scope.user.is_authenticated) {
                 $scope.main.go_home_page();
@@ -47,6 +47,7 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile) {
 
     function load_enroll(enroll_id) {
         return $http.get('/api/play/' + enroll_id + "/").then(function(data) {
+            $scope.model.play.enroll = data.data;
             start_content(data);
 
             }, function(error) {
