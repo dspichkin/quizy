@@ -42,7 +42,7 @@
 	    					<p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Редактировать</p>
 		    			 	<p>Номер сообщения: {{step.number}}</p>
 
-		    			 	{{step.text}}
+		    			 	<p ng-bind-html="step.text"></p>
 		    			</div>
 	    			</div>
 	    			<div ng-if="step.type=='pupil' && step.mode == 'edit'" style="width: 100%;text-align: left;">
@@ -66,7 +66,7 @@
 							    display: inline-block;">
 							<p style="float:right">Преподователь</p>
 		    			 	<p>Номер сообщения: {{step.number}}</p>
-		    			 	{{step.text}}
+		    			 	<p ng-bind-html="step.text"></p>
 		    			</div>
 	    			</div>
     			</div>

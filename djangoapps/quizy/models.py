@@ -219,7 +219,8 @@ class LessonEnroll(BaseModel):
     success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
     date_success = models.DateTimeField('дата последней успешной попытки', null=True, blank=True)
     #  TODO: собирать статистику по прохождению
-    required_attention = models.NullBooleanField('требуется внимание со стороны преподователя', null=True, blank=True)
+    required_attention_by_teacher = models.NullBooleanField('требуется внимание со стороны преподователя', null=True, blank=True)
+    required_attention_by_pupil = models.NullBooleanField('требуется внимание со стороны студента', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Назначение на урок'

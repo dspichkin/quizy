@@ -62,17 +62,21 @@
                        			 margin: 0;" ng-click="lesson_enroll($event, lesson.id)">Назначить ...</div>
 
 		                    <div style="max-height:100px;overflow: auto;">
-		                        <div ng-repeat="enroll in lesson.enrolls" class="enroll_pupil">
+		                        <div ng-repeat="enroll in lesson.enrolls" class="enroll_pupil" ng-class="{
+		                        	'enroll_row_required_attention': enroll.required_attention_by_teacher == true
+		                        }">
 		                            <div style="margin: 6px 0 0 0;width:200px;float:left;">
 		                                <div class="remove_enroll" ng-click="remove_enroll(enroll.id)"><i class="material-icons icon-remove-enroll">close</i></div>
 		                                <div ng-if="lesson.lesson_type == 'inside'" class="enroll_email" style="width: 160px;overflow: auto;">{{enroll.learner.email}}</div> 
-		                                <div ng-if="lesson.lesson_type == 'outside'" class="enroll_email" style="color:#ff9e37; cursor:pointer;text-decoration:underline;width: 160px;overflow: auto;" ng-click="main.go_editor_outside_lesson(enroll.id)">{{enroll.learner.email}}</div> 
+		                                <div ng-if="lesson.lesson_type == 'outside'" class="enroll_email"
+		                                ng-class="{'enroll_row_required_attention': enroll.required_attention_by_teacher == true}" style="color:#ff9e37; cursor:pointer;text-decoration:underline;width: 160px;overflow: auto;" ng-click="main.go_editor_outside_lesson(enroll.id)">{{enroll.learner.email}}</div> 
 		                            </div>
 		                            <div class="enroll_result">
 		                                <div ng-class="{
-		                                    'enroll_success': enroll.success == true,
+		                                	'enroll_required_attention': enroll.required_attention_by_teacher == true,
+		                                    'enroll_success': !enroll.required_attention_by_teacher && enroll.success == true,
 		                                    'enroll_fail': enroll.success == false,
-		                                    'enroll_undone': enroll.success == null}"></div>
+		                                    'enroll_undone': !enroll.required_attention_by_teacher && enroll.success == null}"></div>
 		                                <div class="enroll_data">{{enroll.last_data | date:'yyyy-MM-dd'}} / {{enroll.number_of_attempt}}</div>
 		                            </div> 
 		                        </div>

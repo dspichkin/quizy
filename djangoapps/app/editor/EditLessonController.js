@@ -174,11 +174,11 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
 
     $scope.get_template_content = function() {
         if ($scope.current_menu == 'common') {
-            return '/assets/partials/editor_lesson_common.html';
+            return '/assets/partials/editor/editor_lesson_common.html';
         }
 
         if ($scope.current_menu == 'content') {
-            return '/assets/partials/editor_lesson_content.html';
+            return '/assets/partials/editor/editor_lesson_content.html';
         }
     };
 

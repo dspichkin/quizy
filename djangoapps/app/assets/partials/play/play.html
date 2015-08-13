@@ -141,19 +141,27 @@
                         <div style="float:left;">
                             <div ng-repeat="variant in model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].variants" ng-if="variant.pair_type=='question'"
                                 class="question_panel">
-                                <div class="question_title">{{variant.text}}</div>
+                                <div class="question_title" ng-bind-html="variant.text"></div>
                                 <div class="dropable question_dropable">
-                                    <div drag class="dragable question_dragable" action="make_answer_for_pairs" data-id="{{variant.id}}">{{variant.text}}</div>
+                                    <div drag class="dragable question_dragable" action="make_answer_for_pairs" data-id="{{variant.id}}" ng-bind-html="variant.text"></div>
                                 </div>
 
                             </div>
                         </div>
-                        <div style="float:right;display:block;">
+                        <div style="float:left;display:block;">
 
                             <div ng-repeat="variant in model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].variants" ng-if="variant.pair_type=='answer'" class="answer_panel">
                                 <div class="dropable answer_dropable" data-id="{{variant.id}}"></div>
-                                <div class="answer_title" style="">{{variant.text}}
+                                <div class="answer_title" style="">
                                 </div>
+                            </div>
+                        </div>
+
+
+                         <div style="float:left;display:block;">
+                            <div ng-repeat="variant in model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].variants" ng-if="variant.pair_type=='answer'" class="answer_panel">
+                                <div class="answer_dropable"></div>
+                                <div class="answer_title" style="" ng-bind-html="variant.text"></div>
                             </div>
                         </div>
 

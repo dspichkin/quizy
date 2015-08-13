@@ -39,7 +39,13 @@ def enroll_teacher(request, enroll_pk):
     if request.method == 'PUT':
         data = json.loads(request.body.decode("utf-8"))
         enroll.data = data
-        enroll.required_attention = False
+        enroll.required_attention_by_teacher = False
+        if data.get('active') is False:
+            enroll.required_attention_by_pupil = False
+        else:
+            enroll.required_attention_by_pupil = True
+
+        enroll.success = True
         enroll.save()
 
     enroll = LessonEnrollSerializer(instance=enroll).data
