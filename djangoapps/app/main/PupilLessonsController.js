@@ -36,7 +36,7 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
                     data.data[i].created_at = Date.parse(data.data[i].created_at);
                     $scope.model.lessons.push(data.data[i]);
                 }
-                console.log($scope.model.lessons)
+                //console.log($scope.model.lessons)
             }, function(error) {
                 $log.error('Ошибка получения назначенных на меня уроков', error);
             });
