@@ -9,7 +9,8 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                 lesson_id: "=lessonId",
                 enroll_lessonFn: "=enrollLesson",
                 play_lessonFn: "=playLesson",
-                edit_lessonFn: "=editLesson"
+                edit_lessonFn: "=editLesson",
+                get_lesson_typeFn: "=getLessonType"
             },
             replace: true,
             template: '<div class="" ng-click="show_action($event)" >' +
@@ -36,7 +37,8 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                     html_menu += '          <div class="header_title">Меню урока</div>';
                     html_menu += '      </div>';
                     html_menu += '      <div class="action_menu_items" style="opacity: 0">';
-                    html_menu += '          <div class="action_item" ng-click="edit_lesson()">Редактировать урок</div>';
+                    html_menu += '          <div class="action_item" ng-if="get_lesson_type()!=\'inside\'" style="opacity:0.7">Редактировать урок</div>';
+                    html_menu += '          <div class="action_item" ng-click="edit_lesson()" ng-if="get_lesson_type()==\'inside\'">Редактировать урок</div>';
                     html_menu += '          <div class="action_item" ng-click="enroll_lesson()">Назначить ученика</div>';
                     html_menu += '          <div class="action_item" ng-click="play_lesson($event)">Запустить для тестирования</div>';
                     html_menu += '      </div>';
@@ -69,6 +71,10 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                     scope.close_action();
                     scope.enroll_lessonFn($event, scope.lesson_id);
                 };
+
+                scope.get_lesson_type = function() {
+                    return scope.get_lesson_typeFn(scope.lesson_id)
+                }
             }
         };
     }

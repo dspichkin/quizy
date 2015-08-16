@@ -7,7 +7,6 @@ import os
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.middleware import csrf
 
 
 from rest_framework.response import Response
@@ -15,11 +14,11 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 
-from quizy.models import (Course, Lesson, Page, CourseEnroll, LessonEnroll)
-from quizy.serializers.serializers import (CourseEnrollSerializer, LessonEnrollSerializer, LessonSerializer,
-PageSerializer)
+from quizy.models import (Lesson, Page, CourseEnroll, LessonEnroll, Statistic)
+from quizy.serializers.serializers import (LessonEnrollSerializer, LessonSerializer,
+PageSerializer, StatisticSerializer)
 
-from quizy.serializers.pupil import PupilSerializer
+# from quizy.serializers.pupil import PupilSerializer
 from quizy.pagination import ListPagination
 
 from users.account.models import Account
@@ -77,25 +76,6 @@ def lesson(request, lesson_pk=None):
     return Response(data)
 
 
-@api_view(['GET', 'PUT'])
-@permission_classes((AllowAny, ))
-def demo_play(request, lesson_pk=None):
-    if not request.user.is_authenticated():
-        return Response([], status=status.HTTP_200_OK)
-
-    try:
-        lesson = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk,)
-    except Lesson.DoesNotExist:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    if request.method == 'GET':
-        # if lesson.created_by == request.user or :
-        enroll = LessonEnroll(lesson=lesson, learner=request.user, created_by=request.user)
-        enroll = LessonEnrollSerializer(instance=enroll).data
-        enroll.update({'csrfmiddlewaretoken': csrf.get_token(request)})
-    return Response(enroll, status=status.HTTP_200_OK)
-
-
 @api_view(['POST'])
 def new_page(request, lesson_pk=None):
     if not request.user.is_authenticated():
@@ -135,34 +115,6 @@ def new_page(request, lesson_pk=None):
 
 
 @api_view(['POST', 'DELETE'])
-def lesson_picture_upload(request, lesson_pk=None):
-    if not request.user.is_authenticated():
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-    lesson = get_object_or_404(Lesson, pk=lesson_pk, created_by=request.user)
-    if request.method == "POST":
-        if lesson.picture:
-            if os.path.exists(lesson.picture.path):
-                os.remove(lesson.picture.path)
-                lesson.picture = None
-
-        f = request.FILES.get('file')
-        if f and f._size < 30 * 1024 * 1024:
-            lesson.picture = f
-            lesson.save()
-
-        return Response("OK", status=status.HTTP_200_OK)
-
-    if request.method == "DELETE":
-        if lesson.picture:
-            if os.path.exists(lesson.picture.path):
-                os.remove(lesson.picture.path)
-                lesson.picture = None
-                lesson.save()
-        return Response("OK", status=status.HTTP_200_OK)
-
-
-@api_view(['POST', 'DELETE'])
 def page_picture_upload(request, page_pk=None):
     if not request.user.is_authenticated():
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -192,37 +144,6 @@ def page_picture_upload(request, page_pk=None):
                 page.save()
         return Response("OK", status=status.HTTP_200_OK)
 
-"""
-@api_view(['GET', 'POST'])
-@permission_classes((AllowAny,))
-def lesson_archive(request, lesson_pk=None):
-    if not request.user.is_authenticated():
-        return Response([], status=status.HTTP_200_OK)
-
-    if request.method == 'GET' and lesson_pk is None:
-
-        lessonEnrolls = LessonEnroll.objects.filter(learner=request.user,
-            is_archive=True)
-        archives = []
-        for a in lessonEnrolls:
-            archives.append(LessonEnrollSerializer(instance=a).data)
-        return Response(archives, status=status.HTTP_200_OK)
-
-    if request.method == 'POST' and lesson_pk is not None:
-        lessonEnrolls = LessonEnroll.objects.filter(lesson=lesson_pk, learner=request.user,
-            is_archive=False)
-
-        if len(lessonEnrolls) > 0:
-            lessonEnroll = lessonEnrolls[0]
-            lessonEnroll.is_archive = True
-            lessonEnroll.date_archive = timezone.now()
-            lessonEnroll.save()
-            return Response(LessonEnrollSerializer(instance=lessonEnroll).data, status=status.HTTP_200_OK)
-        else:
-            return Response([], status=status.HTTP_200_OK)
-
-    return Response(status=status.HTTP_400_BAD_REQUEST)
-"""
 
 @api_view(['GET'])
 @permission_classes((AllowAny,))
@@ -257,39 +178,6 @@ def get_mypupil(request):
     return Response(pupils, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-@permission_classes((AllowAny,))
-def pupils(request):
-    """
-    Запрос на страницы мои ученики
-    """
-    if not request.user.is_authenticated():
-        return Response([], status=status.HTTP_200_OK)
-    # проходим по всем назначенным курсам и урока ищем учеников
-    dic_pupils = {}
-    for ce in CourseEnroll.objects.filter(Q(created_by=request.user) | Q(course__teacher=request.user)):
-        dic_pupils.update({
-            ce.learner.pk: ce.learner
-        })
-
-    for le in LessonEnroll.objects.filter(Q(created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user)):
-        dic_pupils.update({
-            le.learner.pk: le.learner
-        })
-
-    pupils = []
-    for key, value in dic_pupils.items():
-        pupils.append(value)
-        # pupils.append(PupilSerializer(value).data)
-
-    paginator = ListPagination()
-    result_page = paginator.paginate_queryset(pupils, request)
-    serializer = PupilSerializer(result_page, many=True)
-    return paginator.get_paginated_response(serializer.data)
-
-    # return Response(pupils, status=status.HTTP_200_OK)
-
-
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 def create_pupil(request):
@@ -322,64 +210,6 @@ def create_pupil(request):
 
 @api_view(['GET', 'POST', 'DELETE'])
 @permission_classes((AllowAny,))
-def enroll_pupil(request, enroll_pk):
-    if not request.user.is_authenticated():
-        return Response(status=status.HTTP_200_OK)
-
-    if request.method == 'POST':
-        data = json.loads(request.body.decode("utf-8"))
-        course_id = data.get('course_id')
-        auto_enroll = data.get('auto_enroll')
-        lesson_id = data.get('lesson_id')
-        email = data.get('email')
-        if course_id is None and lesson_id is None:
-            return Response("Неверный формат course или lesson", status=status.HTTP_400_BAD_REQUEST)
-        if validateEmail(email) is False:
-            return Response("Неверный формат email", status=status.HTTP_400_BAD_REQUEST)
-
-        lesson = None
-        course = None
-        if lesson_id:
-            lesson = get_object_or_404(Lesson, pk=lesson_id)
-        if course_id:
-            course = get_object_or_404(Course, pk=course_id)
-
-        pupil = Account.objects.filter(email__iexact=email)[:1]
-
-        if pupil and lesson:
-            try:
-                enroll = LessonEnroll.objects.get(lesson=lesson, learner=pupil[0])
-            except LessonEnroll.DoesNotExist:
-                enroll = LessonEnroll.objects.create(lesson=lesson, learner=pupil[0], created_by=request.user)
-
-            return Response(LessonEnrollSerializer(enroll).data, status=status.HTTP_200_OK)
-        elif pupil and course:
-            try:
-                enroll = CourseEnroll.objects.get(course=course, learner=pupil[0])
-            except CourseEnroll.DoesNotExist:
-                enroll = CourseEnroll.create(course, pupil[0], request.user)
-
-                if auto_enroll:
-                    enroll.auto_enroll = auto_enroll
-                    enroll.save()
-
-            return Response(CourseEnrollSerializer(enroll).data, status=status.HTTP_200_OK)
-        else:
-            return Response({'code': 404}, status=status.HTTP_200_OK)
-
-    if request.method == 'DELETE' and enroll_pk:
-        try:
-            enroll = LessonEnroll.objects.get(Q(lesson__created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user), pk=enroll_pk)
-            enroll.delete()
-        except LessonEnroll.DoesNotExist:
-            return Response("", status=status.HTTP_400_BAD_REQUEST)
-        return Response("", status=status.HTTP_200_OK)
-
-    return Response(status=status.HTTP_200_OK)
-
-
-@api_view(['GET', 'POST', 'DELETE'])
-@permission_classes((AllowAny,))
 def enroll_course_pupil(request, enroll_pk):
     if not request.user.is_authenticated():
         return Response(status=status.HTTP_200_OK)
@@ -395,3 +225,33 @@ def enroll_course_pupil(request, enroll_pk):
     return Response(status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def statistic(request):
+    """
+    Запрос на статтистику по ученикам
+    """
+    if not request.user.is_authenticated():
+        return Response([], status=status.HTTP_200_OK)
+    pupils = Statistic.objects.filter(Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user))
+
+    dic_pupils = {}
+    for p in pupils:
+        if (p.learner.id in dic_pupils):
+            enrolls = dic_pupils[p.learner.id].get('enrolls', [])
+            enrolls.append(StatisticSerializer(p).data)
+            dic_pupils[p.learner.id]['enrolls'] = enrolls
+        else:
+            dic_pupils[p.learner.id] = {
+                'learner': UserSerializer(p.learner).data,
+                'enrolls': [StatisticSerializer(p).data]
+            }
+            # print "111 ", dic_pupils[p.learner.id]
+
+    a = []
+    for key, value in dic_pupils.items():
+        a.append(value)
+    paginator = ListPagination()
+    result_page = paginator.paginate_queryset(a, request)
+
+    return paginator.get_paginated_response(result_page)

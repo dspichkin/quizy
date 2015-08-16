@@ -12,11 +12,12 @@ from rest_framework.routers import DefaultRouter
 
 from quizy.views import (user_data,
     get_mypupil, create_pupil,
-    demo_play, pupils,
-    new_page, enroll_pupil, enroll_course_pupil,
-    lesson_picture_upload, page_picture_upload)
+    statistic,
+    new_page, enroll_course_pupil,
+    page_picture_upload)
 
-from quizy.pupil import (mylessons, answers, play, reject_lesson)
+from quizy.teacher import (enroll_teacher, demo_play, pupils, lesson_picture_upload, enroll)
+from quizy.pupil import (mylessons, answers, play, reject_lesson, mystatistic, enroll_pupil)
 from quizy.page import PageViewSet
 from quizy.materials import courses, lessons
 # LessonsViewSet,
@@ -47,11 +48,12 @@ urlpatterns = [
     url(r'^api/answers/(\d+)/$', answers, name='answers'),
     url(r'^api/get_mypupil/$', get_mypupil, name='get_mypupil'),
     url(r'^api/create_pupil/$', create_pupil, name='create_pupil'),
+    url(r'^api/enroll/(\d+)?/?$', enroll, name='enroll'),
+    url(r'^api/enroll_teacher/(\d+)?/?$', enroll_teacher, name='enroll_teacher'),
     url(r'^api/enroll_pupil/(\d+)?/?$', enroll_pupil, name='enroll_pupil'),
     url(r'^api/enroll_course_pupil/(\d+)?/?$', enroll_course_pupil, name='enroll_course_pupil'),
 
 
-    # url(r'^api/lessons/$', get_lessons, name='get_lessons'),
     url(r'^api/play/(\d+)?/?$', play, name='run_play'),
     url(r'^api/demo/play/(\d+)?/?$', demo_play, name='run_demo_play'),
     url(r'^api/courses/(\d+)?/?$', courses, name='get_courses'),
@@ -60,6 +62,8 @@ urlpatterns = [
     url(r'^api/lessons/(\d+)/upload/$', lesson_picture_upload, name='lesson_picture_upload'),
     url(r'^api/reject_lesson/(\d+)/$', reject_lesson, name='reject_lesson'),
     url(r'^api/mylessons/$', mylessons, name='mylessons'),
+    url(r'^api/mystatistic/$', mystatistic, name='mystatistic'),
+    url(r'^api/statistic/$', statistic, name='statistic'),
 
     url(r'^api/pages/(\d+)/upload/$', page_picture_upload, name='page_picture_upload'),
     # url(r'^api/archive/(\d+)?/?$', lesson_archive, name='lesson_archive'),

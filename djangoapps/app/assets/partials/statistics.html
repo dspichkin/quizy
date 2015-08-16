@@ -1,0 +1,8 @@
+<div class="lesson" style="min-height:450px;text-align:center">
+	<div class="shadow lesson_panel">
+
+		<div ng-if="user && user.is_authenticated && user.account_type == 2" class="lessons_pupil" ng-style="model.lessons.length > 0 && {'min-height': '50px'}">
+			<div ng-include="'/assets/partials/pupilstatistic.html'"></div>
+		</div>
+	</div>
+</div>

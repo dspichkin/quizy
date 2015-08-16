@@ -87,6 +87,24 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
                 }
             }
         })
+        .state('mystatistics', {
+            url: "/mystatistics/",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/pupilstatistic.html",
+                    controller: "PupilStatisticCtrl"
+                }
+            }
+        })
+        .state('statistics', {
+            url: "/statistics/",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/teacherstatistic.html",
+                    controller: "TeacherStatisticCtrl"
+                }
+            }
+        })
         .state('pupils', {
             url: "/pupils/",
             views: {
@@ -109,8 +127,17 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/editor/lesson/:lesson_id/",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/editor_lesson.html",
+                    templateUrl: "/assets/partials/editor/editor_lesson.html",
                     controller: 'EditLessonCtrl'
+                }
+            }
+        })
+        .state('outside_lesson', {
+            url: "/outside/lesson/:enroll_id/",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/editor/editor_lesson_outside.html",
+                    controller: 'EditOutsideLessonCtrl'
                 }
             }
         })
@@ -118,7 +145,7 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/editor/lesson/",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/editor_lesson.html",
+                    templateUrl: "/assets/partials/editor/editor_lesson.html",
                     controller: 'EditLessonCtrl'
                 }
             }
@@ -127,8 +154,8 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/play/:enroll_id/?",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/play.html",
-                    controller: 'PlayCtrl'
+                    templateUrl: "/assets/partials/play/base_play.html",
+                    controller: 'PlayBaseCtrl'
                 }
             }
         })
@@ -136,8 +163,8 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/play/demo/:lesson_id/?",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/play.html",
-                    controller: 'PlayCtrl'
+                    templateUrl: "/assets/partials/play/base_play.html",
+                    controller: 'PlayBaseCtrl'
                 }
             }
         })

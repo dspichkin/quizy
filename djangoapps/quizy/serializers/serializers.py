@@ -3,12 +3,11 @@
 import json
 
 from rest_framework import serializers
-from rest_framework import pagination
-# from utils.serializers import JSONField
+
 
 from users.account.serializers import UserSerializer
-from users.account.models import Account
-from quizy.models import Course, Lesson, CourseEnroll, LessonEnroll, Page, Variant
+from quizy.models import (Course, Lesson, CourseEnroll, LessonEnroll,
+    Page, Variant, Statistic)
 
 
 class JSONField(serializers.Field):
@@ -66,13 +65,15 @@ class CourseEnrollSerializer(serializers.ModelSerializer):
 class LessonForEnrollSerializer(serializers.ModelSerializer):
     pages = PageSerializer(many=True, read_only=True)
     code_errors = JSONField()
-    material_type = serializers.CharField(source='type')
+    content = JSONField()
 
     class Meta:
         model = Lesson
 
 
 class LessonEnrollSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField()
+    updated_at = serializers.DateTimeField()
     learner = UserSerializer(read_only=True)
     created_by = UserSerializer(read_only=True)
     data = JSONField()
@@ -95,7 +96,6 @@ class LessonForCourseSerializer(serializers.ModelSerializer):
     pages = PageSerializer(many=True, read_only=True)
     enrolls = EnrollForCourseSerializer(many=True, read_only=True)
     code_errors = JSONField()
-    material_type = serializers.CharField(source='type')
 
     class Meta:
         model = Lesson
@@ -105,7 +105,6 @@ class CourseSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     lessons = LessonForCourseSerializer(source='lesson_set', many=True, read_only=True)
     code_errors = JSONField()
-    material_type = serializers.CharField(source='type')
     enroll_number = serializers.ReadOnlyField()
 
     class Meta:
@@ -118,7 +117,29 @@ class LessonSerializer(serializers.ModelSerializer):
     pages = PageSerializer(many=True, read_only=True)
     enrolls = LessonEnrollSerializer(many=True, read_only=True)
     code_errors = JSONField()
-    material_type = serializers.CharField(source='type')
 
     class Meta:
         model = Lesson
+
+
+class CourseForStatisticSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Course
+        exclude = ('teacher',)
+
+
+class LessonForStatisticSerializer(serializers.ModelSerializer):
+    course = CourseForStatisticSerializer(read_only=True)
+
+    class Meta:
+        model = Lesson
+
+
+class StatisticSerializer(serializers.ModelSerializer):
+    lesson = LessonForStatisticSerializer(read_only=True)
+    learner = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Statistic

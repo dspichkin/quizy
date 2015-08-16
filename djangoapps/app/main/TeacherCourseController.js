@@ -106,7 +106,7 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
                             email: $scope.model.modal_enroll.inputed_address
                         };
                         $scope.model.modal_enroll.loading = true;
-                        $.post('/api/enroll_pupil/', JSON.stringify(_data)).then(function(data) {
+                        $.post('/api/enroll/', JSON.stringify(_data)).then(function(data) {
                             $scope.model.modal_enroll.loading = false;
 
                             if (data.hasOwnProperty('code')) {
@@ -164,7 +164,7 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
     };
 
     $scope.remove_enroll = function(enroll_id) {
-        $http.delete('/api/enroll_pupil/' + enroll_id + '/').then(function(data) {
+        $http.delete('/api/enroll/' + enroll_id + '/').then(function(data) {
             $scope.load_course();
         }, function(error) {
             $log.error(error);
@@ -173,6 +173,20 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
 
     $scope.play_lesson = function(enroll_id) {
         $location.path('/play/' + enroll_id + '/');
+    };
+
+    /**
+     * Возвращает тип урока
+     * @param  {[type]} lesson_id [description]
+     * @return {[type]}           [description]
+     */
+    $scope.get_lesson_type = function(lesson_id) {
+        var _lessons = $scope.model.course.lessons;
+        for (var i = 0, len = _lessons.length; i < len; i++) {
+            if (lesson_id == _lessons[i].id) {
+                return _lessons[i].lesson_type;
+            }
+        }
     };
 
 

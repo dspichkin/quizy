@@ -165,9 +165,13 @@
                     <span>Уроки</span>
                     <div ng-class="{'active_menu': main.active_menu=='lessons'}"></div>
                 </div>
-                 <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_pupils_page()">
-                    <span>Мои ученики</span>
+                <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_pupils_page()">
+                    <span>Активные назначения</span>
                     <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
+                </div>
+                 <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
+                    <span>Статистика</span>
+                    <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                 </div>
                 <!--
                 <div class="tab-item" ripple ng-click="main.go_description()">

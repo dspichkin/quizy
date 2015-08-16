@@ -1,0 +1,18 @@
+<div ng-if="show_debug" class="shadow" style="position: absolute;
+            width: 200px;
+            z-index: 100;
+            padding: 7px;
+            background-color: #FF8100;
+            top: -109px;
+            color: white;
+            right: 0;">
+            Тестовый запуск
+            <div ng-if="model.play.lesson_type == 'inside'" ng-click="back_to_editor()" style="text-decoration:underline;">Перейти в редактор</div>
+             <div ng-if="model.play.lesson_type == 'inside'" ng-click="back_to_lessons()" style="text-decoration:underline;">Перейти в список уроков</div>
+
+            <div ng-if="model.play.lesson_type == 'outside'" ng-click="back_to_lessons()" style="text-decoration:underline;">Перейти в список уроков</div>
+        </div>
+
+
+
+<div ng-include="getTemplate()"></div>
