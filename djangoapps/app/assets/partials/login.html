@@ -19,7 +19,7 @@
                 <md-input-container style="text-align: left;padding: 0;">
                     <label>Укажите вашу почту</label>
 
-                    <input id="id_login" ng-class="{'input-error':form_errors.login.length}" autocomplete="off"  type="text" ng-model="model.login.email" name="login">
+                    <input id="id_login" ng-class="{'input-error':form_errors.login.length}" autocomplete="off"  type="text" ng-model="model.login.email" name="login" autofocus>
                 </md-input-container>
                 <ul class="errorlist" ng-show="model.login.form_errors.login" style="margin: 0;padding: 0;">
                     <li ng-repeat="error in model.login.form_errors.login">{{error}}</li>

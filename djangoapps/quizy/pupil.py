@@ -2,6 +2,7 @@
 
 import json
 from datetime import timedelta
+from HTMLParser import HTMLParser
 
 # from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
@@ -18,7 +19,7 @@ from quizy.models import (LessonEnroll, Statistic)
 from quizy.serializers.serializers import (LessonEnrollSerializer)
 from quizy.serializers.pupil import MyStatisticSerializer
 from quizy.pagination import ListPagination
-
+from quizy.utils import normalize
 
 # назначеные на меня уроки
 @api_view(['GET'])
@@ -142,7 +143,8 @@ def enroll_pupil(request, enroll_pk):
 
     if request.method == 'PUT':
         data = json.loads(request.body.decode("utf-8"))
-        enroll.data = data
+        enroll.data = normalize(data)
+
         enroll.required_attention_by_pupil = False
         if data.get('active') is False:
             enroll.required_attention_by_teacher = False
