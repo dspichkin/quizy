@@ -245,6 +245,11 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                 preserveScope: true,
                 controller: function DialogController($scope, $mdDialog) {
 
+                    setTimeout(function() {
+                        $("#id_login").focus();
+                    }, 100);
+
+
                     $scope.model.login = {
                         email: '',
                         password: '',

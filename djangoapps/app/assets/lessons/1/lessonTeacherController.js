@@ -3,6 +3,7 @@
 app.ControllerName = function($scope, $http, $log) {
     $scope.model['lesson_dialog'] = $scope.model.outside.enroll;
     $scope.model['lesson_dialog'].temptext = null;
+    $scope.model.lesson_dialog.loading = false;
 
 
     $scope.back_to_lessons = function() {
@@ -75,8 +76,13 @@ app.ControllerName = function($scope, $http, $log) {
 
     $scope.save = function() {
         var _data = $scope.model.lesson_dialog.data;
+        $scope.model.lesson_dialog.loading = true;
         $http.put('/api/enroll_teacher/' + $scope.model.lesson_dialog.id + '/', JSON.stringify(_data))
-            .then(function() {}, function(error) {
+            .then(function(result) {
+                $scope.model.lesson_dialog.loading = false;
+                $scope.model.lesson_dialog.data = result.data.data;
+            }, function(error) {
+                $scope.model.lesson_dialog.loading = false;
                 $log.error(error);
             });
     } 

@@ -4,8 +4,10 @@ app.ControllerName = function($scope, $http, $log) {
     
     $scope.model['lesson_dialog'] = $scope.model.play.enroll;
     $scope.model.lesson_dialog.temptext = null;
+    $scope.model.lesson_dialog.loading = false;
+    
 
-
+    
     $scope.get_step_by_number = function(number, data) {
         for (var i = 0, len = $scope.model.lesson_dialog.data.steps.length; i < len; i++) {
             if ($scope.model.lesson_dialog.data.steps[i].number == number) {
@@ -24,11 +26,10 @@ app.ControllerName = function($scope, $http, $log) {
     Редактировать шаг учеником
      */
     $scope.edit_step = function(number) {
-        var step = $scope.get_step_by_number(number, {
+        var _step = $scope.get_step_by_number(number, {
             mode: 'edit'
         });
-        $scope.model.temptext = step.text;
-        $scope.save();
+        $scope.model.lesson_dialog.temptext = _step.text;
     };
 
     /*
@@ -82,12 +83,27 @@ app.ControllerName = function($scope, $http, $log) {
     };
 
     $scope.save = function() {
+        $scope.model.lesson_dialog.loading = true;
         var _data = $scope.model.lesson_dialog.data;
         $http.put('/api/enroll_pupil/' + $scope.model.lesson_dialog.id + '/', JSON.stringify(_data))
-            .then(function() {}, function(error) {
+            .then(function(result) {
+                $scope.model.lesson_dialog.loading = false;
+                $scope.model.lesson_dialog.data = result.data.data;
+            }, function(error) {
+                $scope.model.lesson_dialog.loading = false;
                 $log.error(error);
             });
-    } 
+    };
+
+
+
+    // сброс флага внимания со стороны ученика в случении закрытого урока
+    if ($scope.model.lesson_dialog.hasOwnProperty('data') &&
+        $scope.model.lesson_dialog.data.active == false) {
+        if ($scope.model.lesson_dialog.required_attention_by_pupil == true) {
+            $scope.save();
+        }
+    }
 
 
 };

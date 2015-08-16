@@ -9,7 +9,7 @@
 
         <div ng-if="model.inside_play.current_page_index < model.inside_play.attempt.lesson.pages.length">
             <div class="shadow" style="float:left;width: 65%;background-color: white;text-align: left;
-    padding: 20px;min-height: 400px;position: relative;">
+    padding: 20px;min-height: 400px;min-width:710px;position: relative;overflow-x: auto;margin: 0 20px 20px 0px;">
 
                 <div style="font-size: 17px;font-weight: 500;">
                     Вопрос №{{model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].number}}
@@ -188,7 +188,6 @@
                 width: 25%;
                 background-color: white;
                 min-height: 300px;
-                margin: 0 0 20px 20px;
                 padding: 25px;
                 text-align: left;">
                 <p style="font-size: 12px;">Прохождение урока</p>
