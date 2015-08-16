@@ -8,6 +8,7 @@
             <p class="pull-left" style="padding:20px;font-size:20px;font-weight:400;" ng-if="model.editor.current_lesson.pages.length > 0">
             Страница № {{model.editor.current_lesson.pages[model.editor.current_page_index].number}}
             </p>
+
             <div class="col-md-1 pull-right" style="margin-right: 30px;margin-top: 10px;" ng-if="model.editor.current_lesson.pages.length > 0">
                 <div class="shadow btn-round"  ng-if="model.editor.new_lesson == false" ng-click="delete_current_page($event)"><a class="icon-delete"  href="#" style="opacity: 0.2;height: 27px;float:left;"></a>
                 </div>
@@ -17,6 +18,15 @@
                 <div ng-show="model.editor.loading">Сохранение...</div>
                 <div ng-show="model.editor.unsaved">Изменения не сохранены...</div>
             </div>
+
+            <div  style="padding: 20px;font-size: 12px;position: absolute;top: 29px;color: #4988c9;">
+                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'checkbox'">Вопрос на выбор нескольких правильных ответов</p>
+                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'radiobox'">Вопрос на выбор одного правильно ответа</p>
+                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'pairs'">Вопрос на подбор пары</p>
+                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'text'">Вопрос на ввод правильно слова</p>
+                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'words_in_text'">Вопрос на ввод правильного слова</p>
+            </div>
+
 
             
             <div ng-if="model.editor.current_lesson.pages.length > 0" style="clear: both;">
