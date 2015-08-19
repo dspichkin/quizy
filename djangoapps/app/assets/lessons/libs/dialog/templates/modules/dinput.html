@@ -1,0 +1,8 @@
+<button ng-click="repeatMedia($event, model.step.variants[0])">Повторить</button>
+<br>
+<div>
+	<span ng-bind-html="inputed_words"></span>
+	<span ng-show="finished == false"><input type="text" ng-model="inputed" ng-change="inputedWords()"></span>
+</div>
+<br>
+{{model.step.variants[0].data.text}} 

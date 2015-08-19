@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head lang="en">
+    <title>Тестирование диалогов</title>
+    <meta charset="UTF-8">
+
+    <script type="text/javascript" class="inline min" src="../../../../vendor/underscore.min.js"></script>
+    <script type="text/javascript" class="inline min" src="../../../../vendor/jquery.min.js"></script>
+    <script type="text/javascript" class="inline min" src="../../../../vendor/angular.min.js"></script>
+    <script type="text/javascript" class="inline min" src="../../../../vendor/angular-sanitize.min.js"></script>
+
+
+    <script type="text/javascript" class="inline min" src="services/utils.js"></script>
+
+    <script type="text/javascript" class="inline min" src="dialog-model.js"></script>
+    <script type="text/javascript" class="inline min" src="dialog-api.js"></script>
+    <script type="text/javascript" class="inline min" src="dialog.js"></script>
+    <script type="text/javascript" class="inline min" src="components/dialog.controls.js"></script>
+    <script type="text/javascript" class="inline min" src="components/dialog.input.js"></script>
+
+    <script type="text/javascript" class="inline min" src="run_test.js"></script>
+
+</head>
+
+<body ng-app="demo" ng-controller="ctrl">
+
+<div>
+    <div dialog="examUrl" aspect-ratio="4/3" ng-cloak>
+        <div class="browser-support">
+            <h1>  Неподдерживаемый браузер</h1>
+            <p>Ошибка: браузер не поддерживает работу фреймворка AngularJS.</p>
+            <p>Возможно, ваш браузер устарел.</p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
