@@ -80,7 +80,6 @@ def lesson(request, lesson_pk=None):
 def new_page(request, lesson_pk=None):
     if not request.user.is_authenticated():
         return Response(status=status.HTTP_400_BAD_REQUEST)
-
     lesson = get_object_or_404(Lesson, pk=lesson_pk, created_by=request.user)
     if request.method == "POST":
         if request.body:

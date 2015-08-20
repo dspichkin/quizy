@@ -1,0 +1,12 @@
+BASE
+<br>
+supported {{supported}} <br>
+ready {{ready}}
+
+<div ng-if="!supported"  ng-include="getExamTemplate('support')" class="module"></div>
+<!--загружено-->
+<div ng-if="supported && ready && !error" ng-include="getExamTemplate()"></div>
+
+<div ng-if="supported && error" class="error-page">
+    <p ng-bind="error.text"></p>
+</div>

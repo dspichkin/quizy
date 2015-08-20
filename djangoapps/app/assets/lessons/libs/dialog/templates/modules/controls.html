@@ -1,0 +1,22 @@
+CONTROLS
+<div class="data" ng-click="skip($event)" ng-show="ready == true">
+	<div style="position:absolute;right:100px;top:0"><pre>{{model.step | json }}</pre></div>
+	<!--Клиентский баббл -->
+   <p ng-if="model.step.step_status == 'ready'"> Клиентский баббл: {{model.step.data.text}}</p>
+
+
+    <!--варианты ортветов -->
+    <div ng-if="model.step.variants_status == 'ready' && !model.step.type">
+	    <p ng-repeat="variant in model.step.variants" >
+	    	Вариант ответа: {{variant.data.text}} 
+	    	<button ng-click="variantClick($event, variant.id)">Выбрать</button>
+	    </p>
+    </div>
+    <div ng-if="model.step.variants_status == 'playing'">
+    	<button ng-click="stopMedia($event)">Пропустить</button>
+    </div>
+
+    <div ng-if="model.step.variants_status == 'ready' && model.step.type == 'input'" dinput>
+    </div>
+    
+</div>
