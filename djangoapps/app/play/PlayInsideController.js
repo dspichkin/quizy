@@ -99,37 +99,38 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
                 var _text = _variants[i].text;
                 // Формируем все SELECT
                 var _selects = _variants[i].right_answers_select;
+                if (_selects) {
+                    for (var j = 0, lenj = _selects.length; j < lenj; j++) {
+                        var _words = _selects[j].words;
+                        $scope.words_in_text.select[j] = {
+                            options: _words
+                        };
+                        var _select_html = ' <select ng-model="words_in_text.select[' + j + '].selected"' +
+                            ' ng-options="item.text for item in words_in_text.select[' + j + '].options" ' +
+                            'ng-change="change_words_in_text()"></select>';
 
-                for (var j = 0, lenj = _selects.length; j < lenj; j++) {
-                    var _words = _selects[j].words;
-                    $scope.words_in_text.select[j] = {
-                        options: _words
-                    };
-                    var _select_html = ' <select ng-model="words_in_text.select[' + j + '].selected"' +
-                        ' ng-options="item.text for item in words_in_text.select[' + j + '].options" ' +
-                        'ng-change="change_words_in_text()"></select>';
-
-                    _selects[j].source = _selects[j].source.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
-                    var re = new RegExp(_selects[j].source, "g");
-                    _text = _text.replace(re, _select_html);
+                        _selects[j].source = _selects[j].source.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+                        var re = new RegExp(_selects[j].source, "g");
+                        _text = _text.replace(re, _select_html);
+                    }
                 }
 
                 // Формируем все INPUT
                 var _inputs = _variants[i].right_answers_input;
+                if (_inputs) {
+                    for (var j = 0, lenj = _inputs.length; j < lenj; j++) {
+                        var _words = _inputs[j].words;
+                        $scope.words_in_text.input[j] = {
+                            options: _words
+                        };
+                        var _input_html = ' <input ng-model="words_in_text.input[' + j + '].inputed"' +
+                            'ng-change="change_words_in_text()" />';
 
-                for (var j = 0, lenj = _inputs.length; j < lenj; j++) {
-                    var _words = _inputs[j].words;
-                    $scope.words_in_text.input[j] = {
-                        options: _words
-                    };
-                    var _input_html = ' <input ng-model="words_in_text.input[' + j + '].inputed"' +
-                        'ng-change="change_words_in_text()" />';
-
-                    _inputs[j].source = _inputs[j].source.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
-                    var re = new RegExp(_inputs[j].source, "g");
-                    _text = _text.replace(re, _input_html);
+                        _inputs[j].source = _inputs[j].source.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
+                        var re = new RegExp(_inputs[j].source, "g");
+                        _text = _text.replace(re, _input_html);
+                    }
                 }
-
 
                 $scope.words_in_text.text = _text;
             }
