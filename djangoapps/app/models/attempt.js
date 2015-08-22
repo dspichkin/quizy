@@ -91,6 +91,8 @@ _.assign(Attempt.prototype, {
         var general_success = true;
         // для записи результатов шагов
         var step_reflexy = [];
+        // количество не верных пар используеться в рефлексии
+        var number_of_incorrect_pairs = null;
 
         if (this.lesson.pages.length == this.answer_steps.length) {
             last_question = true;
@@ -130,7 +132,7 @@ _.assign(Attempt.prototype, {
                 if (_page_answer) {
                     _page_success = true;
                     if (this.lesson.pages[i].type == 'checkbox') {
-                        
+
                         // получем кол-во правильных ответов
                         var num_right_answer = 0;
                         for (var j = 0, lenj = this.lesson.pages[i].variants.length; j < lenj; j++) {
@@ -210,8 +212,11 @@ _.assign(Attempt.prototype, {
 
                     if (this.lesson.pages[i].type == 'pairs') {
                         var result = true;
+                        // кол-во ответов
+                        var _number_of_answers = 0;
+                        for (var k in _page_answer.item.answers) if (_page_answer.item.answers.hasOwnProperty(k)) _number_of_answers++;
                         // сравниваем по количеству ответов
-                        if (_page_answer.item.answers.length != _page_answer.item.answers.length) {
+                        if (this.lesson.pages[i].variants.length / 2 != _number_of_answers) {
                             _page_success = false;
                         }
                         for (var j = 0, lenj = this.lesson.pages[i].variants.length; j < lenj; j++) {
@@ -225,6 +230,7 @@ _.assign(Attempt.prototype, {
                                     if (_page_answer.item.answers[x].answer == _answer_id) {
                                         if (_page_answer.item.answers[x].question != _pair_id) {
                                             _page_success = false;
+                                            number_of_incorrect_pairs += 1;
                                         }
                                     }
                                 }
@@ -265,12 +271,23 @@ _.assign(Attempt.prototype, {
                     }
                 }
                 //записываем результат прохождения шага
-                step_reflexy.push({
+                var _result = {
                     page_id: this.lesson.pages[i].id,
                     success: _page_success,
                     type: this.lesson.pages[i].type,
                     choiced_elements: choiced_elements
-                });
+                };
+
+                // прописываем кол-во пар для рефлексии
+                if (this.lesson.pages[i].type == 'pairs') {
+                    _result['number_of_pairs'] = this.lesson.pages[i].variants.length / 2;
+                    if (number_of_incorrect_pairs) {
+                        _result['number_of_correct_pairs'] = _result['number_of_pairs'] - number_of_incorrect_pairs;
+                    } else {
+                        _result['number_of_correct_pairs'] = _result['number_of_pairs'];
+                    }
+                }
+                step_reflexy.push(_result);
             }
         }
 

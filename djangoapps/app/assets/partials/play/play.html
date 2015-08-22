@@ -107,7 +107,7 @@
 
                 <div ng-if="model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].type == 'radiobox'" class="variant_radiobox">
                     <div class="radio_variants">
-                        <md-radio-group ng-model="tempdata.radiobox_answer" ng-change="answer_ready()">
+                        <md-radio-group class="md-primary" ng-model="tempdata.radiobox_answer" ng-change="answer_ready()">
                             <md-radio-button ng-repeat="item in model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].variants"
                                                ng-value="item.id"
                                                aria-label="{{item.text}}" class="variant">
@@ -122,7 +122,7 @@
                     <ul class="checkbox_variants">
                         <li ng-repeat="item in model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].variants" class="variant">
                             <div style="clear:both;">
-                            <md-checkbox class="variant_text_checkbox" ng-model="item.answer" type="checkbox" aria-label="Checkbox" value="{{item.answer}}" 
+                            <md-checkbox class="md-primary" ng-model="item.answer" type="checkbox" aria-label="Checkbox" value="{{item.answer}}" 
                                 ng-true-value="true"
                                 ng-false-value="false"
                                 ng-change="answer_ready()"
@@ -199,21 +199,30 @@
             </div>
 
         </div>
+
+
+
+
+
         <!-- вывод резултата -->
         <div class="shadow reflexy_panel" ng-if="model.inside_play.current_page_index == model.inside_play.attempt.lesson.pages.length">
             <h3>Номер попытки: {{model.inside_play.attempt.number_of_attempt}}</h3>
-            Результат: 
-            <span ng-if="model.inside_play.attempt.result.success==false" style="color: red;">Неверно</span>
-            <span ng-if="model.inside_play.attempt.result.success==true" style="color: green;">Верно</span>
+            Результат: <span ng-bind-html="success"></span> из <span ng-bind-html="number_steps"></span>
+            <span ng-if="model.inside_play.attempt.result.success==true" style="color: green;">Все ответы верны.</span>
             <ul>
                 <li class="reflexy_step" ng-repeat="item in model.inside_play.attempt.result.steps" ng-style="item.success==false && {'background-color':'#FFE2E2'}">
                     <span>
-                        {{get_page_by_id(item.page_id).text | htmlToPlaintext | limitTo: 25 }}{{get_page_by_id(item.page_id).text.length > 25 ? '...' : ''}}
+                        {{get_page_by_id(item.page_id).text | htmlToPlaintext }}
                     </span>
                     <span style="float: right;width: 52px;">
                         <span ng-if="item.success==false" style="color: red;">Неверно</span>
                         <span ng-if="item.success==true" style="color: green;">Верно</span>
                     </span>
+                    <div ng-if="item.type=='pairs'">
+                        <div ng-if="item.number_of_correct_pairs != null">
+                            Верно подобранных пар: <span ng-bind-html="item.number_of_correct_pairs"></span> из  <span ng-bind-html="item.number_of_pairs"></span>
+                        </div>
+                    </div>
 
                     <div ng-if="item.choiced_elements.length > 0" style="margin: 7px 0px 0 8px;">
                         <div ng-repeat="r in item.choiced_elements" style="margin: 10px 0 0 0;">
@@ -244,9 +253,11 @@
 
             <div>
                 <div class="btn-primary" ng-if="model.inside_play.attempt.result.success==false" ng-click="repeat()" style="display: inline-block;">Повторить</div>
+                <!--
                 <div ng-if="user.is_authenticated && user.account_type==1" style="display: inline-block;">
                     <div class="btn-primary" ng-click="back_to_start()">Вернуться</div>
                 </div>
+                -->
                 <div ng-if="user.is_authenticated && user.account_type==2" style="display: inline-block;">
                     <div class="btn-primary" ng-click="main.go_lesson_page()">Вернуться</div>
                 </div>
