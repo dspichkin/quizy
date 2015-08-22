@@ -19,28 +19,6 @@
                 <div class="shadow btn-round" ng-if="model.editor.new_lesson == true" ng-click="finish_changed_lesson()"><a class="icon-save"  href="#" style="opacity: 0.2;height: 27px;float:left;"></a>
                 </div>
             </div>
-            <!--
-             <div class="" style="
-                cursor: pointer;
-                margin: 3px 10px 0px 10px;
-                width: 340px;
-                float: right
-                " ng-if="model.editor.current_lesson.is_active">
-                <md-switch ng-model="model.editor.current_lesson.is_active" aria-label="Lesson active" ng-true-value="false" ng-false-value="true" class="md-warn" style="margin:0;float:left;"
-                ng-change="finish_changed_lesson()">
-                </md-switch>
-
-                <div class="" style="font-size: 18px;text-align:left;
-                    font-weight: 300;" ng-if="model.editor.current_lesson.is_active == true">
-                    Урок доступен для назначения
-                </div>
-                <div class="" style="font-size: 18px;
-                    text-align:left;
-                    font-weight: 300;margin: 0 0 0 -20px;" ng-if="model.editor.current_lesson.is_active == false">
-                    Урок недоступен для назначения
-                </div>
-            </div>
-            -->
             
             <div class="activity" style="right: 100px;
         top: 76px;
@@ -75,7 +53,7 @@
 
             <div style="width:100%;padding: 10px 20px 10px 20px;height: 188px;text-align: left;display: inline-table;" ng-if="model.editor.new_lesson == false">
                 <div>
-                    <div ripple class="shadow btn-primary" accept="image/*" ngf-accept="'image/*'" ngf-select ngf-change="upload($files, $event)">Картинка урока
+                    <div ripple class="btn-primary" accept="image/*" ngf-accept="'image/*'" ngf-select ngf-change="upload($files, $event)">Картинка урока
                          <div style="height:2px;width:100%;background-color:red;"
                          ng-style="{width: progressUpload}"></div>
                     </div>

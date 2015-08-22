@@ -247,7 +247,7 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
 
     };
 
-
+    // Проверяем дан ли ответ и можно переходи к следующему вопросу
     $scope.answer_ready = function() {
         if ($scope.model.inside_play.current_page_index < $scope.model.inside_play.attempt.lesson.pages.length) {
             run_make_word_in_text();
@@ -478,10 +478,20 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
             }
         }
 
+        // Конец урока
         // Считаем результаты прохождения
         if ($scope.model.inside_play.current_page_index == _pages.length) {
-            $scope.result = $scope.model.inside_play.attempt.make_result();
+            $scope.model.inside_play.attempt.make_result();
             $scope.model.inside_play.attempt.save();
+            // считаем кол-во правильных и непрпвильных ответов
+            var _steps = $scope.model.inside_play.attempt.result.steps;
+            $scope.success = 0;
+            $scope.number_steps = _steps.length;
+            for (var i = 0, len = _steps.length; i < len; i++) {
+                if (_steps[i].success == true) {
+                    $scope.success += 1;
+                }
+            }
         }
 
         $scope.answer_ready();

@@ -16,7 +16,6 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
     }
 
 
-
     $scope.model['editor'] = {
         is_dirty_data: false,
         page_types: [{
@@ -42,6 +41,8 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
         loading: false,
         unsaved: false
     };
+    // для отображения прогресса загрузки медиа контента
+    $scope.progressUpload = 0;
 
     $scope.main.make_short_header();
     $scope.main.active_menu = 'courses';
@@ -323,7 +324,6 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
 
     /**
      * Определем медиа тип вопроса для текущей страницы
-     * @return {[type]} [description]
      */
     $scope.detect_media_type = function() {
         var _current_page = $scope.model.editor.current_lesson.pages[$scope.model.editor.current_page_index];
@@ -522,27 +522,10 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
 
     /**
      * Сохранение урока
-     * @return {[type]} [description]
      */
     $scope.finish_changed_lesson = function() {
         $scope.model.editor.loading = true;
-        /*
-        if ($scope.model.editor.new_lesson == true) {
-            // создаем новый урок
-            var _data = $scope.model.editor.current_lesson;
-            _data.course = $scope.model.editor.current_lesson.course.id;
-            $http.post('/api/lessons/', _data).then(function(data) {
-                if (data.hasOwnProperty('data')) {
-                    if (data.data.hasOwnProperty('id')) {
-                        $scope.main.go_editor_lesson(data.data.id);
-                    }
-                }
-            }, function(error) {
-                $log.error('Ошибка создания нового урока', error);
-            });
 
-        } else 
-        */
         if ($scope.model.editor.new_lesson == false) {
             $scope.model.editor.current_lesson.check();
             $scope.model.editor.current_lesson.save().then(function() {
@@ -571,7 +554,7 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
         }
     });
 
-    $scope.progressUpload = 0;
+    
 
     $scope.upload = function($files, $event) {
         var file = $files[0];
