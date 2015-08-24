@@ -16,7 +16,9 @@
                 </div>
 
                 <div class="question_text"ng-bind-html="model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].text"></div>
+                {{model.inside_play.media_type}}
                 {{model.inside_play.current_page_index}}
+                <pre>{{model.inside_play.attempt.lesson.pages | json}}</pre>
                 <div class="question_picture" style="width: 100%;margin: 0 0 20px 0;" ng-if="model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].media">
                     
                     <img ng-if="model.inside_play.media_type == 'image'" ng-src="{{model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].media}}" class="md-card-image" alt="Картинка вопроса" style="width:400px;margin: 0 auto;"/>
