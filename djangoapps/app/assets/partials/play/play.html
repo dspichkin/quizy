@@ -7,14 +7,13 @@
     margin-top: -50px;">
 
 
-        <div ng-if="model.inside_play.current_page_index < model.inside_play.attempt.lesson.pages.length">
+        <div ng-if="model.inside_play.finish != true">
             <div class="shadow" style="float:left;width: 65%;background-color: white;text-align: left;
     padding: 20px;min-height: 400px;min-width:710px;position: relative;overflow-x: auto;margin: 0 20px 20px 0px;">
 
                 <div style="font-size: 17px;font-weight: 500;">
                     Вопрос №{{model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].number}}
                 </div>
-
                 <div class="question_text"ng-bind-html="model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].text"></div>
                 <div class="question_picture" style="width: 100%;margin: 0 0 20px 0;" ng-if="model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].media">
                     
@@ -204,7 +203,7 @@
 
 
         <!-- вывод резултата -->
-        <div class="shadow reflexy_panel" ng-if="model.inside_play.current_page_index == model.inside_play.attempt.lesson.pages.length">
+        <div class="shadow reflexy_panel" ng-if="model.inside_play.finish == true">
             <h3>Номер попытки: {{model.inside_play.attempt.number_of_attempt}}</h3>
             Количество правильных ответов: <span ng-bind-html="success"></span> из <span ng-bind-html="number_steps"></span>
             <span ng-if="model.inside_play.attempt.result.success==true" style="color: green;">Все ответы верны.</span>
