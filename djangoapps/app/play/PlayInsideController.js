@@ -470,7 +470,6 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
         $scope.model.inside_play.attempt.save();
 
 
-
         // переход к следующей страницы
         if ($scope.model.inside_play.next_question == true) {
             $scope.model.inside_play.current_page_index++;
