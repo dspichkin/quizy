@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="question_text"ng-bind-html="model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].text"></div>
-
+                {{model.inside_play.current_page_index}}
                 <div class="question_picture" style="width: 100%;margin: 0 0 20px 0;" ng-if="model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].media">
                     
                     <img ng-if="model.inside_play.media_type == 'image'" ng-src="{{model.inside_play.attempt.lesson.pages[model.inside_play.current_page_index].media}}" class="md-card-image" alt="Картинка вопроса" style="width:400px;margin: 0 auto;"/>
@@ -207,7 +207,7 @@
         <!-- вывод резултата -->
         <div class="shadow reflexy_panel" ng-if="model.inside_play.current_page_index == model.inside_play.attempt.lesson.pages.length">
             <h3>Номер попытки: {{model.inside_play.attempt.number_of_attempt}}</h3>
-            Результат: <span ng-bind-html="success"></span> из <span ng-bind-html="number_steps"></span>
+            Количество правильных ответов: <span ng-bind-html="success"></span> из <span ng-bind-html="number_steps"></span>
             <span ng-if="model.inside_play.attempt.result.success==true" style="color: green;">Все ответы верны.</span>
             <ul>
                 <li class="reflexy_step" ng-repeat="item in model.inside_play.attempt.result.steps" ng-style="item.success==false && {'background-color':'#FFE2E2'}">
@@ -259,7 +259,7 @@
                 </div>
                 -->
                 <div ng-if="user.is_authenticated && user.account_type==2" style="display: inline-block;">
-                    <div class="btn-primary" ng-click="main.go_lesson_page()">Вернуться</div>
+                    <div class="btn-primary" ng-click="main.go_lesson_page()">На главную</div>
                 </div>
             </div>
         </div>

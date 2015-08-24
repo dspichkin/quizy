@@ -115,12 +115,17 @@ def new_page(request, lesson_pk=None):
 
 @api_view(['POST', 'DELETE'])
 def page_picture_upload(request, page_pk=None):
+    """
+    загрузка медия для вопроса
+    """
     if not request.user.is_authenticated():
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     page = get_object_or_404(Page, pk=page_pk)
-    if page.lesson.created_by != request.user:
-        return Response("OK", status=status.HTTP_200_OK)
+    try:
+        Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=page.lesson.pk)
+    except Lesson.DoesNotExist:
+        return Response("PermissionDenied", status=status.HTTP_200_OK)
 
     if request.method == "POST":
         if page.media:
