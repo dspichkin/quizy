@@ -15,8 +15,8 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
     //$scope.main.make_short_header();
     //$scope.main.active_menu = 'lessons';
 
-    
     $scope.model['inside_play'] = {
+        finish: false,
         current_page_index: 0,
         next_question: false,
         result: null,
@@ -411,19 +411,12 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
 
         var _pages = $scope.model.inside_play.attempt.lesson.pages;
         // переход к следующей страницы
-        $scope.model.inside_play.current_page_index++;
 
-        // проверка на последний элемент
-        if ($scope.model.inside_play.current_page_index >= _pages.length) {
-            $scope.model.inside_play.current_page_index = _pages.length - 1;
-        }
 
 
         // записывае текущий ответ
         var _page_type = _pages[$scope.model.inside_play.current_page_index].type;
-        if (_pages[$scope.model.inside_play.current_page_index].media) {
-            $scope.detect_media_type();
-        }
+       
 
         if (_page_type == 'checkbox') {
             var _step = $scope.model.inside_play.attempt.answer_steps[$scope.model.inside_play.current_page_index];
@@ -483,11 +476,40 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
         $scope.model.inside_play.attempt.save();
 
 
-        
 
-        // Конец урока
-        // Считаем результаты прохождения
-        if ($scope.model.inside_play.current_page_index == _pages.length) {
+        $scope.model.inside_play.current_page_index++;
+        // проверка на последний элемент
+        if ($scope.model.inside_play.current_page_index >= _pages.length) {
+            $scope.model.inside_play.current_page_index = _pages.length - 1;
+            $scope.model.inside_play.finish = true;
+            // Конец урока
+            // Считаем результаты прохождения
+            $scope.model.inside_play.attempt.make_result();
+            $scope.model.inside_play.attempt.save();
+            // считаем кол-во правильных и непрпвильных ответов
+            var _steps = $scope.model.inside_play.attempt.result.steps;
+            $scope.success = 0;
+            $scope.number_steps = _steps.length;
+            for (var i = 0, len = _steps.length; i < len; i++) {
+                if (_steps[i].success == true) {
+                    $scope.success += 1;
+                }
+            }
+        } else {
+
+            // определяем медиа текущего вопроса
+            if (_pages[$scope.model.inside_play.current_page_index].media) {
+                $scope.detect_media_type();
+            }
+            $scope.answer_ready();
+        }
+        /*
+        
+        if ($scope.model.inside_play.current_page_index >= _pages.length) {
+            console.log("finish")
+            $scope.model.inside_play.finish = true;
+            // Конец урока
+            // Считаем результаты прохождения
             $scope.model.inside_play.attempt.make_result();
             $scope.model.inside_play.attempt.save();
             // считаем кол-во правильных и непрпвильных ответов
@@ -500,8 +522,11 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
                 }
             }
         }
-
-        $scope.answer_ready();
+        */
+        
+        
+ 
+        
         //$scope.get_answer_result();
     };
 
