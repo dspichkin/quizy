@@ -403,6 +403,18 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
 
 
     $scope.next_question = function($event) {
+        // переход к следующей страницы
+        if ($scope.model.inside_play.next_question != true) {
+            return;
+        }
+
+        $scope.model.inside_play.current_page_index++;
+        if ($scope.model.inside_play.current_page_index >= _pages.length) {
+            $scope.model.inside_play.current_page_index = _pages.length;
+        }
+        
+
+
         var _pages = $scope.model.inside_play.attempt.lesson.pages;
         // записывае текущий ответ
         var _page_type = _pages[$scope.model.inside_play.current_page_index].type;
@@ -472,13 +484,7 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
         $scope.model.inside_play.attempt.save();
 
 
-        // переход к следующей страницы
-        if ($scope.model.inside_play.next_question == true) {
-            $scope.model.inside_play.current_page_index++;
-            if ($scope.model.inside_play.current_page_index >= _pages.length) {
-                $scope.model.inside_play.current_page_index = _pages.length;
-            }
-        }
+        
 
         // Конец урока
         // Считаем результаты прохождения
