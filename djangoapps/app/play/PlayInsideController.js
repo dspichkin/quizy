@@ -406,8 +406,9 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
         var _pages = $scope.model.inside_play.attempt.lesson.pages;
         // записывае текущий ответ
         var _page_type = _pages[$scope.model.inside_play.current_page_index].type;
-
+        console.log("111 ", _pages[$scope.model.inside_play.current_page_index].media)
         if (_pages[$scope.model.inside_play.current_page_index].media) {
+            console.log("111 ", $scope.detect_media_type())
             $scope.detect_media_type();
         }
 
