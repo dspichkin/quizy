@@ -32,11 +32,11 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
 
     function start() {
         $scope.model.inside_play.current_page_index = 0;
+        $scope.model.inside_play.finish = false;
         if ($stateParams.enroll_id) {
             load_enroll($stateParams.enroll_id);
         } else if ($stateParams.lesson_id) {
             load_lesson($stateParams.lesson_id);
-            
         } else {
             return;
         }
@@ -503,31 +503,6 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
             }
             $scope.answer_ready();
         }
-        /*
-        
-        if ($scope.model.inside_play.current_page_index >= _pages.length) {
-            console.log("finish")
-            $scope.model.inside_play.finish = true;
-            // Конец урока
-            // Считаем результаты прохождения
-            $scope.model.inside_play.attempt.make_result();
-            $scope.model.inside_play.attempt.save();
-            // считаем кол-во правильных и непрпвильных ответов
-            var _steps = $scope.model.inside_play.attempt.result.steps;
-            $scope.success = 0;
-            $scope.number_steps = _steps.length;
-            for (var i = 0, len = _steps.length; i < len; i++) {
-                if (_steps[i].success == true) {
-                    $scope.success += 1;
-                }
-            }
-        }
-        */
-        
-        
- 
-        
-        //$scope.get_answer_result();
     };
 
 
