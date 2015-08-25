@@ -101,6 +101,7 @@ _.assign(Lesson.prototype, {
         });
     },
     check: function() {
+        var old_correct = this.is_correct;
         if (!this.name || this.name == "") {
             this.add_error('200');
         } else {
@@ -139,6 +140,10 @@ _.assign(Lesson.prototype, {
                     this.is_correct = true;
                 }
             }
+        }
+
+        if (old_correct != this.is_correct) {
+            this.save();
         }
     },
     /**

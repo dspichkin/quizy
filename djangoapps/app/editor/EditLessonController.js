@@ -277,6 +277,7 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
                                 }
                                 re_number_pages();
                                 $scope.model.editor.current_page_index = 0;
+                                $scope.model.editor.current_lesson.check();
                                 $scope.$apply();
                                 $scope.model.editor.loading = false;
                             }, function(error) {

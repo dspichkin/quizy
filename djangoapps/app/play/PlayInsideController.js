@@ -11,7 +11,7 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
         'radiobox_answer': null,
         'text_answer': null
     };
-    
+
     //$scope.main.make_short_header();
     //$scope.main.active_menu = 'lessons';
 
@@ -267,7 +267,6 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
      * Делаем ответ для pairs
      * @param  {[type]} question_id [description]
      * @param  {[type]} answer_id   [description]
-     * @return {[type]}             [description]
      */
     $scope.make_answer_for_pairs = function(question_id, answer_id) {
         // записывае ответ сделанный пользователем
@@ -403,7 +402,6 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
 
 
     $scope.next_question = function($event) {
-        
         // проверка на присутсвие ответа
         if ($scope.model.inside_play.next_question != true) {
             return;
@@ -416,7 +414,6 @@ var PlayCtrl = function($scope, $sce, $http, $stateParams, $log, $location, $com
 
         // записывае текущий ответ
         var _page_type = _pages[$scope.model.inside_play.current_page_index].type;
-       
 
         if (_page_type == 'checkbox') {
             var _step = $scope.model.inside_play.attempt.answer_steps[$scope.model.inside_play.current_page_index];
