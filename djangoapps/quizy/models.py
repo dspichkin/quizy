@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import json
+import shutil
 
 from uuid import uuid1
 from random import randrange
@@ -8,6 +9,8 @@ from random import randrange
 from django.utils import timezone
 from django.db import models
 from django.conf import settings
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 from sorl.thumbnail import ImageField
 
@@ -171,6 +174,16 @@ class Lesson(BaseModel):
         if self.lesson_type == 'inside':
             self.code_errors = code_errors
             self.save()
+
+
+@receiver(pre_delete, sender=Lesson, dispatch_uid='lesson_delete_signal')
+def pre_deleted_lesson(sender, instance, using, **kwargs):
+    """
+    удаления медиа вместе с уроком
+    """
+    directory = os.path.join(settings.MEDIA_ROOT, 'lessons', str(instance.pk))
+    if os.path.exists(directory):
+        shutil.rmtree(directory)
 
 
 class CourseEnroll(BaseModel):
