@@ -101,6 +101,13 @@ def lesson_picture_upload(obj, fn):
 
 
 class Lesson(BaseModel):
+    def media_question_upload(obj, fn):
+        if obj.pk:
+            fn, ext = os.path.splitext(fn)
+            return os.path.join('lessons', str(obj.pk), 'media_%s%s' % (str(obj.id) + '_' + str(randrange(0, 9999)), ext))
+        else:
+            raise Exception("Сохраните вопрос до загрузки изображения")
+
     LESSON_TYPE_CHOICES = (
         ('inside', 'внутренний'),
         ('outside', 'внешний'),
@@ -128,6 +135,10 @@ class Lesson(BaseModel):
 
     lesson_type = models.CharField('тип урока', max_length=10, default='inside', choices=LESSON_TYPE_CHOICES)
     path_content = models.CharField('путь к контенту', max_length=255, blank=True, null=True)
+
+    media = models.FileField('медиа урока', upload_to=media_question_upload, blank=True, null=True)
+
+    timer = models.IntegerField('таймер урока (сек)', blank=True, null=True)
 
     class Meta:
         ordering = ('number', )

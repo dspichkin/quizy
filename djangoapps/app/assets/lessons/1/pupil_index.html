@@ -12,11 +12,64 @@
             <div class="shadow" style="float:left;width: 65%;background-color: white;text-align: left;
     padding: 20px;min-height: 400px;position: relative;">
 
+                <p style="font-size: 26px;font-weight: 500;">{{model.inside_play.attempt.lesson.name}}</p>
+                <p>{{model.inside_play.attempt.lesson.description}}</p>
 
                 <div>
-                    <h3>Задание</h3>
-                    <p>Описание задание того что нужно сделать</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ipsum metus, mollis et mi vel, scelerisque cursus mi. Donec non dignissim est. Phasellus ultrices sed lorem quis imperdiet. Nullam quis nunc vehicula, feugiat eros et, sagittis eros.</p>
+
+                    <!-- MEDIA урока -->
+
+                    <div class="question_picture" style="width: 100%;margin: 0 0 20px 0;" ng-if="model.lesson_dialog.lesson.media">
+                        <img ng-if="model.lesson_dialog.lesson.media_type == 'image'" ng-src="{{model.lesson_dialog.lesson.media}}" class="md-card-image" alt="Картинка вопроса" style="width:400px;margin: 0 auto;"/>
+
+                        <div ng-if="model.lesson_dialog.lesson.media_type == 'video'" class="md-card-image" style="width:400px;margin: 0 auto;">
+                            <videogular>
+                                <vg-media vg-src="model.lesson_dialog.lesson.media_sources" vg-type="video">
+                                </vg-media>
+                                <vg-controls>
+                                    <vg-play-pause-button></vg-play-pause-button>
+                                    <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+                                    <vg-scrub-bar>
+                                        <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                    </vg-scrub-bar>
+                                    <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                                    <vg-volume>
+                                        <vg-mute-button></vg-mute-button>
+                                        <vg-volume-bar></vg-volume-bar>
+                                    </vg-volume>
+                                    <vg-fullscreen-button></vg-fullscreen-button>
+                                </vg-controls>
+
+                                <vg-overlay-play></vg-overlay-play>
+                                <vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
+                            </videogular>
+                        </div>
+
+                        <div ng-if="model.lesson_dialog.lesson.media_type == 'audio'" class="md-card-image" style="width:400px;margin:0 auto;">
+                            <videogular>
+                                <vg-media vg-src="model.lesson_dialog.lesson.media_sources" vg-type="audio">
+                                </vg-media>
+                                <vg-controls>
+                                    <vg-play-pause-button></vg-play-pause-button>
+                                    <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+                                    <vg-scrub-bar>
+                                        <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                    </vg-scrub-bar>
+                                    <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                                    <vg-volume>
+                                        <vg-mute-button></vg-mute-button>
+                                        <vg-volume-bar></vg-volume-bar>
+                                    </vg-volume>
+                                </vg-controls>
+
+                                <vg-overlay-play></vg-overlay-play>
+                                <vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
+                            </videogular>
+                        </div>
+
+
+                    </div>
+
                 </div>
 
                 <div ng-if="model.lesson_dialog.active == false">
@@ -97,9 +150,25 @@
                 margin: 0 0 20px 20px;
                 padding: 25px;
                 text-align: left;">
-                <p style="font-size: 12px;">Прохождение урока</p>
-                <p style="font-size: 26px;font-weight: 500;">{{model.inside_play.attempt.lesson.name}}</p>
-                <p>{{model.inside_play.attempt.lesson.description}}</p>
+
+                <div ng-if="model.lesson_dialog.lesson.timer" class="shadow" style="text-align: center;padding: 5px 10px 5px 10px;">
+                    <h3 style="margin: 0;">Таймер урока</h3>
+                    <div style="width:100%;">
+                        <div style="margin: 0 auto;
+    width: 179px;
+    font-size: 46px;
+    font-weight: 500;" ng-style="timer_success == true && {'background-color': '#CEECCA'}">{{model.timer | secondsToTimeString: 'ss'}}</div>
+                    </div>
+                    <div style="margin:10px;">
+                        <button type="button" class="btn-secondary" ng-click="runTimer()" ng-class="{'btn-disabled': disable_runtimer == true}" ng-disabled="disable_runtimer == true">Запустить</button>
+                        <button type="button" class="btn-secondary" ng-click="stopTimer()">Стоп</button>
+                    </div>
+                    <div style="margin:10px;">
+                        <button type="button" class="btn-primary" ng-click="resetTimer()">Сброс</button>
+                        <button type="button" class="btn-primary" ng-click="inputTimer($event)" ng-class="{'btn-disabled': disable_runtimer == true}" ng-disabled="disable_runtimer == true">Изменить</button>
+                    </div>
+                </div>
+                
                 <div ng-if="model.inside_play.attempt.lesson.picture">
                     <img ng-src="{{model.inside_play.attempt.lesson.picture}}" style="width: 100%;">
                 </div>
