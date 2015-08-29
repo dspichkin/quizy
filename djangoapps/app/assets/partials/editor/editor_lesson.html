@@ -46,12 +46,14 @@
                         top: 10px;">
                             <div class="btn-secondary shadow" ripple ng-click="go_current_course(model.editor.current_lesson.course.id)" style="color:black;">СПИСОК УРОКОВ КУРСА</div>
                         </div>
-                    <div style="max-width: 300px;
+                    <div style="max-width: 500px;
                         overflow: hidden;
                         position: absolute;
                         left: 232px;
+                        height: 30px;
                         top: 7px;">
-                        {{model.editor.current_lesson.course.name}}
+                        1 {{model.editor.current_lesson.course.name | limitTo: 45 }}
+                        {{model.editor.current_lesson.course.name.length > 45 ? '...' : ''}}
                     </div>
                 </div>
                 
