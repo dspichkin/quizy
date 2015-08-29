@@ -288,7 +288,7 @@ ANSWER_ERRORS = {
 
 def media_question_upload(obj, fn):
     fn, ext = os.path.splitext(fn)
-    return os.path.join('lessons', str(obj.lesson.uuid), 'question_%s' % (str(randrange(0, 9999)), ext))
+    return os.path.join('lessons', str(obj.lesson.uuid), 'question_%s%s' % (str(randrange(0, 9999)), ext))
 
 
 class Page(models.Model):
