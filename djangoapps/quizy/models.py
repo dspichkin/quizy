@@ -114,6 +114,11 @@ class Lesson(BaseModel):
         ('outside', 'внешний'),
     )
 
+    LESSON_FULL_TYPE_CHOICES = (
+        (1, 'внутренний урок'),
+        (2, 'урок на написание писем'),
+    )
+
     is_active = models.BooleanField('активен?', default=True)
 
     name = models.CharField('название урока', max_length=140, blank=True, null=True)
@@ -135,6 +140,8 @@ class Lesson(BaseModel):
     picture = models.ImageField('картинка урока', upload_to=lesson_picture_upload, blank=True, null=True)
 
     lesson_type = models.CharField('тип урока', max_length=10, default='inside', choices=LESSON_TYPE_CHOICES)
+    full_lesson_type = models.IntegerField('тип урока', choices=LESSON_FULL_TYPE_CHOICES)
+
     path_content = models.CharField('путь к контенту', max_length=255, blank=True, null=True)
 
     media = models.FileField('медиа урока', upload_to=media_question_upload, blank=True, null=True)
@@ -151,6 +158,12 @@ class Lesson(BaseModel):
         if self.name:
             return self.name
         return u"Урок без именени"
+
+    def save(self, *args, **kwargs):
+        if self.full_lesson_type == 2:
+            self.lesson_type = 'outside'
+            self.path_content = '1'
+        super(Lesson, self).save(*args, **kwargs)
 
     @property
     def content(self):
