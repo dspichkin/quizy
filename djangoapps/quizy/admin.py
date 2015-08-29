@@ -54,11 +54,17 @@ class LessonEnrollAdmin(admin.ModelAdmin):
 class LessonAdmin(admin.ModelAdmin):
     search_fields = ['course', 'name', 'created_by']
     list_filter = ['lesson_type', 'course']
-    # fieldsets = (
-    #    (None, {
-    #        'fields': ('course', 'name', 'description', 'number', 'is_active', 'picture', 'is_correct', 'created_by')
-    #    }),
-    # )
+    fieldsets = (
+        (
+            u'Основные', {
+                'fields': ('course', 'name', 'description', 'is_active', 'number', 'picture', 'is_correct')
+            }
+        ), (
+            u'Дополнительные', {
+                'fields': ('created_by', 'teacher', 'full_lesson_type', 'media', 'timer')
+            }
+        )
+    )
 
     list_display = ['course', 'name', 'number', 'is_active', 'is_correct', 'is_correct']
     # list_editable = ['is_active']
