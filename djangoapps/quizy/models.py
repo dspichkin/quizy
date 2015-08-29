@@ -2,6 +2,7 @@
 import os
 import json
 import shutil
+import uuid
 
 from uuid import uuid1
 from random import randrange
@@ -20,7 +21,7 @@ from json_field import JSONField
 
 
 class BaseModel(models.Model):
-    uuid = models.CharField(max_length=36, unique=True, db_index=True, editable=False)
+    uuid = models.UUIDField(max_length=36, unique=True, db_index=True, editable=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -29,19 +30,17 @@ class BaseModel(models.Model):
         abstract = True
 
     def save(self, *args, **kwargs):
-        if self.id or not self.uuid:
-            u = uuid1()
-            self.uuid = str(u)
+        if not self.uuid:
+            self.uuid = str(uuid.uuid4())
 
         super(BaseModel, self).save(*args, **kwargs)
 
 
 def course_picture_upload(obj, fn):
-    if obj.pk:
-        fn, ext = os.path.splitext(fn)
-        return os.path.join('courses', str(obj.pk), '%s' % 'lesson_' + str(randrange(0, 9999)) + ext)
-    else:
-        raise Exception("Сохраните курс до загрузки изображения")
+    if not obj.uuid:
+        obj.uuid = uuid.uuid4()
+    fn, ext = os.path.splitext(fn)
+    return os.path.join('courses', str(obj.uuid), '%s' % 'lesson_' + str(randrange(0, 9999)) + ext)
 
 
 class Course(BaseModel):
@@ -96,20 +95,19 @@ class Course(BaseModel):
 
 
 def lesson_picture_upload(obj, fn):
-    if obj.pk:
-        fn, ext = os.path.splitext(fn)
-        return os.path.join('lessons', str(obj.pk), '%s' % 'lesson_' + str(randrange(0, 9999)) + ext)
-    else:
-        raise Exception("Сохраните урок до загрузки изображения")
+    if not obj.uuid:
+        obj.uuid = uuid.uuid4()
+    fn, ext = os.path.splitext(fn)
+    return os.path.join('lessons', str(obj.uuid)[:8], '%s' % 'lesson_' + str(randrange(0, 9999)) + ext)
 
 
 class Lesson(BaseModel):
+
     def media_question_upload(obj, fn):
-        if obj.pk:
-            fn, ext = os.path.splitext(fn)
-            return os.path.join('lessons', str(obj.pk), 'media_%s%s' % (str(obj.id) + '_' + str(randrange(0, 9999)), ext))
-        else:
-            raise Exception("Сохраните вопрос до загрузки изображения")
+        if not obj.uuid:
+            obj.uuid = uuid.uuid4()
+        fn, ext = os.path.splitext(fn)
+        return os.path.join('lessons', str(obj.uuid)[:8], 'media_%s%s' % (str(randrange(0, 9999)), ext))
 
     LESSON_TYPE_CHOICES = (
         ('inside', 'внутренний'),
@@ -134,7 +132,7 @@ class Lesson(BaseModel):
     code_errors = JSONField('ошибки редактирования урока', default={}, blank=True, null=True)
     is_correct = models.BooleanField('урок составлен верно?', default=True)
 
-    picture = ImageField(upload_to=lesson_picture_upload, blank=True, null=True)
+    picture = models.ImageField('картинка урока', upload_to=lesson_picture_upload, blank=True, null=True)
 
     lesson_type = models.CharField('тип урока', max_length=10, default='inside', choices=LESSON_TYPE_CHOICES)
     path_content = models.CharField('путь к контенту', max_length=255, blank=True, null=True)
@@ -181,7 +179,7 @@ def pre_deleted_lesson(sender, instance, using, **kwargs):
     """
     удаления медиа вместе с уроком
     """
-    directory = os.path.join(settings.MEDIA_ROOT, 'lessons', str(instance.pk))
+    directory = os.path.join(settings.MEDIA_ROOT, 'lessons', str(instance.uuid)[:8])
     if os.path.exists(directory):
         shutil.rmtree(directory)
 
@@ -269,23 +267,6 @@ class LessonEnroll(BaseModel):
         return self.is_active and bool(self.paid_until) and timezone.now() <= self.paid_until
 
 """
-class Attempt(models.Model):
-    enroll = models.ForeignKey(LessonEnroll, related_name='attempts',
-                               related_query_name='attempt', default=0)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    data = JSONField(default='{}')
-
-    class Meta:
-        verbose_name = 'Попытка'
-        verbose_name_plural = 'Попытки'
-
-    def __unicode__(self):
-        return '%s / %s Attempt #%d' % (self.lesson, self.learner, self.num)
-"""
-
 TASK_ERRORS = {
     '100': 'Нет ни одного вопроса',
 }
@@ -302,14 +283,12 @@ QUESTION_ERRORS = {
 ANSWER_ERRORS = {
     # '100': 'Поле текст ответа не заполнен',
 }
+"""
 
 
 def media_question_upload(obj, fn):
-    if obj.pk:
-        fn, ext = os.path.splitext(fn)
-        return os.path.join('lessons', str(obj.lesson.pk), 'question_%s%s' % (str(obj.id) + '_' + str(randrange(0, 9999)), ext))
-    else:
-        raise Exception("Сохраните вопрос до загрузки изображения")
+    fn, ext = os.path.splitext(fn)
+    return os.path.join('lessons', str(obj.lesson.uuid), 'question_%s' % (str(randrange(0, 9999)), ext))
 
 
 class Page(models.Model):
