@@ -47,7 +47,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
             mode: 'edit'
         });
         $scope.model.lesson_dialog.temptext = _step.text;
-        $scope.change_text();
+        $scope.change_text(_step.text);
     };
 
     /*
@@ -72,6 +72,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
             text: "",
             mode: 'edit'
         });
+        $scope.model.number_words = 0;
     };
 
     /*
@@ -250,8 +251,12 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
         }
     };
 
-    $scope.change_text = function() {
-        $scope.model.number_words = $scope.get_number_words($scope.model.lesson_dialog.temptext);
+    $scope.change_text = function(text) {
+        if (text) {
+            $scope.model.number_words = $scope.get_number_words(text);
+        } else {
+            $scope.model.number_words = $scope.get_number_words($scope.model.lesson_dialog.temptext);
+        }
     };
     $scope.get_number_words = function(text) {
         var _words = text.split(' ');
