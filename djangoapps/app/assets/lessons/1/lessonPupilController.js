@@ -12,6 +12,9 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
     detect_media_type();
 
     $scope.model.timer = $scope.model.lesson_dialog.lesson.timer;
+    // количество слов
+    $scope.model.number_words = 0;
+
 
     // сброс флага внимания со стороны ученика в случении закрытого урока
     if ($scope.model.lesson_dialog.hasOwnProperty('data') &&
@@ -44,6 +47,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
             mode: 'edit'
         });
         $scope.model.lesson_dialog.temptext = _step.text;
+        $scope.change_text();
     };
 
     /*
@@ -109,7 +113,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
             });
     };
 
-    
+
     $scope.runTimer = function() {
         var startTimer = function() {
             if ($scope.timer_success == true) {
@@ -246,6 +250,21 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
         }
     };
 
+    $scope.change_text = function() {
+        $scope.model.number_words = $scope.get_number_words($scope.model.lesson_dialog.temptext);
+    };
+    $scope.get_number_words = function(text) {
+        var _words = text.split(' ');
+        if (_words && _words.length == 1) {
+            if (_words[0] == "") {
+                return 0;
+            } else {
+                return _words.length;
+            }
+        } else {
+            return _words.length;
+        }
+    }
     
 
 
