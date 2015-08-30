@@ -13,7 +13,7 @@
     padding: 20px;min-height: 400px;position: relative;">
 
                 <p style="font-size: 26px;font-weight: 500;">{{model.inside_play.attempt.lesson.name}}</p>
-                <p>{{model.inside_play.attempt.lesson.description}}</p>
+                <p style="font-size: 18px;">{{model.inside_play.attempt.lesson.description}}</p>
 
                 <div>
 
@@ -85,7 +85,7 @@
                     <div ng-if="step.type=='pupil' && step.mode != 'edit'" style="width: 100%;text-align: left;">
 
                         <div style="margin: 20px 10px 20px 10px;
-                                width: 500px;
+                                width: 100%;
                                 background-color: rgba(2, 99, 90, 0.18);
                                 padding: 20px;
                                 text-align: left;
@@ -105,6 +105,7 @@
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Удалить</p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Редактировать</p>
                             <p>Номер сообщения: {{step.number}}</p>
+                            <div style="margin:-10px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
 
                             <p ng-bind-html="step.text"></p>
                         </div>
@@ -112,18 +113,19 @@
                     <div ng-if="step.type=='pupil' && step.mode == 'edit'" style="width: 100%;text-align: left;">
 
                         <div ng-if="$first == true">
+
                             <div  ng-if="$first == true" class="btn-primary shadow" ng-click="save_step(step.number)"> Сохранить</div>
                             <div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)"> Удалить</div>
                         </div>
-
-                        <textarea style="resize: none;height: 200px;margin: 20px 10px 20px 10px;width: 500px;padding:10px;" ng-model="model.lesson_dialog.temptext">
+                        <div style="margin: 20px 0 0 0;">Количество слов: {{model.number_words}}</div>
+                        <textarea style="resize: none;height: 200px;margin: 20px 0px 0px 0px;width: 100%;padding:10px;" ng-model="model.lesson_dialog.temptext" ng-change="change_text()">
                             
                         </textarea>
                     </div>
 
                     <div ng-if="step.type=='teacher'" style="width: 100%;text-align: right;">
                         <div style="margin: 20px 10px 20px 10px;
-                                width: 500px;
+                                width: 100%;
                                 background-color: rgba(99, 38, 2, 0.18);
                                 padding: 20px;
                                 text-align: left;
