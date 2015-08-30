@@ -85,6 +85,19 @@ app.ControllerName = function($scope, $http, $log) {
                 $scope.model.lesson_dialog.loading = false;
                 $log.error(error);
             });
-    } 
+    };
+
+    $scope.get_number_words = function(text) {
+        var _words = text.split(' ');
+        if (_words && _words.length == 1) {
+            if (_words[0] == "") {
+                return 0;
+            } else {
+                return _words.length;
+            }
+        } else {
+            return _words.length;
+        }
+    }
 
 }

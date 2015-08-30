@@ -264,8 +264,8 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
         } else {
             return _words.length;
         }
-    }
-    
+    };
+
 
 
 };
