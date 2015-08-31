@@ -33,10 +33,11 @@ def courses(request, course_pk=None):
             return paginator.get_paginated_response(serializer.data)
 
         else:
-            try:
-                course = Course.objects.get(Q(created_by=request.user) | Q(teacher=request.user), pk=course_pk)
+            course = Course.objects.filter(Q(created_by=request.user) | Q(teacher=request.user), pk=course_pk).distinct()
+            if course:
+                course = course[0]
                 coursejson = CourseSerializer(course).data
-            except Course.DoesNotExist:
+            else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             return Response(coursejson, status=status.HTTP_200_OK)
 
