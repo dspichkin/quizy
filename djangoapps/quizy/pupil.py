@@ -89,7 +89,7 @@ def play(request, enroll_pk=None):
     try:
         enroll = LessonEnroll.objects.get(pk=enroll_pk, learner=request.user)
     except LessonEnroll.DoesNotExist:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response("enroll not found", status=status.HTTP_404_NOT_FOUND)
 
     return Response(LessonEnrollSerializer(instance=enroll).data, status=status.HTTP_200_OK)
 

@@ -4,7 +4,7 @@ var Page = require('../models/page');
 var Lesson = require('../models/lesson');
 var Attempt = require('../models/attempt');
 
-var PlayCtrl = function($scope, $stateParams, $http, $compile) {
+var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
 
 
     if (!$scope.user || !$scope.user.is_authenticated) {
@@ -51,7 +51,8 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile) {
             start_content(data);
 
             }, function(error) {
-                $log.error('Ошибка получения назначенных на меня уроков', error);
+                $log.error('PlayBaseController: Ошибка получения назначенных уроков', error);
+                $scope.main.go_home_page();
             });
 
     };
@@ -124,6 +125,6 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile) {
 };
 
 
-module.exports = ['$scope', '$stateParams', '$http', '$compile', PlayCtrl];
+module.exports = ['$scope', '$stateParams', '$http', '$compile', '$log', PlayCtrl];
 
 
