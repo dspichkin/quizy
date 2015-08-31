@@ -57,40 +57,22 @@
                     </div>
                     <div ng-repeat="step in model.lesson_dialog.data.steps.slice().reverse()">
 
+                        <div ng-if="$first == true && !get_answer_teacher() && step.type == 'pupil' && step.mode != 'finish'">
+                            <h4>Задание редактируется учеником<h4>
+                        </div>
+                        <div ng-if="$first == true && !get_answer_teacher() && step.type == 'teacher' && step.mode == 'finish'">
+                            <h4>Задание редактируется учеником<h4>
+                        </div>
+
                         <div ng-if="$first && get_answer_teacher()">
                             <div ripple class="btn-secondary shadow" style="margin: 15px 0 0 0;position:relative" ng-click="add_answer_teacher()" >Написать</div>
                         </div>
 
 
 
-                        <div ng-if="step.type=='pupil'" style="width: 100%;text-align: left;">
-
-                            <div style="margin: 20px 10px 20px 10px;
-                                    width: 100%;
-                                    background-color: rgba(2, 99, 90, 0.18);
-                                    padding: 20px;
-                                    text-align: left;
-                                    display: inline-block;">
-                                <p style="float:right">Ученик</p>
-                                <p>Номер сообщения: {{step.number}}</p>
-                                <div style="margin:-10px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
-                                <p ng-bind-html="step.text"></p>
-                            </div>
-                        </div>
-                        <div ng-if="step.type=='teacher' && step.mode == 'edit'" style="width: 100%;text-align: left;">
+                        <div ng-if="step.type=='teacher' && step.mode == 'finish'" style="width: 100%;text-align: left;">
 
                             
-                            <textarea style="resize: none;height: 200px;margin: 20px 10px 20px 10px;width: 500px;padding:10px;" ng-model="model.lesson_dialog.temptext">
-                                
-                            </textarea>
-                            <div ng-if="$first == true">
-                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="save_step(step.number)"> Сохранить</div>
-                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)"> Удалить</div>
-                            </div>
-
-                        </div>
-
-                        <div ng-if="step.type=='teacher' && step.mode != 'edit'" style="width: 100%;text-align: right;">
                             <div style="margin: 20px 10px 20px 10px;
                                     width: 100%;
                                     background-color: rgba(99, 38, 2, 0.18);
@@ -110,6 +92,50 @@
 
 
                                 <p style="float:right">Преподователь</p>
+                                <p>Номер сообщения: {{step.number}}</p>
+                                <p ng-bind-html="step.text"></p>
+
+
+                            </div>
+
+                        </div>
+
+
+                        <div ng-if="step.type=='teacher' && step.mode == 'edit'" style="width: 100%;text-align: left;">
+
+                            
+                            <textarea style="resize: none;height: 200px;margin: 20px 10px 20px 10px;width: 500px;padding:10px;" ng-model="model.lesson_dialog.temptext">
+                                
+                            </textarea>
+                            <div ng-if="$first == true">
+                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="save_step(step.number)"> Сохранить</div>
+                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)"> Удалить</div>
+                            </div>
+
+                        </div>
+
+                        <div ng-if="step.type=='teacher' && !step.mode" style="width: 100%;text-align: right;">
+                            <div style="margin: 20px 10px 20px 10px;
+                                    width: 100%;
+                                    background-color: rgba(99, 38, 2, 0.18);
+                                    padding: 20px;
+                                    text-align: left;
+                                    display: inline-block;
+                                    position:relative;">
+
+
+                                <!-- loading -->
+                                <div ng-if="model.lesson_dialog.loading == true" style="width:100%;height:100%;background-color: rgb(220, 179, 155);position: absolute;margin: -20px;">
+                                    <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
+                                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                                    </div>
+                                </div>
+
+
+
+                                <p style="float:right">Преподователь</p>
+                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="commit_step($event, step.number)">Отправить ученику</p>
+
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Удалить</p>
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Редактировать</p>
                                 <p>Номер сообщения: {{step.number}}</p>
@@ -118,6 +144,24 @@
 
                             </div>
                         </div>
+
+
+                        <!-- Отображение ответов ученика -->
+                        <div ng-if="step.type=='pupil' && step.mode=='finish'" style="width: 100%;text-align: left;">
+
+                            <div style="margin: 20px 10px 20px 10px;
+                                    width: 100%;
+                                    background-color: rgba(2, 99, 90, 0.18);
+                                    padding: 20px;
+                                    text-align: left;
+                                    display: inline-block;">
+                                <p style="float:right">Ученик</p>
+                                <p>Номер сообщения: {{step.number}}</p>
+                                <div style="margin:-10px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
+                                <p ng-bind-html="step.text"></p>
+                            </div>
+                        </div>
+
                     </div>
 
 
