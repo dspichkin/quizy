@@ -128,6 +128,10 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
             });
     };
 
+    $scope.commit = function() {
+        save();
+    };
+
     $scope.get_number_words = function(text) {
         var _words = text.split(' ');
         if (_words && _words.length == 1) {
