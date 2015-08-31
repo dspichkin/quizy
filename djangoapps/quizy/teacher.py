@@ -32,9 +32,10 @@ def enroll_teacher(request, enroll_pk):
         return Response([], status=status.HTTP_200_OK)
 
     if enroll_pk:
-        try:
-            enroll = LessonEnroll.objects.get(Q(created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user), pk=enroll_pk)
-        except LessonEnroll.DoesNotExist:
+        enroll = LessonEnroll.objects.filter(Q(created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user), pk=enroll_pk).distinct()
+        if enroll:
+            enroll = enroll[0]
+        else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'PUT':
@@ -192,10 +193,11 @@ def enroll(request, enroll_pk):
             return Response({'code': 404}, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE' and enroll_pk:
-        try:
-            enroll = LessonEnroll.objects.get(Q(lesson__created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user), pk=enroll_pk)
+        enroll = LessonEnroll.objects.filter(Q(lesson__created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user), pk=enroll_pk).distinct()
+        if enroll:
+            enroll = enroll[0]
             enroll.delete()
-        except LessonEnroll.DoesNotExist:
+        else:
             return Response("", status=status.HTTP_400_BAD_REQUEST)
         return Response("", status=status.HTTP_200_OK)
 

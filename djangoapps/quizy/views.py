@@ -227,10 +227,11 @@ def enroll_course_pupil(request, enroll_pk):
         return Response(status=status.HTTP_200_OK)
 
     if request.method == 'DELETE' and enroll_pk:
-        try:
-            enroll = CourseEnroll.objects.get(Q(created_by=request.user) | Q(course__teacher=request.user), pk=enroll_pk)
+        enroll = CourseEnroll.objects.filter(Q(created_by=request.user) | Q(course__teacher=request.user), pk=enroll_pk).distinct()
+        if enroll:
+            enroll = enroll[0]
             enroll.delete()
-        except CourseEnroll.DoesNotExist:
+        else:
             return Response("", status=status.HTTP_400_BAD_REQUEST)
         return Response("", status=status.HTTP_200_OK)
 
