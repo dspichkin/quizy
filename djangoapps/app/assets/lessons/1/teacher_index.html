@@ -28,8 +28,15 @@
                     
                     <div>
                         <h3>Задание</h3>
-                        <p>Описание задание того что нужно сделать</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus ipsum metus, mollis et mi vel, scelerisque cursus mi. Donec non dignissim est. Phasellus ultrices sed lorem quis imperdiet. Nullam quis nunc vehicula, feugiat eros et, sagittis eros.</p>
+                        <p style="font-size: 26px;font-weight: 500;">{{model.inside_play.attempt.lesson.name}}</p>
+                        <p style="font-size: 18px;">{{model.inside_play.attempt.lesson.description}}</p>
+                        <p>Советы:<p>
+                        <p>
+                            Что бы выделить текст используйте тег &lt;b&gt;&lt;/b&gt;<b>Выделеный текст</b>
+                            <br>
+                            Что бы наколнить текст используйте тег &lt;i&gt;&lt;/i&gt;<i>Выделеный текст</i>
+                        </p>
+
                     </div>
 
                     <md-switch ng-model="model.lesson_dialog.data.active" aria-label="Lesson active" ng-true-value="false" ng-false-value="true" class="md-warn" style="margin:0;float:left;"
