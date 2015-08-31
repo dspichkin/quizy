@@ -71,9 +71,8 @@
                     </div>
 
                 </div>
-
-                <div ng-if="model.lesson_dialog.active == false">
-                    <h3>Урок остановлен</h3>
+                <div ng-if="model.lesson_dialog.data.active == false">
+                    <h4>Урок остановлен преподователем</h4>
                 </div>
 
                 <div ng-if="get_answer_pupil()">
