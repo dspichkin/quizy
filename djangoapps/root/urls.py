@@ -63,7 +63,7 @@ urlpatterns = [
     url(r'^api/reject_lesson/(\d+)/$', reject_lesson, name='reject_lesson'),
     url(r'^api/mylessons/$', mylessons, name='mylessons'),
     url(r'^api/mystatistic/$', mystatistic, name='mystatistic'),
-    url(r'^api/statistic/$', statistic, name='statistic'),
+    url(r'^api/statistic/(\d+)?/?$', statistic, name='statistic'),
 
     url(r'^api/pages/(\d+)/upload/$', page_picture_upload, name='page_picture_upload'),
     # url(r'^api/archive/(\d+)?/?$', lesson_archive, name='lesson_archive'),

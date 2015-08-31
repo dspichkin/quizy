@@ -34,7 +34,7 @@
                                             margin: 0 0 0 20px;">
                                             {{enroll.lesson.course.name | htmlToPlaintext | limitTo: 50 }}{{enroll.lesson.course.name.length > 50 ? '...' : ''}}
                                         </div>
-                                        <div class="remove_enroll" ng-click="remove_enroll(enroll.id)" style="    float: left;">
+                                        <div class="remove_enroll" ng-click="remove_statistic($event, enroll.id)" style="    float: left;">
                                             <i class="material-icons icon-remove-enroll" style="font-size:12px;">close</i>
                                         </div>
                                         <div class="enroll_email" style="overflow: auto;">

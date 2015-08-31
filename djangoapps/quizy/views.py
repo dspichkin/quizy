@@ -238,9 +238,9 @@ def enroll_course_pupil(request, enroll_pk):
     return Response(status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'DELETE'])
 @permission_classes((AllowAny,))
-def statistic(request):
+def statistic(request, statistic_pk):
     """
     Запрос на статтистику по ученикам
     """
@@ -248,23 +248,30 @@ def statistic(request):
         return Response([], status=status.HTTP_200_OK)
     pupils = Statistic.objects.filter(Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user))
 
-    dic_pupils = {}
-    for p in pupils:
-        if (p.learner.id in dic_pupils):
-            enrolls = dic_pupils[p.learner.id].get('enrolls', [])
-            enrolls.append(StatisticSerializer(p).data)
-            dic_pupils[p.learner.id]['enrolls'] = enrolls
-        else:
-            dic_pupils[p.learner.id] = {
-                'learner': UserSerializer(p.learner).data,
-                'enrolls': [StatisticSerializer(p).data]
-            }
-            # print "111 ", dic_pupils[p.learner.id]
+    if request.method == "GET":
+        dic_pupils = {}
+        for p in pupils:
+            if (p.learner.id in dic_pupils):
+                enrolls = dic_pupils[p.learner.id].get('enrolls', [])
+                enrolls.append(StatisticSerializer(p).data)
+                dic_pupils[p.learner.id]['enrolls'] = enrolls
+            else:
+                dic_pupils[p.learner.id] = {
+                    'learner': UserSerializer(p.learner).data,
+                    'enrolls': [StatisticSerializer(p).data]
+                }
+        a = []
+        for key, value in dic_pupils.items():
+            a.append(value)
+        paginator = ListPagination()
+        result_page = paginator.paginate_queryset(a, request)
 
-    a = []
-    for key, value in dic_pupils.items():
-        a.append(value)
-    paginator = ListPagination()
-    result_page = paginator.paginate_queryset(a, request)
+        return paginator.get_paginated_response(result_page)
 
-    return paginator.get_paginated_response(result_page)
+    if request.method == "DELETE" and statistic_pk:
+        try:
+            s = Statistic.objects.filter(Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user), pk=statistic_pk).distinct()
+            s.delete()
+        except Statistic.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response("OK", status=status.HTTP_200_OK)
