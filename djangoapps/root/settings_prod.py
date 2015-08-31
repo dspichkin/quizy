@@ -7,4 +7,5 @@ EMAIL_SUBJECT_PREFIX = '[Quizy/Production] '
 
 ALLOWED_HOSTS = [
     'www.myquizy.ru',
+    'myquizy.ru'
 ]
