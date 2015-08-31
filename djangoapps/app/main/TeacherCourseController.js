@@ -163,13 +163,35 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
             });
     };
 
-    $scope.remove_enroll = function(enroll_id) {
-        $http.delete('/api/enroll/' + enroll_id + '/').then(function(data) {
-            $scope.load_course();
-        }, function(error) {
-            $log.error(error);
+
+    /*
+    Удаление назначение на страницы курса
+     */
+    $scope.remove_enroll = function($event, enroll_id) {
+        $mdDialog.show({
+            targetEvent: $event,
+            templateUrl: '/assets/partials/confirm/confirm_delete_enroll.html',
+            disableParentScroll: true,
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function() {
+                    $mdDialog.hide();
+                };
+
+                $scope.submit = function() {
+                    $mdDialog.hide();
+                    $http.delete('/api/enroll/' + enroll_id + '/').then(function(data) {
+                        $scope.load_course();
+                    }, function(error) {
+                        $log.error(error);
+                    });
+                };
+            }
         });
     };
+
 
     $scope.play_lesson = function(enroll_id) {
         $location.path('/play/' + enroll_id + '/');

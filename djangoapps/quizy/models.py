@@ -397,6 +397,8 @@ class Statistic(models.Model):
         ('not_done', 'Не приступал'),
     )
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     lesson = models.ForeignKey('Lesson', related_name='statistics',
                             verbose_name='урок', blank=True, null=True, on_delete=models.SET_NULL)
     learner = models.ForeignKey('account.Account', related_name='statistics',
@@ -408,6 +410,7 @@ class Statistic(models.Model):
     class Meta:
         verbose_name = 'Статистика'
         verbose_name_plural = 'Статистика'
+        ordering = ('-updated_at', '-created_at', )
 
     
 

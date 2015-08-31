@@ -69,13 +69,24 @@
                                             margin: 0 0 0 20px;">
                                             {{enroll.lesson.course.name | htmlToPlaintext | limitTo: 50 }}{{enroll.lesson.course.name.length > 50 ? '...' : ''}}
                                         </div>
-                                        <div class="remove_enroll" ng-click="remove_enroll(enroll.id)" style="    float: left;">
+                                        <div class="remove_enroll" ng-click="remove_enroll($event, enroll.id)" style="    float: left;">
                                             <i class="material-icons icon-remove-enroll" style="font-size:12px;">close</i>
                                         </div>
-                                        <div class="enroll_email" style="overflow: auto;">
+
+
+                                        <!-- отображение название урока -->
+                                        <div ng-if="enroll.lesson.lesson_type == 'inside'"  class="enroll_email" style="overflow: auto;font-weight: 500;color: green;">
                                             {{enroll.lesson.name | htmlToPlaintext | limitTo: 100 }}{{enroll.lesson.name.length > 100 ? '...' : ''}}
 
                                         </div> 
+                                        <!-- если урок вненшний то ссылку на страницу назначения -->
+                                        <div ng-if="enroll.lesson.lesson_type == 'outside'" class="enroll_email"
+                                        ng-class="{'enroll_row_required_attention': enroll.required_attention_by_teacher == true}" style="color: blue; cursor:pointer;text-decoration:underline;width: 160px;overflow: auto;" ng-click="main.go_editor_outside_lesson(enroll.id)">{{enroll.lesson.name}}</div> 
+
+
+
+
+
                                     </div>
                                     <div class="enroll_result" style="width: 200px;margin: 8px 0 0 0;">
                                             <div ng-class="{

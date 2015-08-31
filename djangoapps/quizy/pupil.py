@@ -153,5 +153,10 @@ def enroll_pupil(request, enroll_pk):
         enroll.success = True
         enroll.save()
 
+        # Делаем пометку в статистики
+        statistic, created = Statistic.objects.get_or_create(lesson=enroll.lesson, learner=request.user)
+        statistic.success = enroll.success = True
+        statistic.save()
+
     enroll = LessonEnrollSerializer(instance=enroll).data
     return Response(enroll, status=status.HTTP_200_OK)

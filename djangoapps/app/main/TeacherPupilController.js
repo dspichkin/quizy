@@ -93,11 +93,31 @@ var TeacherPupilCtrl = function($scope, $mdDialog, $http, $data, $log, $location
         }
     };
 
-    $scope.remove_enroll = function(enroll_id) {
-        $http.delete('/api/enroll/' + enroll_id + '/').then(function(data) {
-            $scope.load_pupils();
-        }, function(error) {
-            $log.error(error);
+    /*
+    Удаление назначение на страницы назначений
+     */
+    $scope.remove_enroll = function($event, enroll_id) {
+        $mdDialog.show({
+            targetEvent: $event,
+            templateUrl: '/assets/partials/confirm/confirm_delete_enroll.html',
+            disableParentScroll: true,
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function() {
+                    $mdDialog.hide();
+                };
+
+                $scope.submit = function() {
+                    $mdDialog.hide();
+                    $http.delete('/api/enroll/' + enroll_id + '/').then(function(data) {
+                        $scope.load_pupils();
+                    }, function(error) {
+                        $log.error(error);
+                    });
+                };
+            }
         });
     };
 
