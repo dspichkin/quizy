@@ -35,14 +35,22 @@ class EmailConfirmationAdmin(admin.ModelAdmin):
 
 class AccountAdmin(UserAdmin):
     list_display = ('username', 'account_type', 'number_of_pupil', 'is_active', 'verified', 'is_superuser')
-    fieldsets = UserAdmin.fieldsets
-    extra_fieldsets = (
-        (u'Дополнения', {
-            'classes': ('wide',),
-            'fields': ('middle_name', 'avatar', 'account_type', 'pupils')}
-        ),
+    # fieldsets = UserAdmin.fieldsets
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        (u'Персональная информация', {'fields': ('first_name', 'last_name', 'middle_name', 'email')}),
+        (u'Права доступа', {'fields': ('is_active', 'is_staff', 'is_superuser',)}),  # 'groups', 'user_permissions'
+        (
+            u'Дополнения', {
+                'classes': ('wide',),
+                'fields': ('avatar', 'account_type', 'pupils')
+            }
+        )
     )
-    fieldsets += (extra_fieldsets)
+    # fieldsets = (extra_fieldsets)
+
+    filter_horizontal = ('pupils', )
+
 
 class SystemMessageAdmin(admin.ModelAdmin):
     pass
