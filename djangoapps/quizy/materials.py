@@ -86,7 +86,7 @@ def lessons(request, lesson_pk=None):
         course = get_object_or_404(Course, pk=course_id)
         # выставляем текущий номер урока в курсе
         number_lesson = course.lesson_set.all().count() + 1
-        lesson = Lesson.objects.create(course=course, number=number_lesson, created_by=request.user)
+        lesson = Lesson.objects.create(course=course, number=number_lesson, created_by=request.user, lesson_type='inside', full_lesson_type=1)
 
         if lesson.is_active != is_active and is_active is not None:
             lesson.is_active = is_active
