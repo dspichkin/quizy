@@ -59,7 +59,7 @@ def demo_play(request, lesson_pk=None):
     if not request.user.is_authenticated():
         return Response([], status=status.HTTP_200_OK)
 
-    lesson = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk).distinct()
+    lesson = Lesson.objects.filter(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk).distinct()
     if lesson:
         lesson = lesson[0]
     else:
