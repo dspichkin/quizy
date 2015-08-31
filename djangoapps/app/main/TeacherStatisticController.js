@@ -40,7 +40,6 @@ var TeacherStatisticCtrl = function($scope, $http, $log, $location) {
 
         $http.get(url).then(function(data) {
             $scope.model.pupils = data.data.results;
-            console.log($scope.model.pupils)
             var page_length = 10;
             var from_page = _page * page_length - page_length;
             if (!from_page) {
