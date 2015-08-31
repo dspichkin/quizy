@@ -82,10 +82,10 @@
                 <div ng-repeat="step in model.lesson_dialog.data.steps.slice().reverse()">
 
 
-                    <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && step.mode == 'finish'">
+                    <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && step.mode == 'finish' && model.lesson_dialog.data.active != false">
                         <h4>Ответ находится в ожидание отклика от преподователя<h4>
                     </div>
-                    <div ng-if="$first == true && !get_answer_pupil() && step.type=='teacher' && step.mode != 'finish'">
+                    <div ng-if="$first == true && !get_answer_pupil() && step.type=='teacher' && step.mode != 'finish' && model.lesson_dialog.data.active != false">
                         <h4>Ответ находится в ожидание отклика от преподователя<h4>
                     </div>
                     
