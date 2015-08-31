@@ -20,7 +20,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
     if ($scope.model.lesson_dialog.hasOwnProperty('data') &&
         $scope.model.lesson_dialog.data.active == false) {
         if ($scope.model.lesson_dialog.required_attention_by_pupil == true) {
-            $scope.save();
+            save();
         }
     }
 
@@ -58,7 +58,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
             text: $scope.model.lesson_dialog.temptext,
             mode: null
         });
-        $scope.save();
+        save();
     };
 
     /*
@@ -80,11 +80,14 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
     Появление кнопки и добавить ответ для ученика
      */
     $scope.get_answer_pupil = function() {
+        // если урок активен
         if ($scope.model.lesson_dialog.data.active == true) {
+            // если нет ответов или последний ответ был от учителя
             if ($scope.model.lesson_dialog.data.steps.length == 0 || $scope.model.lesson_dialog.data.steps[$scope.model.lesson_dialog.data.steps.length - 1].type == 'teacher') {
                 return true;
             }
         }
+        return false;
     };
 
     $scope.delete_step = function(number) {
@@ -97,11 +100,11 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
         }
         if (index != null) {
             $scope.model.lesson_dialog.data.steps.splice(index, 1);
-            $scope.save();
+            save();
         }
     };
 
-    $scope.save = function() {
+    function save() {
         $scope.model.lesson_dialog.loading = true;
         var _data = $scope.model.lesson_dialog.data;
         $http.put('/api/enroll_pupil/' + $scope.model.lesson_dialog.id + '/', JSON.stringify(_data))
