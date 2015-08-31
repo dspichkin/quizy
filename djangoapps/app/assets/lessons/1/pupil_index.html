@@ -71,6 +71,10 @@
                     </div>
 
                 </div>
+                
+                
+
+
                 <div ng-if="model.lesson_dialog.data.active == false">
                     <h4>Урок остановлен преподователем</h4>
                 </div>
@@ -87,6 +91,12 @@
                     </div>
                     <div ng-if="$first == true && !get_answer_pupil() && step.type=='teacher' && step.mode != 'finish' && model.lesson_dialog.data.active != false">
                         <h4>Ответ находится в ожидание отклика от преподователя<h4>
+                    </div>
+
+                    <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && !step.mode && model.lesson_dialog.data.active != false">
+                        <p style="margin:10px;color:red;">
+                            После завершения написания отклика обязательно нажмите кнопку "Отправить преподователю"
+                        </p>
                     </div>
                     
                     <!--  режим реактирование -->
