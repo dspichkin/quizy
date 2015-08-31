@@ -59,9 +59,10 @@ def demo_play(request, lesson_pk=None):
     if not request.user.is_authenticated():
         return Response([], status=status.HTTP_200_OK)
 
-    try:
-        lesson = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk,)
-    except Lesson.DoesNotExist:
+    lesson = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk).distinct()
+    if lesson:
+        lesson = lesson[0]
+    else:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'GET':
