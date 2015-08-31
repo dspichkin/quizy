@@ -66,7 +66,7 @@
 		                        	'enroll_row_required_attention': enroll.required_attention_by_teacher == true
 		                        }">
 		                            <div style="margin: 6px 0 0 0;width:200px;float:left;">
-		                                <div class="remove_enroll" ng-click="remove_enroll(enroll.id)"><i class="material-icons icon-remove-enroll">close</i></div>
+		                                <div class="remove_enroll" ng-click="remove_enroll($event, enroll.id)"><i class="material-icons icon-remove-enroll">close</i></div>
 		                                <div ng-if="lesson.lesson_type == 'inside'" class="enroll_email" style="width: 160px;overflow: auto;">{{enroll.learner.email}}</div> 
 		                                <div ng-if="lesson.lesson_type == 'outside'" class="enroll_email"
 		                                ng-class="{'enroll_row_required_attention': enroll.required_attention_by_teacher == true}" style="color:#ff9e37; cursor:pointer;text-decoration:underline;width: 160px;overflow: auto;" ng-click="main.go_editor_outside_lesson(enroll.id)">{{enroll.learner.email}}</div> 
