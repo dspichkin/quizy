@@ -156,7 +156,7 @@ def page_picture_upload(request, page_pk=None):
 @permission_classes((AllowAny,))
 def get_mypupil(request):
     """
-    запрос для получения адресов
+    запрос для получения адресов учеников
     используеться при назначение
     """
     if not request.user.is_authenticated():
@@ -172,6 +172,11 @@ def get_mypupil(request):
     for le in LessonEnroll.objects.filter(Q(created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user)):
         dic_pupils.update({
             le.learner.pk: le.learner
+        })
+    # так же берем из моих учеников
+    for p in request.user.pupils.all():
+        dic_pupils.update({
+            p.pk: p
         })
 
     pupils = []
