@@ -1,7 +1,7 @@
 'use strict';
 
 
-var TeacherStatisticCtrl = function($scope, $http, $log, $location) {
+var TeacherStatisticCtrl = function($scope, $mdDialog, $http, $log, $location) {
     $scope.model = {
         pupils: []
     };
@@ -23,7 +23,13 @@ var TeacherStatisticCtrl = function($scope, $http, $log, $location) {
     $scope.main.make_short_header();
     $scope.main.active_menu = 'statistic';
 
-    $scope.load_statistic = function(url) {
+
+    load_statistic();
+
+
+
+
+    function load_statistic(url) {
         var _page;
         if (!url) {
             var url = '/api/statistic/';
@@ -63,12 +69,36 @@ var TeacherStatisticCtrl = function($scope, $http, $log, $location) {
     }
 
 
-    // =============================
-    $scope.load_statistic();
+    $scope.remove_statistic = function($event, statistic_id) {
+        $mdDialog.show({
+            targetEvent: $event,
+            templateUrl: '/assets/partials/confirm/confirm_delete_statistic.html',
+            disableParentScroll: true,
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.closeDialog = function() {
+                    $mdDialog.hide();
+                };
+
+                $scope.submit = function() {
+                    $mdDialog.hide();
+                    $http.delete('/api/statistic/' + statistic_id + '/').then(function(data) {
+                        load_statistic();
+                    }, function(error) {
+                        $log.error(error);
+                    });
+                };
+            }
+        });
+    };
+
+
 
 
 };
 
-module.exports = ['$scope', '$http', '$log', '$location', TeacherStatisticCtrl];
+module.exports = ['$scope', '$mdDialog', '$http', '$log', '$location', TeacherStatisticCtrl];
 
 

@@ -14,9 +14,11 @@
 		            <th class="table_th">
 		                Дата перемещения в статистику
 		            </th>
+		            <!--
 		            <th class="table_th">
 		                Результат
 		            </th>
+		            -->
 		        </thead>
 
 		        <tbody>
@@ -42,12 +44,14 @@
 		                    <span>{{enroll.created_at | date:'yyyy-MM-dd'}}</span>
 		                    </div>
 		                </td>
+		                <!--
 		                <td style="min-width: 100px;text-align:left">
 		                    <span ng-if="enroll.success == 'success'">Успешно выполнено</span>
 		                    <span ng-if="enroll.success == 'done_time'">Просроченно</span>
 		                    <span ng-if="enroll.reason == 'not_done'">Не приступал</span>
 		                    <span ng-if="enroll.reason == 'reject'">Отказался</span>
 		                </td>
+		                -->
 		            </tr>
 
 		        </tbody>
