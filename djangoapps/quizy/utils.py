@@ -103,6 +103,7 @@ def normalize(data):
             clean_step['text'] = strip_tags(step['text'])
             clean_step['type'] = step['type']
             clean_step['number'] = step['number']
+            clean_step['mode'] = step['mode']
             clean_steps.append(clean_step)
         clean_data['steps'] = clean_steps
     return clean_data

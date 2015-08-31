@@ -81,7 +81,16 @@
 
                 <div ng-repeat="step in model.lesson_dialog.data.steps.slice().reverse()">
 
-                    <div ng-if="step.type=='pupil' && step.mode != 'edit'" style="width: 100%;text-align: left;">
+
+                    <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && step.mode == 'finish'">
+                        <h4>Ответ находится в ожидание отклика от преподователя<h4>
+                    </div>
+                    <div ng-if="$first == true && !get_answer_pupil() && step.type=='teacher' && step.mode != 'finish'">
+                        <h4>Ответ находится в ожидание отклика от преподователя<h4>
+                    </div>
+                    
+                    <!--  режим реактирование -->
+                    <div ng-if="step.type=='pupil' && step.mode == 'finish'" style="width: 100%;text-align: left;">
 
                         <div style="margin: 20px 10px 20px 10px;
                                 width: 100%;
@@ -101,6 +110,37 @@
 
 
                             <p style="float:right">Ученик</p>
+                            
+                            <p>Номер сообщения: {{step.number}}</p>
+                            <div style="margin:-10px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
+
+                            <p ng-bind-html="step.text"></p>
+                        </div>
+                    </div>
+
+
+                    <!-- режим просмотра -->
+                    <div ng-if="step.type=='pupil' && !step.mode" style="width: 100%;text-align: left;">
+
+                        <div style="margin: 20px 10px 20px 10px;
+                                width: 100%;
+                                background-color: rgba(2, 99, 90, 0.18);
+                                padding: 20px;
+                                text-align: left;
+                                display: inline-block;
+                                position:relative;">
+
+                            <!-- loading -->
+                            <div ng-if="$first == true && model.lesson_dialog.loading == true" style="width:100%;height:100%;background-color: rgb(186, 226, 228);position: absolute;margin: -20px;">
+                                <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
+                                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                                </div>
+                            </div>
+
+
+
+                            <p style="float:right">Ученик</p>
+                            <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="commit_step($event, step.number)">Отправить преподователю</p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Удалить</p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Редактировать</p>
                             <p>Номер сообщения: {{step.number}}</p>
@@ -109,6 +149,8 @@
                             <p ng-bind-html="step.text"></p>
                         </div>
                     </div>
+
+
                     <div ng-if="step.type=='pupil' && step.mode == 'edit'" style="width: 100%;text-align: left;">
 
                         <div ng-if="$first == true">
@@ -122,7 +164,10 @@
                         </textarea>
                     </div>
 
-                    <div ng-if="step.type=='teacher'" style="width: 100%;text-align: right;">
+
+
+                    <!-- Отображение ответов преподователя -->
+                    <div ng-if="step.type=='teacher' && step.mode=='finish'" style="width: 100%;text-align: right;">
                         <div style="margin: 20px 10px 20px 10px;
                                 width: 100%;
                                 background-color: rgba(99, 38, 2, 0.18);

@@ -1,6 +1,6 @@
 'use strict';
 
-app.ControllerName = function($scope, $http, $log) {
+app.ControllerName = function($scope, $http, $log, $mdDialog) {
     $scope.model['lesson_dialog'] = $scope.model.outside.enroll;
     $scope.model['lesson_dialog'].temptext = null;
     $scope.model.lesson_dialog.loading = false;
@@ -11,8 +11,13 @@ app.ControllerName = function($scope, $http, $log) {
 
     };
 
+    /*
+    Определяет есть ли возможность написать ответ
+     */
     $scope.get_answer_teacher = function() {
-        if ($scope.model.lesson_dialog.data.steps.length > 0 && $scope.model.lesson_dialog.data.steps[$scope.model.lesson_dialog.data.steps.length - 1].type == 'pupil') {
+        if ($scope.model.lesson_dialog.data.steps.length > 0 &&
+            $scope.model.lesson_dialog.data.steps[$scope.model.lesson_dialog.data.steps.length - 1].type == 'pupil' &&
+            $scope.model.lesson_dialog.data.steps[$scope.model.lesson_dialog.data.steps.length - 1].mode == 'finish') {
             return true;
         }
     };
@@ -58,7 +63,7 @@ app.ControllerName = function($scope, $http, $log) {
         }
         if (index != null) {
             $scope.model.lesson_dialog.data.steps.splice(index, 1);
-            $scope.save();
+            save();
         }
     };
 
@@ -69,12 +74,48 @@ app.ControllerName = function($scope, $http, $log) {
             mode: null
         });
 
-        $scope.save();
+        save();
+    };
+
+    $scope.commit_step = function($event, number) {
+        $mdDialog.show({
+            targetEvent: $event,
+            template:
+                '<md-dialog aria-label="List dialog">' +
+                '  <md-dialog-content>' +
+                '    <p>После подтверждения редактирование будет невозможно</p>' +
+                '  </md-dialog-content>' +
+                '  <div class="md-actions">' +
+                '    <md-button ng-click="closeDialog()" class="md-primary">' +
+                '      Отмена' +
+                '    </md-button>' +
+                '    <button type="button" ng-click="submit($event)" class="btn-secondary" style="margin-left: 10px;">' +
+                '      Подтвердить' +
+                '    </button>' +
+                '  </div>' +
+                '</md-dialog>',
+            disableParentScroll: true,
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,
+            controller: function TimerController($scope, $mdDialog) {
+                scope.closeDialog = function($event) {
+                    $mdDialog.hide();
+                };
+                scope.submit = function($event) {
+                    $event.preventDefault();
+                    $scope.get_step_by_number(number, {
+                        mode: 'finish'
+                    });
+                    save();
+                    $mdDialog.hide();
+                };
+            }
+        });
     };
 
 
-
-    $scope.save = function() {
+    function save() {
         var _data = $scope.model.lesson_dialog.data;
         $scope.model.lesson_dialog.loading = true;
         $http.put('/api/enroll_teacher/' + $scope.model.lesson_dialog.id + '/', JSON.stringify(_data))
