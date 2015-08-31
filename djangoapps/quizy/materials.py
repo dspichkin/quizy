@@ -57,8 +57,11 @@ def lessons(request, lesson_pk=None):
             return Response(lessons, status=status.HTTP_200_OK)
         else:
             try:
-                lesson = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk)
-                lessonsjson = LessonSerializer(lesson).data
+                lesson = Lesson.objects.filter(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk).distinct()
+                if lesson:
+                    lessonsjson = LessonSerializer(lesson[0]).data
+                else:
+                    lessonsjson = []
             except Lesson.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             return Response(lessonsjson, status=status.HTTP_200_OK)
