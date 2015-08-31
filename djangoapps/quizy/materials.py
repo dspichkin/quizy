@@ -56,15 +56,12 @@ def lessons(request, lesson_pk=None):
             lessons = LessonSerializer(qs, many=True).data
             return Response(lessons, status=status.HTTP_200_OK)
         else:
-            try:
-                lesson = Lesson.objects.filter(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk).distinct()
-                if lesson:
-                    lessonsjson = LessonSerializer(lesson[0]).data
-                else:
-                    lessonsjson = []
-            except Lesson.DoesNotExist:
+            lesson = Lesson.objects.filter(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk).distinct()
+            if lesson:
+                lessonsjson = LessonSerializer(lesson[0]).data
+                return Response(lessonsjson, status=status.HTTP_200_OK)
+            else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            return Response(lessonsjson, status=status.HTTP_200_OK)
 
     is_dirty = False
     is_active = None
@@ -125,9 +122,10 @@ def lessons(request, lesson_pk=None):
         description = req.get("description")
         code_errors = req.get("code_errors")
         is_correct = req.get("is_correct")
-        try:
-            lesson = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk)
-        except Lesson.DoesNotExist:
+        lesson = Lesson.objects.filter(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk).distinct()
+        if lesson:
+            lesson = lesson[0]
+        else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         if lesson.is_active != is_active:
