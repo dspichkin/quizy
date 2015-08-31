@@ -80,7 +80,11 @@ def lesson(request, lesson_pk=None):
 def new_page(request, lesson_pk=None):
     if not request.user.is_authenticated():
         return Response(status=status.HTTP_400_BAD_REQUEST)
-    lesson = Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk)
+    lesson = Lesson.objects.filter(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=lesson_pk).distinct()
+    if lesson:
+        lesson = lesson[0]
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     if request.method == "POST":
         if request.body:
             req = json.loads(request.body.decode("utf-8"))
@@ -122,9 +126,8 @@ def page_picture_upload(request, page_pk=None):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     page = get_object_or_404(Page, pk=page_pk)
-    try:
-        Lesson.objects.get(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=page.lesson.pk)
-    except Lesson.DoesNotExist:
+    lesson = Lesson.objects.filter(Q(created_by=request.user) | Q(teacher=request.user) | Q(course__teacher=request.user), pk=page.lesson.pk).distinct()
+    if len(lesson) == 0:
         return Response("PermissionDenied", status=status.HTTP_200_OK)
 
     if request.method == "POST":
