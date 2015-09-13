@@ -14,12 +14,13 @@
     <link href="{% static "css/angular-material.min.css" %}" rel="stylesheet">
     <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
     <link href="{% static "css/videogular.min.css" %}" rel="stylesheet">
+    <link href="{% static "/assets/js/ckeditor/skins/moono/editor.css" %}" rel="stylesheet">
 
     <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
     <script type="text/javascript" src="/assets/js/jquery-ui.js"></script>
-<!--   
-    <link href="{% static "css/textAngular.css" %}" rel="stylesheet">
--->
+    <script type="text/javascript" src="/assets/js/ckeditor/ckeditor.js"></script>
+    
+
     {% block extra_css %}{% endblock %}
     {% block link %}{% endblock %}
     {% block extra_js %}{% endblock %}
@@ -69,7 +70,7 @@
      -o-transition: all .2s ease-out 0.1s;
      transition: all .2s ease-out 0.1s;
      " >
-     <button ng-if="model.message.text.length > 1" class="md-raised pull-left md-button md-default-theme" ripple ng-click="model.message.next_message()" style="background-color: #FF9E37;    margin: -8px 43px 0 0px;"><span>Следующее</span></button>
+     <button ng-if="model.message.text.length > 1" class="md-raised pull-left md-button md-default-theme" ripple ng-click="model.message.next_message()" style="background-color: #FF9E37;    margin: -8px 43px 0 0px;"><span>Next</span></button>
      <span ng-if="model.message.text.length > 1"> {{model.message.current_message + 1}} из {{model.message.text.length}}: </span>
      <span ng-bind-html="model.message.text[model.message.current_message]"></span>
 
@@ -106,11 +107,11 @@
     ng-style="{
         'left1': model.menu.positionTitleLeft,
         'top1': model.menu.positionTitleTop}"
-    >Электронные уроки
+    >Home lessonss
     </div>
     <div style="position: absolute;
     top: 39%;
-    left: 17px;">A Quiz Creator to quickly assess your students</div>
+    left: 17px;">A home lessons to quickly assess your students</div>
 
     <div style="top: 0;
     position: absolute;
@@ -123,10 +124,10 @@
     ng-if="user.loaded">
 
         <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="main.login($event)">
-            Вход 
+            Login 
         </div>
         <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="reg($event)">
-            Регистрация
+            Registration
         </div>
         
          <div class="btn-menu" ng-if="user.is_authenticated">
@@ -139,7 +140,7 @@
                 <md-menu-content width="4" style="height: 48px;padding:0;">
                     <md-menu-item>
                         <md-button ng-click="main.logout($event)">
-                        Выход
+                        Logout
                         </md-button>
                     </md-menu-item>
                 </md-menu-content>
@@ -155,23 +156,23 @@
         <div class="tabs-canvas">
             <div class="tabs-wrapper">
                 <div class="tab-item" ripple ng-click="main.go_home_page()">
-                    <span>Главная</span>
+                    <span>Home</span>
                     <div ng-class="{'active_menu': main.active_menu=='main'}"></div>
                 </div>
                 <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_courses_page()">
-                    <span>Курсы</span>
+                    <span>Courses</span>
                     <div ng-class="{'active_menu': main.active_menu=='courses'}"></div>
                 </div>
                 <div ng-if="user && user.is_authenticated && user.account_type == 2" class="tab-item" ripple ng-click="main.go_lesson_page()">
-                    <span>Уроки</span>
+                    <span>Lessons</span>
                     <div ng-class="{'active_menu': main.active_menu=='lessons'}"></div>
                 </div>
                 <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_pupils_page()">
-                    <span>Активные назначения</span>
+                    <span>Active enrolls</span>
                     <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                 </div>
                  <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
-                    <span>Статистика</span>
+                    <span>Statistics</span>
                     <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                 </div>
                 <!--
@@ -221,20 +222,24 @@
                     <div class="tabs-canvas">
                         <div class="tabs-wrapper">
                             <div class="tab-item" ripple ng-click="main.go_home_page()">
-                                <span>Главная</span>
-                                <div ng-class="{'active_menu_bottom': main.active_menu=='main'}"></div>
+                                <span>Home</span>
+                                <div ng-class="{'active_menu': main.active_menu=='main'}"></div>
                             </div>
-                            <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_lessons_page()">
-                                <span>Уроки</span>
-                                <div ng-class="{'active_menu_bottom': main.active_menu=='lessons'}"></div>
+                            <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_courses_page()">
+                                <span>Courses</span>
+                                <div ng-class="{'active_menu': main.active_menu=='courses'}"></div>
                             </div>
-                            <div class="tab-item" ripple ng-click="main.go_price()">
-                                <span>Цены</span>
-                                <div ng-class="{'active_menu_bottom': main.active_menu=='price'}"></div>
+                            <div ng-if="user && user.is_authenticated && user.account_type == 2" class="tab-item" ripple ng-click="main.go_lesson_page()">
+                                <span>Lessons</span>
+                                <div ng-class="{'active_menu': main.active_menu=='lessons'}"></div>
                             </div>
-                            <div class="tab-item" ripple ng-click="main.go_description()">
-                                <span>Описание</span>
-                                <div ng-class="{'active_menu_bottom': main.active_menu=='description'}"></div>
+                            <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_pupils_page()">
+                                <span>Active enrolls</span>
+                                <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
+                            </div>
+                             <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
+                                <span>Statistics</span>
+                                <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                             </div>
                         </div>
                     </div>
@@ -255,6 +260,6 @@
 
 {% endverbatim %}
 <script src="{% static 'app.js' %}{% if django.DEBUG %}?v={{ time }}{% endif %}"></script>
-    
+
 </body>
 </html>

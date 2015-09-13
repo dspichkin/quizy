@@ -1,7 +1,7 @@
 'use strict';
 
 
-var EditOutsideLessonCtrl = function($scope, $stateParams, $http, $compile) {
+var EditOutsideLessonCtrl = function($scope, $stateParams, $http, $compile, $log) {
 
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
@@ -78,4 +78,4 @@ var EditOutsideLessonCtrl = function($scope, $stateParams, $http, $compile) {
 
 
 
-module.exports = ['$scope', '$stateParams', '$http', '$compile', EditOutsideLessonCtrl];
+module.exports = ['$scope', '$stateParams', '$http', '$compile', '$log', EditOutsideLessonCtrl];

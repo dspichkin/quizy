@@ -3,7 +3,7 @@
 
                     
 		<div fab ripple fab-class="fab-add-lesson" icon="icon-add" fab-class-menu="fab-add-lesson-menu" icon="icon-add" menu-right-x="178" menu-y="0" menu-width="200" menu-height="52">
-		    <div><div ng-click="main.new_lesson(model.course)">Создать новый <b>урок</b></div></div>
+		    <div><div ng-click="main.new_lesson(model.course)">Create new <b>lesson</b></div></div>
 		</div>
 
 
@@ -23,17 +23,17 @@
 		    <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
 		        <thead style="background-color:#e3eaf1;height:60px">
 		            <th class="table_th">
-		                Действия
+		                Action
 		            </th>
 		            <th class="table_th">
-		                Название
+		                Name
 		            </th>
 		            <th class="table_th">
-		                Краткое описание
+		                Description
 		            </th>
 		            <th class="table_th" style="width: 400px;">
-		                <div style="width:200px;float:left;">Назначение</div>
-		                <div style="">Статистика</div>
+		                <div style="width:200px;float:left;">Assign</div>
+		                <div style="">Statistics</div>
 		            </th>
 		        </thead>
 
@@ -49,17 +49,17 @@
 		                <td style="width: 200px;text-align:left;">
 		                	<div style="max-height:40px;overflow:hidden;">
 		                    <span ng-if="lesson.name">{{lesson.number}}. {{lesson.name}}</span>
-		                    <span ng-if="!lesson.name">{{lesson.number}}. Урок без имени</span>
+		                    <span ng-if="!lesson.name">{{lesson.number}}. No name</span>
 		                    </div>
 		                    <div ng-if="lesson.lesson_type=='inside'" style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
-                       			 margin: 5px 0;" ng-click="main.go_editor_lesson(lesson.id)">Редактировать урок ...</div>
+                       			 margin: 5px 0;" ng-click="main.go_editor_lesson(lesson.id)">Edit lesson ...</div>
 		                </td>
 		                <td style="min-width: 200px;text-align:left">
 		                    <span>{{lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>
 		                </td>
 		                <td class="td_enroll_stats" style="width:400px;text-align:left">
 		                	<div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
-                       			 margin: 0;" ng-click="lesson_enroll($event, lesson.id)">Назначить ...</div>
+                       			 margin: 0;" ng-click="lesson_enroll($event, lesson.id)">Assign ...</div>
 
 		                    <div style="max-height:100px;overflow: auto;">
 		                        <div ng-repeat="enroll in lesson.enrolls" class="enroll_pupil" ng-class="{

@@ -32,12 +32,12 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                     html_menu += '      <div class="header">';
                     html_menu += '          <div class="header_close" ng-click="close_action()"></div>';
                     //html_menu += '          <div class="header_delete"></div>';
-                    html_menu += '          <div class="header_title">Меню курса</div>';
+                    html_menu += '          <div class="header_title">Course menu</div>';
                     html_menu += '      </div>';
                     html_menu += '      <div class="action_menu_items" style="opacity: 0">';
-                    html_menu += '          <div class="action_item" ng-click="enroll_course()">Назначить ученика</div>';
-                    html_menu += '          <div class="action_item" ng-click="edit_enroll_course()">Редактировать назначения</div>';
-                    html_menu += '          <div class="action_item" ng-click="edit_course()">Редактировать уроки курса</div>';
+                    html_menu += '          <div class="action_item" ng-click="enroll_course()">Enroll pupil</div>';
+                    html_menu += '          <div class="action_item" ng-click="edit_enroll_course()">Edit enroll</div>';
+                    html_menu += '          <div class="action_item" ng-click="edit_course()">Edit lesson</div>';
                     html_menu += '      </div>';
                     html_menu += '  </div>';
                     html_menu += '</div>';

@@ -40,7 +40,8 @@ def enroll_teacher(request, enroll_pk):
 
     if request.method == 'PUT':
         data = json.loads(request.body.decode("utf-8"))
-        enroll.data = normalize(data)
+        # enroll.data = normalize(data)
+        enroll.data = data
         enroll.required_attention_by_teacher = False
         enroll.required_attention_by_pupil = True
 

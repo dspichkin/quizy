@@ -55,6 +55,12 @@ class MLStripper(HTMLParser):
         if tag.lower() == 'i':
             self.start_custom = '<i>'
             self.end_custom = '</i>'
+        if tag.lower() == 's':
+            self.start_custom = '<s>'
+            self.end_custom = '</s>'
+        if tag.lower() == 'p':
+            self.start_custom = '<p>'
+            self.end_custom = '</p>'
         if tag.lower() == 'br':
             self.start_custom = '<br>'
             self.end_custom = ''

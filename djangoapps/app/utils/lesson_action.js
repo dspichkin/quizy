@@ -34,13 +34,13 @@ module.exports = ['$rootScope', '$compile', '$timeout',
                     html_menu += '      <div class="header">';
                     html_menu += '          <div class="header_close" ng-click="close_action()"></div>';
                     //html_menu += '          <div class="header_delete"></div>';
-                    html_menu += '          <div class="header_title">Меню урока</div>';
+                    html_menu += '          <div class="header_title">Lesson menu</div>';
                     html_menu += '      </div>';
                     html_menu += '      <div class="action_menu_items" style="opacity: 0">';
-                    html_menu += '          <div class="action_item" ng-if="get_lesson_type()!=\'inside\'" style="opacity:0.7">Редактировать урок</div>';
-                    html_menu += '          <div class="action_item" ng-click="edit_lesson()" ng-if="get_lesson_type()==\'inside\'">Редактировать урок</div>';
-                    html_menu += '          <div class="action_item" ng-click="enroll_lesson()">Назначить ученика</div>';
-                    html_menu += '          <div class="action_item" ng-click="play_lesson($event)">Запустить для тестирования</div>';
+                    html_menu += '          <div class="action_item" ng-if="get_lesson_type()!=\'inside\'" style="opacity:0.7">Edit lesson</div>';
+                    html_menu += '          <div class="action_item" ng-click="edit_lesson()" ng-if="get_lesson_type()==\'inside\'">Edit lesson</div>';
+                    html_menu += '          <div class="action_item" ng-click="enroll_lesson()">Enroll pupil</div>';
+                    html_menu += '          <div class="action_item" ng-click="play_lesson($event)">Run</div>';
                     html_menu += '      </div>';
                     html_menu += '  </div>';
                     html_menu += '</div>';

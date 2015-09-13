@@ -60,7 +60,6 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
                 $scope.model['modal'] = {
                     loading: false
                 };
-                console.log('lesson_id', lesson_id)
                 $scope.closeDialog = function() {
                     $mdDialog.hide();
                 };

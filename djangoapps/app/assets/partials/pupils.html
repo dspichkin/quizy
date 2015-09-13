@@ -4,7 +4,7 @@
                     
 
         <div class="col-md-12 lessons_header">
-            <div class="col-md-2 mylesson_title">Мои ученики</div>
+            <div class="col-md-2 mylesson_title">My pupils</div>
             <div class="col-md-8 pull-left search_panel" style="padding: 0 12px;
                 height: 60px;
                 overflow: hidden;">
@@ -15,10 +15,10 @@
             <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
                 <thead style="background-color:#e3eaf1;height:60px">
                     <th class="table_th" style="text-align:center;">
-                        Ученик
+                        Pupil
                     </th>
                     <th class="table_th" style="width: 400px;">
-                        <div style="">Назначение</div>
+                        <div style="">Enroll</div>
                     </th>
                 </thead>
 
@@ -32,7 +32,7 @@
                         </td>
                         <td style="text-align:left;">
                             <div style="max-height: 200px;overflow-y: auto;">
-                                <div style="font-weight:500;color: #00A2EA">назначенные курсы</div>
+                                <div style="font-weight:500;color: #00A2EA">courses</div>
                                 <div class="enroll_pupil" ng-repeat="enroll in pupil.course_enrolls" style="display:block;width:100%;">
                                     <div style="margin: 0 0 0 0;
                                             max-height: 50px;
@@ -51,13 +51,13 @@
                                         <i class="material-icons icon-remove-enroll" style="font-size:12px;">mode_edit</i>
                                     </div>
                                     <div style="font-size: 12px;margin: 0 0 0 17px;">
-                                        <div ng-if="enroll.auto_enroll == true">автоназначение уроков</div>
-                                        <div ng-if="enroll.auto_enroll == false">ручное назначение уроков</div>
+                                        <div ng-if="enroll.auto_enroll == true">auto enroll lessons</div>
+                                        <div ng-if="enroll.auto_enroll == false">custom enroll lesson</div>
                                     </div> 
                                 </div>
 
 
-                                <div style="font-weight:500;color: #ff9e37">назначенные уроки</div>
+                                <div style="font-weight:500;color: #ff9e37">lessons</div>
                                 <div class="enroll_pupil" ng-repeat="enroll in pupil.lesson_enrolls" style="width:100%;">
                                     <div style="margin: 0 0 0 0;
                                             width: 500px;
@@ -103,7 +103,6 @@
                     </tr>
 
                 </tbody>
-
 
             </table>
 

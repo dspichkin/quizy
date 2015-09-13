@@ -11,3 +11,4 @@ module.exports = angular.module('quizy.Directives', [])
     .directive('compile', require('./utils/compile.js'))
     .directive('dynamicCtrl', require('./utils/dynamic_ctrl.js'))
 
+
