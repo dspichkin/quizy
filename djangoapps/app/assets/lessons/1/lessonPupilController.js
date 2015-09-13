@@ -15,6 +15,14 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
     // количество слов
     $scope.model.number_words = 0;
 
+    // Editor options.
+    $scope.editorOptions = {
+        language: 'ru',
+        allowedContent: true,
+        entities: false,
+        height: '200px',
+        resize_enabled: false
+    };
 
     // сброс флага внимания со стороны ученика в случении закрытого урока
     if ($scope.model.lesson_dialog.hasOwnProperty('data') &&
@@ -303,15 +311,28 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
         }
     };
     $scope.get_number_words = function(text) {
-        var _words = text.split(' ');
-        if (_words && _words.length == 1) {
-            if (_words[0] == "") {
-                return 0;
+        if (text) {
+            var _words = [];
+            var temp = text.split(' ');
+            for (var i = 0; i < temp.length; i++) {
+                var t = temp[i].split('\n');
+                if (t.length > 1) {
+                    _words = _words.concat(t);
+                } else {
+                    _words.push(temp[i]);
+                }
+            }
+
+
+            if (_words && _words.length == 1) {
+                if (_words[0] == "") {
+                    return 0;
+                } else {
+                    return _words.length;
+                }
             } else {
                 return _words.length;
             }
-        } else {
-            return _words.length;
         }
     };
 

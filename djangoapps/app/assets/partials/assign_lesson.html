@@ -22,10 +22,10 @@
         </div>
 
         <div style="margin-top: -20px;" ng-if="model.modal_enroll.show_create_account==false">
-            <h4>Назначение урока на ученика</h4>
+            <h4>Assign pupil to the lesson</h4>
 
             <md-input-container>
-                <label>Введите email ученика:</label>
+                <label>Input email of the pupil:</label>
                 <input type="text" ng-model="model.modal_enroll.inputed_address" md-maxlength="100"
                 ng-change="change_inputed_address()" data-ng-model-options="{debounce: 350}">
             </md-input-container>
@@ -48,14 +48,14 @@
             right: 0;
             padding: 20px;
             width:100%;">
-            <md-button class="md-raised" ng-click="ok()" ng-disabled="submit_disabled==true">OK</md-button>
-            <md-button class="md-raised" ng-click="closeDialog()">Отмена</md-button>
+            <md-button class="md-raised" ng-click="ok()" ng-disabled="submit_disabled==true">Ok</md-button>
+            <md-button class="md-raised" ng-click="closeDialog()">Cancel</md-button>
         </div>
          <div style="margin-top: -20px;" ng-if="model.modal_enroll.show_create_account==true">
-            <h4>Создание учетной записи</h4>
-            <p>Указаный вами email <b>{{model.modal_enroll.inputed_address}}</b>
-            не найден среди зарегистрированных учеников.</p>
-            <p>Создать для него новую учетную запись и автоматически назначить на нее урок?</p>
+            <h4>Create new account</h4>
+            <p>Email  <b>{{model.modal_enroll.inputed_address}}</b>
+            doen't exist.</p>
+            <p>Create new account and assign the lesson?</p>
         </div>
         <div ng-if="model.modal_enroll.show_create_account==true" 
             class="modal-footer" style="position: absolute;
@@ -63,8 +63,8 @@
             right: 0;
             padding: 20px;
             width:100%;">
-            <md-button class="md-raised" ng-click="createAccount()">Да</md-button>
-            <md-button class="md-raised" ng-click="cancelCreateAccount()">Нет, не надо!</md-button>
+            <md-button class="md-raised" ng-click="createAccount()">Yes</md-button>
+            <md-button class="md-raised" ng-click="cancelCreateAccount()">No</md-button>
         </div>
     </md-content>
 </md-dialog>

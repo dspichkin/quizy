@@ -87,13 +87,14 @@
 
 
                     <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && step.mode == 'finish' && model.lesson_dialog.data.active != false">
-                        <h4>Ответ находится в ожидание отклика от преподователя<h4>
+                        <h4>Урок находится в ожидание отклика от преподователя<h4>
                     </div>
                     <div ng-if="$first == true && !get_answer_pupil() && step.type=='teacher' && step.mode != 'finish' && model.lesson_dialog.data.active != false">
-                        <h4>Ответ находится в ожидание отклика от преподователя<h4>
+                        <h4>Урок находится в ожидание отклика от преподователя<h4>
                     </div>
 
-                    <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && !step.mode && model.lesson_dialog.data.active != false">
+                    <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && 
+                    !step.mode && model.lesson_dialog.data.active != false">
                         <p style="margin:10px;color:red;">
                             После завершения написания отклика обязательно нажмите кнопку "Отправить преподователю"
                         </p>
@@ -105,7 +106,7 @@
                         <div style="margin: 20px 10px 20px 10px;
                                 width: 100%;
                                 background-color: rgba(2, 99, 90, 0.18);
-                                padding: 20px;
+                                padding: 10px;
                                 text-align: left;
                                 display: inline-block;
                                 position:relative;">
@@ -124,7 +125,8 @@
                             <p>Номер сообщения: {{step.number}}</p>
                             <div style="margin:-10px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
 
-                            <p ng-bind-html="step.text"></p>
+                            <!-- <p ng-bind-html="step.text"></p> -->
+                            <pre>{{step.text}}</pre>
                         </div>
                     </div>
 
@@ -135,7 +137,7 @@
                         <div style="margin: 20px 10px 20px 10px;
                                 width: 100%;
                                 background-color: rgba(2, 99, 90, 0.18);
-                                padding: 20px;
+                                padding: 10px;
                                 text-align: left;
                                 display: inline-block;
                                 position:relative;">
@@ -156,7 +158,8 @@
                             <p>Номер сообщения: {{step.number}}</p>
                             <div style="margin:-10px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
 
-                            <p ng-bind-html="step.text"></p>
+                            <!-- <p ng-bind-html="step.text"></p> -->
+                            <pre>{{step.text}}</pre>
                         </div>
                     </div>
 
@@ -170,8 +173,12 @@
                         </div>
                         <div style="margin: 20px 0 0 0;">Количество слов: {{model.number_words}}</div>
                         <textarea style="resize: none;height: 200px;margin: 20px 0px 0px 0px;width: 100%;padding:10px;" ng-model="model.lesson_dialog.temptext" ng-change="change_text()">
-                            
                         </textarea>
+                        <!--
+                        <div style="resize: none;height: 300px;margin: 20px 10px 20px 10px;padding:10px;">
+                            <textarea ckeditor="editorOptions" ng-model="model.lesson_dialog.temptext" ng-change="change_text()"></textarea>
+                        </div>
+                        -->
                     </div>
 
 
@@ -181,7 +188,7 @@
                         <div style="margin: 20px 10px 20px 10px;
                                 width: 100%;
                                 background-color: rgba(99, 38, 2, 0.18);
-                                padding: 20px;
+                                padding: 10px;
                                 text-align: left;
                                 display: inline-block;">
 

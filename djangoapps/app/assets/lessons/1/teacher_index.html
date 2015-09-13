@@ -1,4 +1,4 @@
-<div dynamic-ctrl="getController()">
+<div dynamic-ctrl="getController()" class="select_enable">
     <div class="shadow" style="position: absolute;
         width: 200px;
         z-index: 100;
@@ -8,7 +8,7 @@
         color: white;
         right: 0;">
 
-        <div ng-click="back_to_lessons()" style="text-decoration:underline;">Перейти в список уроков</div>
+        <div ng-click="back_to_lessons()" style="text-decoration:underline;">Back to the list of lessons</div>
     </div>
 
 
@@ -27,15 +27,8 @@
                     <h2>{{model.lesson_dialog.lesson.name}}</h2>
                     
                     <div>
-                        <h3>Задание</h3>
+                        <h3>Task</h3>
                         <p style="font-size: 18px;">{{model.lesson_dialog.lesson.description}}</p>
-                        <p>Советы:</p>
-                        <p>
-                            Что бы выделить текст используйте тег &lt;b&gt;<b>Выделеный текст</b>&lt;/b&gt;
-                            <br>
-                            Что бы наколнить текст используйте тег &lt;i&gt;<i>Наклоненый текст</i>&lt;/i&gt;
-                        </p>
-                        
                     </div>
 
                     <md-switch ng-model="model.lesson_dialog.data.active" aria-label="Lesson active" ng-true-value="false" ng-false-value="true" class="md-warn" style="margin:0;float:left;"
@@ -44,35 +37,35 @@
 
                     <div class="" style="font-size: 18px;text-align:left;
                         font-weight: 300;" ng-if="model.lesson_dialog.data.active == true">
-                        Урок активен
+                        Lesson is active
                     </div>
                     <div class="" style="font-size: 18px;
                         text-align:left;
                         font-weight: 300;margin: 0 0 0 -20px;" ng-if="model.lesson_dialog.data.active == false">
-                        Урок остановлен
+                        Lesson is stoped
                     </div>
 
                     <div ng-if="model.lesson_dialog.data.steps.length == 0">
-                        <h4>Студент пока еще не сделал задание</h4>
+                        <h4>The student has't made the task yet</h4>
                     </div>
                     
 
 
                     <div ng-repeat="step in model.lesson_dialog.data.steps.slice().reverse()">
                         <div ng-if="!get_answer_teacher() && step.type=='teacher' && !step.mode" style="margin-top:20px;color:red;">
-                            <p>После завершения написания отклика обязательно нажмите кнопку "Отправить ученику"</p>
+                            <p>After completing the response is required to press the "Send feedback"</p>
                         </div>
 
 
                         <div ng-if="$first == true && !get_answer_teacher() && step.type == 'pupil' && step.mode != 'finish'">
-                            <h4>Задание редактируется учеником<h4>
+                            <h4>Lesson edited by pupil<h4>
                         </div>
                         <div ng-if="$first == true && !get_answer_teacher() && step.type == 'teacher' && step.mode == 'finish'">
-                            <h4>Задание редактируется учеником<h4>
+                            <h4>Lesson edited by pupil<h4>
                         </div>
 
                         <div ng-if="$first && get_answer_teacher()">
-                            <div ripple class="btn-secondary shadow" style="margin: 15px 0 0 0;position:relative" ng-click="add_answer_teacher()" >Написать</div>
+                            <div ripple class="btn-secondary shadow" style="margin: 15px 0 0 0;position:relative;font-size: 18px;" ng-click="add_answer_teacher()" >Give feedback</div>
                         </div>
 
 
@@ -89,18 +82,18 @@
                                     position:relative;">
 
 
-                                <!-- loading -->
+                                <!-- loading 
                                 <div ng-if="model.lesson_dialog.loading == true" style="width:100%;height:100%;background-color: rgb(220, 179, 155);position: absolute;margin: -20px;">
                                     <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
                                         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                                     </div>
                                 </div>
+                                -->
 
 
-
-                                <p style="float:right">Преподователь</p>
-                                <p>Номер сообщения: {{step.number}}</p>
-                                <p ng-bind-html="step.text"></p>
+                                <p style="float:right">Teacher</p>
+                                <p>Message: {{step.number}}</p>
+                                <p style="font-size: 18px;" ng-bind-html="step.text"></p>
 
 
                             </div>
@@ -110,13 +103,19 @@
 
                         <div ng-if="step.type=='teacher' && step.mode == 'edit'" style="width: 100%;text-align: left;">
 
-                            
+                            <!--
                             <textarea style="resize: none;height: 200px;margin: 20px 10px 20px 10px;width: 500px;padding:10px;" ng-model="model.lesson_dialog.temptext">
-                                
                             </textarea>
+                            -->
+                           
+                            <div style="resize: none;height: 300px;margin: 20px 10px 20px 10px;padding:10px;">
+                                <textarea ckeditor="editorOptions" ng-model="model.lesson_dialog.temptext"></textarea>
+                            </div>
+                                
+                            
                             <div ng-if="$first == true">
-                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="save_step(step.number)"> Сохранить</div>
-                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)"> Удалить</div>
+                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="save_step(step.number)">Save</div>
+                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)">Delete</div>
                             </div>
 
                         </div>
@@ -132,7 +131,7 @@
 
 
                                 <!-- loading -->
-                                <div ng-if="model.lesson_dialog.loading == true" style="width:100%;height:100%;background-color: rgb(220, 179, 155);position: absolute;margin: -20px;">
+                                <div ng-if="$first == true && model.lesson_dialog.loading == true" style="width:100%;height:100%;background-color: rgb(220, 179, 155);position: absolute;margin: -20px;">
                                     <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
                                         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                                     </div>
@@ -140,13 +139,13 @@
 
 
 
-                                <p style="float:right">Преподователь</p>
-                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="commit_step($event, step.number)">Отправить ученику</p>
+                                <p style="float:right">Teacher</p>
+                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="commit_step($event, step.number)">Send feedback</p>
 
-                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Удалить</p>
-                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Редактировать</p>
-                                <p>Номер сообщения: {{step.number}}</p>
-                                <p ng-bind-html="step.text"></p>
+                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Delete</p>
+                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Edit</p>
+                                <p>Message: {{step.number}}</p>
+                                <p style="font-size: 18px;" ng-bind-html="step.text"></p>
 
 
                             </div>
@@ -162,10 +161,12 @@
                                     padding: 20px;
                                     text-align: left;
                                     display: inline-block;">
-                                <p style="float:right">Ученик</p>
-                                <p>Номер сообщения: {{step.number}}</p>
-                                <div style="margin:-10px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
-                                <p ng-bind-html="step.text"></p>
+                                <p style="float:right">Pupil</p>
+                                <p>Message: {{step.number}}</p>
+                                <div style="margin:-10px 0 10px 0;">Number of words: {{get_number_words(step.text)}}</div>
+
+                                <!-- <p style="font-size: 18px;" ng-bind-html="step.text"></p>-->
+                                <pre style="font-size: 18px;">{{step.text}}</pre>
                             </div>
                         </div>
 

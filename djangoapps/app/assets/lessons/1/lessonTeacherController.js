@@ -5,7 +5,16 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
     $scope.model['lesson_dialog'].temptext = null;
     $scope.model.lesson_dialog.loading = false;
 
+    // Editor options.
+    $scope.editorOptions = {
+        language: 'ru',
+        allowedContent: true,
+        entities: false,
+        height: '200px',
+        resize_enabled: false
+    };
 
+  
     $scope.back_to_lessons = function() {
         $scope.main.go_courses_page($scope.model.outside.course_id);
 

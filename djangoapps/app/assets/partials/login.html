@@ -13,11 +13,11 @@
                 top: 41%;"></md-progress-circular>
     </div>
     <div class="login-form" ng-if="model.login.show_recall == false">
-        <h1>Вход</h1>
+        <h1>Sign In</h1>
         <form id="login">
             <p style="text-align: left;">
                 <md-input-container style="text-align: left;padding: 0;">
-                    <label>Укажите вашу почту</label>
+                    <label>Email</label>
 
                     <input id="id_login" ng-class="{'input-error':form_errors.login.length}" autocomplete="off"  type="text" ng-model="model.login.email" name="login" autofocus>
                 </md-input-container>
@@ -29,7 +29,7 @@
 
             <p style="text-align: left;">
                 <md-input-container style="text-align: left;padding: 0;">
-                    <label>Укажите ваш пароль</label>
+                    <label>Password</label>
                     <input id="id_password" ng-class="{'input-error':form_errors.login.length}" autocomplete="off"  type="password" ng-model="model.login.password" name="password">
                 </md-input-container>
                 <ul class="errorlist" ng-how="model.login.form_errors.password" style="margin: 0;padding: 0;">
@@ -43,12 +43,12 @@
                     <li ng-repeat="error in model.login.form_errors.other">{{error}}</li>
                 </ul>
 
-                <md-button type="submit" class="btn-secondary" ng-click="submit($event)">Вход</md-button>
-                <a class="button secondaryAction" href="" ng-click="show_recall($event)">Забыли пароль?</a>
+                <md-button type="submit" class="btn-secondary" ng-click="submit($event)">Sign In</md-button>
+                <a class="button secondaryAction" href="" ng-click="show_recall($event)">Forgot Password?</a>
 
                 <br/>
                 <br/>
-                <div>Войдите через социальные сети</div>
+                <div>Sign in through social networks</div>
                 
 
                 <div class="socialaccount_ballot"></div>

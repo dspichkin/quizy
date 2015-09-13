@@ -92,7 +92,6 @@ var TeacherPupilCtrl = function($scope, $mdDialog, $http, $data, $log, $location
             $location.path('/');
         }
     };
-
     /*
     Удаление назначение на страницы назначений
      */

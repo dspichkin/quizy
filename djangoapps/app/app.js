@@ -20,6 +20,7 @@ require('angular-aria');
 require('angular-material');
 require('angular-material-icons');
 
+
 //require('angular-parallax');
 
 require('ng-file-upload');
@@ -35,7 +36,8 @@ require('./editor/filters');
 require('./controllers');
 require('./directives');
 
-require('./utils/utils')
+require('./utils/utils');
+require('./utils/angular-ckeditor.js');
 //'ngDragDrop',
 //'angular-parallax',
 window.app = angular.module('quizy', [
@@ -44,6 +46,7 @@ window.app = angular.module('quizy', [
         'ui.router',
         'ngMaterial',
         'ngMdIcons',
+        'ngCkeditor',
 
         "com.2fdevs.videogular",
         "com.2fdevs.videogular.plugins.controls",
