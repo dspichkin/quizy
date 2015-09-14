@@ -50,7 +50,7 @@
                     element.attr('contenteditable', true);
                 }
 
-                var onLoad = function () {
+                var onLoad = function() {
                     var options = {
                         toolbar: 'full',
                         toolbar_full: [ //jshint ignore:line
@@ -58,10 +58,18 @@
                                 name: 'basicstyles',
                                 items: ['Bold', 'Italic', 'Strike', 'Underline', 'Undo', 'Redo']
                             },
+                            {
+                                name: 'styles',
+                                items: ['TextColor', 'Format']
+                            }
                             //{name: 'paragraph', items: ['BulletedList', 'NumberedList', 'Blockquote']},
                             //{name: 'editing', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
                             //{name: 'links', items: ['Link', 'Unlink', 'Anchor']},
                             //{name: 'tools', items: ['SpellChecker', 'Maximize']},
+                            //{
+                            //    name: 'styles',
+                            //    items: ['Format', 'FontSize', 'TextColor', 'PasteText', 'PasteFromWord', 'RemoveFormat']
+                            //}
                             //'/',
                             //{
                              //   name: 'styles',
