@@ -11,10 +11,11 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
         allowedContent: true,
         entities: false,
         height: '200px',
-        resize_enabled: false
+        resize_enabled: false,
+        extraPlugins: 'panelbutton,colorbutton'
     };
 
-  
+
     $scope.back_to_lessons = function() {
         $scope.main.go_courses_page($scope.model.outside.course_id);
 

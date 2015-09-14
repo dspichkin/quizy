@@ -93,7 +93,8 @@
 
                                 <p style="float:right">Teacher</p>
                                 <p>Message: {{step.number}}</p>
-                                <p style="font-size: 18px;" ng-bind-html="step.text"></p>
+                                
+                                <p style="font-size: 18px;" compile="step.text"></p>
 
 
                             </div>
@@ -145,7 +146,8 @@
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Delete</p>
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Edit</p>
                                 <p>Message: {{step.number}}</p>
-                                <p style="font-size: 18px;" ng-bind-html="step.text"></p>
+                                
+                                <p style="font-size: 18px;" compile="step.text"></p>
 
 
                             </div>
