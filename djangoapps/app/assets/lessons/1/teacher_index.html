@@ -90,8 +90,10 @@
                                 </div>
                                 -->
 
-
                                 <p style="float:right">Teacher</p>
+                                
+
+
                                 <p>Message: {{step.number}}</p>
                                 
                                 <p style="font-size: 18px;" compile="step.text"></p>
@@ -163,7 +165,20 @@
                                     padding: 20px;
                                     text-align: left;
                                     display: inline-block;">
+
+                                
                                 <p style="float:right">Pupil</p>
+                                <div class="btn btn-secondary shadow" ripple style="float:right;margin:-9px 10px;" ng-click="estimate($event, step.number)">
+                                    Estimate
+                                </div>
+                                <div style="float:right" ng-if="step.estimate">Current estimation: 
+                                    {{step.estimate.estimate_task}} /
+                                    {{step.estimate.coherence_task}} /
+                                    {{step.estimate.lexical_task}} /
+                                    {{step.estimate.grammatical_task}}
+                                </div>
+
+
                                 <p>Message: {{step.number}}</p>
                                 <div style="margin:-10px 0 10px 0;">Number of words: {{get_number_words(step.text)}}</div>
 

@@ -51,6 +51,9 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
                 if (data.hasOwnProperty('mode')) {
                     $scope.model.lesson_dialog.data.steps[i].mode = data.mode;
                 }
+                if (data.hasOwnProperty('estimate')) {
+                    $scope.model.lesson_dialog.data.steps[i].estimate = data.estimate;
+                }
                 return $scope.model.lesson_dialog.data.steps[i];
             }
         }
@@ -153,6 +156,95 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
         } else {
             return _words.length;
         }
+    }
+
+    /*
+    Поставить оценку
+     */
+    $scope.estimate = function($event, step_number) {
+        $mdDialog.show({
+            targetEvent: $event,
+            templateUrl: '/assets/lessons/1/estimate.html',    
+            disableParentScroll: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,
+            controller: function TimerController($scope, $mdDialog) {
+                var curent_step = '';
+                for (var i = 0, len = scope.model.lesson_dialog.data.steps.length; i < len; i++) {
+                        if (scope.model.lesson_dialog.data.steps[i].number == step_number) {
+                            curent_step = scope.model.lesson_dialog.data.steps[i];
+                        }
+                    }
+
+
+                scope.model['estimate'] = {
+                    commit_disabled: true,
+                    estimate_task: '',
+                    estimate_task_varinats: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+                    coherence_task: '',
+                    coherence_task_varinats: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+                    lexical_task: '',
+                    lexical_task_varinats: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
+                    grammatical_task: '',
+                    grammatical_task_varinats: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+                };
+                if (curent_step) {
+                    if (curent_step.estimate && curent_step.estimate.estimate_task)
+                        scope.model.estimate.estimate_task = curent_step.estimate.estimate_task;
+                    if (curent_step.estimate && curent_step.estimate.coherence_task)
+                        scope.model.estimate.coherence_task = curent_step.estimate.coherence_task;
+                    if (curent_step.estimate && curent_step.estimate.lexical_task)
+                        scope.model.estimate.lexical_task = curent_step.estimate.lexical_task;
+                    if (curent_step.estimate && curent_step.estimate.grammatical_task)
+                        scope.model.estimate.grammatical_task = curent_step.estimate.grammatical_task;
+                }
+
+                scope.change = function() {
+                    if (is_ready() == true) {
+                        scope.model.estimate.commit_disabled = false;
+                    }
+                };
+
+                scope.closeDialog = function($event) {
+                    $mdDialog.hide();
+                };
+
+                scope.submit = function($event) {
+                    $event.preventDefault();
+                    var _data = {
+                        estimate_task: scope.model.estimate.estimate_task,
+                        coherence_task: scope.model.estimate.coherence_task,
+                        lexical_task: scope.model.estimate.lexical_task,
+                        grammatical_task: scope.model.estimate.grammatical_task
+                    };
+                    for (var i = 0, len = scope.model.lesson_dialog.data.steps.length; i < len; i++) {
+                        if (scope.model.lesson_dialog.data.steps[i].number == step_number) {
+                            scope.model.lesson_dialog.data.steps[i].estimate = _data;
+                        }
+                    }
+
+                    $mdDialog.hide();
+                    save();
+                };
+
+                function is_ready() {
+                    var _is_ready = true;
+                    if (scope.model.estimate.estimate_task == "") {
+                        _is_ready = false;
+                    }
+                    if (scope.model.estimate.coherence_task == "") {
+                        _is_ready = false;
+                    }
+                    if (scope.model.estimate.lexical_task == "") {
+                        _is_ready = false;
+                    }
+                    if (scope.model.estimate.grammatical_task == "") {
+                        _is_ready = false;
+                    }
+                    return _is_ready;
+                }
+            }
+        });
     }
 
 }

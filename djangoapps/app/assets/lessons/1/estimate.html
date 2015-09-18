@@ -1,0 +1,57 @@
+<md-dialog aria-label="List dialog">
+    <md-dialog-content> 
+        <p>Writing task</p>
+        <table>
+            <thead>
+                <tr>
+                    <td style="padding:0 10px;font-weight:600;">Task achievement</td>
+                    <td style="padding:0 10px;font-weight:600;">Coherence and cohesion</td>
+                    <td style="padding:0 10px;font-weight:600;">Lexical resource</td>
+                    <td style="padding:0 10px;font-weight:600;">Grammatical range and accurancy</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align:center;">
+                        <md-input-container style="display: inline-block;">
+                            <md-select ng-model="model.estimate.estimate_task" placeholder="0-9" ng-change="change()">
+                              <md-option ng-repeat="state in model.estimate.estimate_task_varinats" value="{{state}}">{{state}}</md-option>
+                            </md-select>
+                          </md-input-container>
+                    </td>
+                    <td style="text-align:center;">
+                        <md-input-container style="display: inline-block;">
+                            <md-select ng-model="model.estimate.coherence_task" placeholder="0-9" ng-change="change()">
+                              <md-option ng-repeat="state in model.estimate.coherence_task_varinats" value="{{state}}">{{state}}</md-option>
+                            </md-select>
+                          </md-input-container>
+                    </td>
+                    <td style="text-align:center;">
+                        <md-input-container style="display: inline-block;">
+                            <md-select ng-model="model.estimate.lexical_task" placeholder="0-9" ng-change="change()">
+                              <md-option ng-repeat="state in model.estimate.lexical_task_varinats" value="{{state}}">{{state}}</md-option>
+                            </md-select>
+                          </md-input-container>
+                    </td>
+                    <td style="text-align:center;">
+                        <md-input-container style="display: inline-block;">
+                            <md-select ng-model="model.estimate.grammatical_task" placeholder="0-9" ng-change="change()">
+                              <md-option ng-repeat="state in model.estimate.grammatical_task_varinats" value="{{state}}">{{state}}</md-option>
+                            </md-select>
+                          </md-input-container>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        
+
+    </md-dialog-content>
+    <div class="md-actions">
+        <md-button ng-click="closeDialog()" class="md-primary"> Отмена</md-button>
+        <button type="button" ng-click="submit($event)" class="btn-secondary" style="margin-left: 10px;"
+            ng-disabled="model.estimate.commit_disabled">
+            Подтвердить
+        </button>
+    </div>
+</md-dialog>
