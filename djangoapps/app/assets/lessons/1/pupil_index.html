@@ -121,6 +121,13 @@
 
 
                             <p style="float:right">Ученик</p>
+
+                            <div style="float:right;margin:0 10px;" ng-if="step.estimate">Оценка преподователя: 
+                                    {{step.estimate.estimate_task}} /
+                                    {{step.estimate.coherence_task}} /
+                                    {{step.estimate.lexical_task}} /
+                                    {{step.estimate.grammatical_task}}
+                                </div>
                             
                             <p>Номер сообщения: {{step.number}}</p>
                             <div style="margin:-10px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
