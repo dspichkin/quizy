@@ -1,4 +1,4 @@
-<div dynamic-ctrl="getController()">
+<div dynamic-ctrl="getController()" class="select_enable">
 <div class="play_div" ng-controller="PlayInsideCtrl">
     
     <div class="play_panel" style="
@@ -76,7 +76,7 @@
 
 
                 <div ng-if="model.lesson_dialog.data.active == false">
-                    <h4>Урок остановлен преподователем</h4>
+                    <h4>Урок остановлен преподавателем</h4>
                 </div>
 
                 <div ng-if="get_answer_pupil()">
@@ -87,16 +87,16 @@
 
 
                     <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && step.mode == 'finish' && model.lesson_dialog.data.active != false">
-                        <h4>Урок находится в ожидание отклика от преподователя<h4>
+                        <h4>Урок находится в ожидание отклика от преподавателя<h4>
                     </div>
                     <div ng-if="$first == true && !get_answer_pupil() && step.type=='teacher' && step.mode != 'finish' && model.lesson_dialog.data.active != false">
-                        <h4>Урок находится в ожидание отклика от преподователя<h4>
+                        <h4>Урок находится в ожидание отклика от преподавателя<h4>
                     </div>
 
                     <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && 
                     !step.mode && model.lesson_dialog.data.active != false">
                         <p style="margin:10px;color:red;">
-                            После завершения написания отклика обязательно нажмите кнопку "Отправить преподователю"
+                            После завершения написания отклика обязательно нажмите кнопку "Отправить преподавателю"
                         </p>
                     </div>
                     
@@ -122,11 +122,11 @@
 
                             <p style="float:right">Ученик</p>
 
-                            <div style="float:right;margin:0 10px;" ng-if="step.estimate">Оценка преподователя: 
-                                    {{step.estimate.estimate_task}} /
-                                    {{step.estimate.coherence_task}} /
-                                    {{step.estimate.lexical_task}} /
-                                    {{step.estimate.grammatical_task}}
+                            <div style="float:right;margin:0 10px;" ng-if="step.estimate">Оценка преподавателя: 
+                                    TA {{step.estimate.estimate_task}} /
+                                    CC {{step.estimate.coherence_task}} /
+                                    LR {{step.estimate.lexical_task}} /
+                                    GA {{step.estimate.grammatical_task}}
                                 </div>
                             
                             <p>Номер сообщения: {{step.number}}</p>
@@ -159,7 +159,7 @@
 
 
                             <p style="float:right">Ученик</p>
-                            <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="commit_step($event, step.number)">Отправить преподователю</p>
+                            <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="commit_step($event, step.number)">Отправить преподавателю</p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Удалить</p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Редактировать</p>
                             <p>Номер сообщения: {{step.number}}</p>
@@ -190,7 +190,7 @@
 
 
 
-                    <!-- Отображение ответов преподователя -->
+                    <!-- Отображение ответов преподавателя -->
                     <div ng-if="step.type=='teacher' && step.mode=='finish'" style="width: 100%;text-align: right;">
                         <div style="margin: 20px 10px 20px 10px;
                                 width: 100%;
@@ -199,7 +199,7 @@
                                 text-align: left;
                                 display: inline-block;">
 
-                            <p style="float:right">Преподователь</p>
+                            <p style="float:right">Преподаватель</p>
                             <p>Номер сообщения: {{step.number}}</p>
                             <p compile="step.text"></p>
                         </div>

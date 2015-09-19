@@ -169,13 +169,13 @@
                                 
                                 <p style="float:right">Pupil</p>
                                 <div class="btn btn-secondary shadow" ripple style="float:right;margin:-9px 10px;" ng-click="estimate($event, step.number)">
-                                    Estimate
+                                    Give a score
                                 </div>
                                 <div style="float:right" ng-if="step.estimate">Current estimation: 
-                                    {{step.estimate.estimate_task}} /
-                                    {{step.estimate.coherence_task}} /
-                                    {{step.estimate.lexical_task}} /
-                                    {{step.estimate.grammatical_task}}
+                                    TA {{step.estimate.estimate_task}} /
+                                    CC {{step.estimate.coherence_task}} /
+                                    LR {{step.estimate.lexical_task}} /
+                                    GA {{step.estimate.grammatical_task}}
                                 </div>
 
 
