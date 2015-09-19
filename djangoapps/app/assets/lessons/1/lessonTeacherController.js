@@ -96,14 +96,14 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
             template:
                 '<md-dialog aria-label="List dialog">' +
                 '  <md-dialog-content>' +
-                '    <p>После подтверждения редактирование будет невозможно</p>' +
+                '    <p>After confirming the editing is not possible.</p>' +
                 '  </md-dialog-content>' +
                 '  <div class="md-actions">' +
                 '    <md-button ng-click="closeDialog()" class="md-primary">' +
-                '      Отмена' +
+                '      Cancel' +
                 '    </md-button>' +
                 '    <button type="button" ng-click="submit($event)" class="btn-secondary" style="margin-left: 10px;">' +
-                '      Подтвердить' +
+                '      Confirm' +
                 '    </button>' +
                 '  </div>' +
                 '</md-dialog>',

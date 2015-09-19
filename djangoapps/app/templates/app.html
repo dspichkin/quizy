@@ -107,11 +107,11 @@
     ng-style="{
         'left1': model.menu.positionTitleLeft,
         'top1': model.menu.positionTitleTop}"
-    >Homework
+    >Teachers’ toolkit 
     </div>
     <div style="position: absolute;
     top: 39%;
-    left: 17px;">A home lessons to quickly assess your students</div>
+    left: 17px;">A snazzy solution for managing students’ homework</div>
 
     <div style="top: 0;
     position: absolute;
@@ -168,7 +168,7 @@
                     <div ng-class="{'active_menu': main.active_menu=='lessons'}"></div>
                 </div>
                 <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_pupils_page()">
-                    <span>Active enrolls</span>
+                    <span>Enrolled students</span>
                     <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                 </div>
                  <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
@@ -234,7 +234,7 @@
                                 <div ng-class="{'active_menu': main.active_menu=='lessons'}"></div>
                             </div>
                             <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_pupils_page()">
-                                <span>Active enrolls</span>
+                                <span>Enrolled students</span>
                                 <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                             </div>
                              <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
