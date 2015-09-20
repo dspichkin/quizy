@@ -94,7 +94,7 @@
                                 
 
 
-                                <p>Message: {{step.number}}</p>
+                                <p>Comment: {{step.number}}</p>
                                 
                                 <p style="font-size: 18px;" compile="step.text"></p>
 
@@ -147,7 +147,7 @@
 
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Delete</p>
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Edit</p>
-                                <p>Message: {{step.number}}</p>
+                                <p>Comment: {{step.number}}</p>
                                 
                                 <p style="font-size: 18px;" compile="step.text"></p>
 
@@ -171,7 +171,7 @@
                                 <div class="btn btn-secondary shadow" ripple style="float:right;margin:-9px 10px;" ng-click="estimate($event, step.number)">
                                     Give a score
                                 </div>
-                                <div style="float:right" ng-if="step.estimate">Current estimation: 
+                                <div style="float:right" ng-if="step.estimate">Current score: 
                                     TA {{step.estimate.estimate_task}} /
                                     CC {{step.estimate.coherence_task}} /
                                     LR {{step.estimate.lexical_task}} /

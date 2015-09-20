@@ -24,9 +24,9 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
         resize_enabled: false
     };
 
-    // сброс флага внимания со стороны ученика в случении закрытого урока
-    if ($scope.model.lesson_dialog.hasOwnProperty('data') &&
-        $scope.model.lesson_dialog.data.active == false) {
+    // сброс флага внимания со стороны ученика
+    // $scope.model.lesson_dialog.data.active == false
+    if ($scope.model.lesson_dialog.hasOwnProperty('data')) {
         if ($scope.model.lesson_dialog.required_attention_by_pupil == true) {
             save();
         }
@@ -122,7 +122,8 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
               template:
                     '<md-dialog aria-label="List dialog">' +
                     '  <md-dialog-content>' +
-                    '    <p>После подтверждения редактирование будет невозможно</p>' +
+                    '    <p><b>Отправляем работу на проверку?</b>' +
+                    '    <p>После подтверждения редактирование будет невозможным. </p>' +
                     '  </md-dialog-content>' +
                     '  <div class="md-actions">' +
                     '    <md-button ng-click="closeDialog()" class="md-primary">' +

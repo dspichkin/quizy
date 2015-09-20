@@ -97,6 +97,8 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
                 '<md-dialog aria-label="List dialog">' +
                 '  <md-dialog-content>' +
                 '    <p>After confirming the editing is not possible.</p>' +
+                '   <p>Ready to send the feedback to the student?</p>' +
+                '   <p>After confirming, you won’t be able to edit your comments.</p>' +
                 '  </md-dialog-content>' +
                 '  <div class="md-actions">' +
                 '    <md-button ng-click="closeDialog()" class="md-primary">' +
