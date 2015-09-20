@@ -130,7 +130,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                     '      Отмена' +
                     '    </md-button>' +
                     '    <button type="button" ng-click="submit($event)" class="btn-secondary" style="margin-left: 10px;">' +
-                    '      Подтвердить' +
+                    '      Отправить' +
                     '    </button>' +
                     '  </div>' +
                     '</md-dialog>',
