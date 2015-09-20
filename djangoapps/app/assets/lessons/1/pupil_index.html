@@ -13,12 +13,12 @@
     padding: 20px;min-height: 400px;position: relative;">
 
                 <p style="font-size: 26px;font-weight: 500;">{{model.inside_play.attempt.lesson.name}}</p>
-                <p style="font-size: 18px;">{{model.inside_play.attempt.lesson.description}}</p>
+                <p style="font-size: 18px;">22 {{model.inside_play.attempt.lesson.description}}</p>
 
                 <div>
 
-                    <!-- MEDIA урока -->
-
+                    <!-- MEDIA урока -->    
+                    {{model.lesson_dialog.lesson.media}} 111
                     <div class="question_picture" style="width: 100%;margin: 0 0 20px 0;" ng-if="model.lesson_dialog.lesson.media">
                         <img ng-if="model.lesson_dialog.lesson.media_type == 'image'" ng-src="{{model.lesson_dialog.lesson.media}}" class="md-card-image" alt="Картинка вопроса" style="width:400px;margin: 0 auto;"/>
 
