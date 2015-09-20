@@ -95,7 +95,7 @@
                     <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && 
                     !step.mode && model.lesson_dialog.data.active != false">
                         <p style="margin:10px;color:red;">
-                            После завершения написания отклика обязательно нажмите кнопку "Отправить преподавателю"
+                            После написания задания обязательно нажмите кнопку "Отправить преподавателю"
                         </p>
                     </div>
                     
@@ -128,7 +128,7 @@
                                     GA {{step.estimate.grammatical_task}}
                                 </div>
                             
-                            <p>Номер сообщения: {{step.number}}</p>
+                            <p>Номер попытки: {{step.number}}</p>
                             <div style="margin:-10px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
 
                             <!-- <p ng-bind-html="step.text"></p> -->
@@ -161,7 +161,7 @@
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="commit_step($event, step.number)">Отправить преподавателю</p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Удалить</p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Редактировать</p>
-                            <p>Номер сообщения: {{step.number}}</p>
+                            <p>Номер попытки: {{step.number}}</p>
                             <div style="margin:-10px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
 
                             <!-- <p ng-bind-html="step.text"></p> -->
@@ -199,7 +199,7 @@
                                 display: inline-block;">
 
                             <p style="float:right">Преподаватель</p>
-                            <p>Номер сообщения: {{step.number}}</p>
+                            <p>Комментарии преподавателя: {{step.number}}</p>
                             <p compile="step.text"></p>
                         </div>
                     </div>
