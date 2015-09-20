@@ -16,6 +16,11 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
     };
 
 
+    detect_media_type();
+
+
+
+
     $scope.back_to_lessons = function() {
         $scope.main.go_courses_page($scope.model.outside.course_id);
 
@@ -247,6 +252,39 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
                 }
             }
         });
-    }
+    };
+
+
+    // Опеределяем тип медиа
+    function detect_media_type() {
+        var _filename = $scope.model.lesson_dialog.lesson.media;
+        if (_filename) {
+            var _ext = _filename.substr(_filename.length - 3);
+            if (_ext.toLowerCase() == 'mp4') {
+                $scope.model.lesson_dialog.lesson.media_type = 'video';
+                $scope.model.lesson_dialog.lesson.media_sources = [{
+                    src: $sce.trustAsResourceUrl($scope.model.lesson_dialog.lesson.media),
+                    type: "video/mp4"
+                }];
+            }
+            if (_ext.toLowerCase() == 'webm') {
+                $scope.model.lesson_dialog.lesson.media_type = 'video';
+                $scope.model.lesson_dialog.lesson.media_sources = [{
+                    src: $sce.trustAsResourceUrl($scope.model.lesson_dialog.lesson.media),
+                    type: "video/webm"
+                }];
+            }
+            if (_ext.toLowerCase() == 'mp3') {
+                $scope.model.lesson_dialog.lesson.media_type = 'audio';
+                $scope.model.lesson_dialog.lesson.media_sources = [{
+                    src: $sce.trustAsResourceUrl(scope.model.lesson_dialog.lesson.media),
+                    type: "audio/mp3"
+                }];
+            }
+            if (_ext.toLowerCase() == 'jpg' || _ext.toLowerCase() == 'png' || _ext.toLowerCase() == 'gif') {
+                $scope.model.lesson_dialog.lesson.media_type = 'image';
+            }
+        }
+    };
 
 }

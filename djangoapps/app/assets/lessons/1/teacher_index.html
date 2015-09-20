@@ -31,6 +31,64 @@
                         <p style="font-size: 18px;">{{model.lesson_dialog.lesson.description}}</p>
                     </div>
 
+
+                    <div>
+                        <!-- MEDIA урока -->    
+                        <div class="question_picture" style="width: 100%;margin: 0 0 20px 0;" ng-if="model.lesson_dialog.lesson.media">
+                            <img ng-if="model.lesson_dialog.lesson.media_type == 'image'" ng-src="{{model.lesson_dialog.lesson.media}}" class="md-card-image" alt="Картинка вопроса" style="width:400px;margin: 0 auto;"/>
+
+                            <div ng-if="model.lesson_dialog.lesson.media_type == 'video'" class="md-card-image" style="width:400px;margin: 0 auto;">
+                                <videogular>
+                                    <vg-media vg-src="model.lesson_dialog.lesson.media_sources" vg-type="video">
+                                    </vg-media>
+                                    <vg-controls>
+                                        <vg-play-pause-button></vg-play-pause-button>
+                                        <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+                                        <vg-scrub-bar>
+                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                        </vg-scrub-bar>
+                                        <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                                        <vg-volume>
+                                            <vg-mute-button></vg-mute-button>
+                                            <vg-volume-bar></vg-volume-bar>
+                                        </vg-volume>
+                                        <vg-fullscreen-button></vg-fullscreen-button>
+                                    </vg-controls>
+
+                                    <vg-overlay-play></vg-overlay-play>
+                                    <vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
+                                </videogular>
+                            </div>
+
+                            <div ng-if="model.lesson_dialog.lesson.media_type == 'audio'" class="md-card-image" style="width:400px;margin:0 auto;">
+                                <videogular>
+                                    <vg-media vg-src="model.lesson_dialog.lesson.media_sources" vg-type="audio">
+                                    </vg-media>
+                                    <vg-controls>
+                                        <vg-play-pause-button></vg-play-pause-button>
+                                        <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+                                        <vg-scrub-bar>
+                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                        </vg-scrub-bar>
+                                        <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                                        <vg-volume>
+                                            <vg-mute-button></vg-mute-button>
+                                            <vg-volume-bar></vg-volume-bar>
+                                        </vg-volume>
+                                    </vg-controls>
+
+                                    <vg-overlay-play></vg-overlay-play>
+                                    <vg-poster vg-url='controller.config.plugins.poster'></vg-poster>
+                                </videogular>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+
                     <md-switch ng-model="model.lesson_dialog.data.active" aria-label="Lesson active" ng-true-value="false" ng-false-value="true" class="md-warn" style="margin:0;float:left;"
                     ng-change="commit()">
                     </md-switch>
