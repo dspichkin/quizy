@@ -109,7 +109,7 @@
                     
 
 
-                    <div ng-repeat="step in model.lesson_dialog.data.steps.slice().reverse()">
+                    <div ng-repeat="step in model.lesson_dialog.data.steps.slice().reverse() track by $index">
                         <div ng-if="!get_answer_teacher() && step.type=='teacher' && !step.mode" style="margin-top:20px;color:red;">
                             <p>After completing the response is required to press the "Send feedback"</p>
                         </div>
