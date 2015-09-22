@@ -18,6 +18,13 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
 
     detect_media_type();
 
+    // сброс флага внимания со стороны ученика
+    // $scope.model.lesson_dialog.data.active == false
+    if ($scope.model.lesson_dialog.hasOwnProperty('data')) {
+        if ($scope.model.lesson_dialog.required_attention_by_teacher == true) {
+            save();
+        }
+    }
 
 
 
@@ -101,7 +108,6 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
             template:
                 '<md-dialog aria-label="List dialog">' +
                 '  <md-dialog-content>' +
-                '    <p>After confirming the editing is not possible.</p>' +
                 '   <p>Ready to send the feedback to the student?</p>' +
                 '   <p>After confirming, you won’t be able to edit your comments.</p>' +
                 '  </md-dialog-content>' +

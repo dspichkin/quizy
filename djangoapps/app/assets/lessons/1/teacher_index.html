@@ -152,7 +152,7 @@
                                 
 
 
-                                <p>Comment: {{step.number}}</p>
+                                <p>Comment</p>
                                 
                                 <p style="font-size: 18px;" compile="step.text"></p>
 
@@ -205,7 +205,7 @@
 
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Delete</p>
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Edit</p>
-                                <p>Comment: {{step.number}}</p>
+                                <!--<p>Comment: {{step.number}}</p>-->
                                 
                                 <p style="font-size: 18px;" compile="step.text"></p>
 
@@ -237,7 +237,7 @@
                                 </div>
 
 
-                                <p>Message: {{step.number}}</p>
+                                <!-- <p>Message: {{step.number}}</p> -->
                                 <div style="margin:-10px 0 10px 0;">Number of words: {{get_number_words(step.text)}}</div>
 
                                 <!-- <p style="font-size: 18px;" ng-bind-html="step.text"></p>-->
