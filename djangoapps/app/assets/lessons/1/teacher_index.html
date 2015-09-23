@@ -224,24 +224,24 @@
                                     text-align: left;
                                     display: inline-block;">
 
+                                <div class="row" style="margin: -10px 0 8px 0px;">
+                                     <p style="float:right;margin: 6px 0 0 0;">Pupil</p>
+                                     <div class="btn btn-secondary" ripple style="float:right;margin:0 10px;" ng-click="estimate($event, step.number)">
+                                        Give a score
+                                    </div>
+                                    <div style="float:right;margin: 8px 8px 0px 0px;" ng-if="step.estimate">Current score: 
+                                        TA <b>{{step.estimate.estimate_task}}</b> /
+                                        CC <b>{{step.estimate.coherence_task}}</b> /
+                                        LR <b>{{step.estimate.lexical_task}}</b> /
+                                        GA <b>{{step.estimate.grammatical_task}}</b>
+                                    </div>
+
+                                    <div style="margin: 7px 0 0 0;">Number of words: <b>{{get_number_words(step.text)}}</b></div>
+                                </div>
+                               
                                 
-                                <p style="float:right;margin: -11px 0 0 0;">Pupil</p>
-                                <div class="btn btn-secondary shadow" ripple style="float:right;margin:-17px 10px;" ng-click="estimate($event, step.number)">
-                                    Give a score
-                                </div>
-                                <div style="float:right;margin: -9px 127px 0px 0px;" ng-if="step.estimate">Current score: 
-                                    TA {{step.estimate.estimate_task}} /
-                                    CC {{step.estimate.coherence_task}} /
-                                    LR {{step.estimate.lexical_task}} /
-                                    GA {{step.estimate.grammatical_task}}
-                                </div>
-
-
-                                <!-- <p>Message: {{step.number}}</p> -->
-                                <div style="margin:-10px 0 10px 0;">Number of words: {{get_number_words(step.text)}}</div>
-
                                 <!-- <p style="font-size: 18px;" ng-bind-html="step.text"></p>-->
-                                <pre style="font-size: 18px;">{{step.text}}</pre>
+                                <pre style="font-size: 18px;" compile="step.text"></pre>
                             </div>
                         </div>
 
