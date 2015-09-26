@@ -12,7 +12,9 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
         entities: false,
         height: '200px',
         resize_enabled: false,
-        extraPlugins: 'panelbutton,colorbutton'
+        stylesSet: 'my_styles',
+        extraPlugins: 'panelbutton,colorbutton,redbutton'
+        // extraPlugins: 'panelbutton,colorbutton'
     };
 
 
@@ -46,6 +48,11 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
 
     $scope.add_answer_teacher = function() {
         $scope.model['lesson_dialog'].temptext = null;
+        var _text_pupil = "";
+        if ($scope.model.lesson_dialog.data.steps.length > 0) {
+            _text_pupil = $scope.model.lesson_dialog.data.steps[$scope.model.lesson_dialog.data.steps.length - 1].text;
+        }
+        $scope.model.lesson_dialog.temptext = _text_pupil;
         $scope.model.lesson_dialog.data.steps.push({
             number: $scope.model.lesson_dialog.data.steps.length + 1,
             type: "teacher",

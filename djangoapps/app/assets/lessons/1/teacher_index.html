@@ -201,7 +201,7 @@
 
 
                                 <p style="float:right">Teacher</p>
-                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="commit_step($event, step.number)">Send feedback</p>
+                                <p  ng-if="$first == true" class="btn-primary" style="float:right;cursor:pointer;margin: -9px 14px 0px 0px;" ng-click="commit_step($event, step.number)">Send feedback</p>
 
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Delete</p>
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 10px 10px;" ng-click="edit_step(step.number)">Edit</p>
@@ -240,8 +240,8 @@
                                 </div>
                                
                                 
-                                <!-- <p style="font-size: 18px;" ng-bind-html="step.text"></p>-->
-                                <pre style="font-size: 18px;" compile="step.text"></pre>
+                                <p style="font-size: 18px;" compile="step.text"></p>
+                                <!-- <pre style="font-size: 18px;" compile="step.text"></pre> -->
                             </div>
                         </div>
 

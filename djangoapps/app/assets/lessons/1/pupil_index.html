@@ -131,8 +131,8 @@
                             <!-- <p>Номер попытки: {{step.number}}</p> -->
                             <div style="margin: 0px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
 
-                            <!-- <p ng-bind-html="step.text"></p> -->
-                            <pre>{{step.text}}</pre>
+                            <p compile="step.text"></p>
+                            <!-- <pre>{{step.text}}</pre> -->
                         </div>
                     </div>
 
@@ -158,14 +158,14 @@
 
 
                             <p style="float:right">Ученик</p>
-                            <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="commit_step($event, step.number)">Отправить преподавателю</p>
+                            <p  ng-if="$first == true" class="btn-primary" style="float:right;cursor:pointer;margin: -4px 14px 0px 0px;" ng-click="commit_step($event, step.number)">Отправить преподавателю</p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Удалить</p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Редактировать</p>
                             <!-- <p>Номер попытки: {{step.number}}</p> -->
                             <div style="margin: 0px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
 
-                            <!-- <p ng-bind-html="step.text"></p> -->
-                            <pre>{{step.text}}</pre>
+                            <p compile="step.text"></p>
+                            <!-- <pre>{{step.text}}</pre> -->
                         </div>
                     </div>
 
@@ -178,8 +178,12 @@
                             <div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)"> Удалить</div>
                         </div>
                         <div style="margin: 20px 0 0 0;">Количество слов: {{model.number_words}}</div>
+                        <!--
                         <textarea style="resize: none;height: 200px;margin: 20px 0px 0px 0px;width: 100%;padding:10px;" ng-model="model.lesson_dialog.temptext" ng-change="change_text()">
+                        -->
                         </textarea>
+                        <textarea ckeditor="editorOptions" ng-model="model.lesson_dialog.temptext" ng-change="change_text()"></textarea>
+
                         <!--
                         <div style="resize: none;height: 300px;margin: 20px 10px 20px 10px;padding:10px;">
                             <textarea ckeditor="editorOptions" ng-model="model.lesson_dialog.temptext" ng-change="change_text()"></textarea>

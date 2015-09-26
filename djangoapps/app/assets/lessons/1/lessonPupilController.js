@@ -21,7 +21,9 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
         allowedContent: true,
         entities: false,
         height: '200px',
-        resize_enabled: false
+        resize_enabled: false,
+        stylesSet: 'my_styles',
+        extraPlugins: 'panelbutton,colorbutton'
     };
 
     // сброс флага внимания со стороны ученика
@@ -305,25 +307,48 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
     };
 
     $scope.change_text = function(text) {
+        var _text;
         if (text) {
-            $scope.model.number_words = $scope.get_number_words(text);
+            _text = text;
         } else {
-            $scope.model.number_words = $scope.get_number_words($scope.model.lesson_dialog.temptext);
+            _text = $scope.model.lesson_dialog.temptext;
+        }
+
+        if (_text) {
+            $scope.model.number_words = $scope.get_number_words(_text);
+        } else {
+            $scope.model.number_words = 0;
         }
     };
     $scope.get_number_words = function(text) {
         if (text) {
+            text = text.replace(/<(?:.|\n)*?>/gm, '');
+            text = text.replace('&nbsp;', ' ');
+
             var _words = [];
             var temp = text.split(' ');
+
             for (var i = 0; i < temp.length; i++) {
                 var t = temp[i].split('\n');
-                if (t.length > 1) {
-                    _words = _words.concat(t);
+
+                // удаляем все пустые элементы в масивах t
+                var _t1 = [];
+                for (var j = 0; j < t.length; j++) {
+                    t[j] = t[j].replace('\n', '');
+                    if (t[j] != '') {
+                        _t1 = _t1.concat(t[j]);
+                    }
+                }
+
+                if (_t1.length > 1) {
+                    _words = _words.concat(_t1);
                 } else {
-                    _words.push(temp[i]);
+                    temp[i] = temp[i].replace('\n', '');
+                    if (temp[i] != '') {
+                        _words.push(temp[i]);
+                    }
                 }
             }
-
 
             if (_words && _words.length == 1) {
                 if (_words[0] == "") {
