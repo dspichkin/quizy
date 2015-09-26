@@ -41,7 +41,8 @@
             link: function (scope, element, attrs, ctrls) {
                 var ngModel = ctrls[0];
                 var form = ctrls[1] || null;
-                var EMPTY_HTML = '<p></p>',
+                //var EMPTY_HTML = '<p></p>',
+                var EMPTY_HTML = '',
                     isTextarea = element[0].tagName.toLowerCase() === 'textarea',
                     data = [],
                     isReady = false;
@@ -60,7 +61,7 @@
                             },
                             {
                                 name: 'styles',
-                                items: ['TextColor', 'Format']
+                                items: ['TextColor', 'Format', 'RedButton']
                             }
                             //{name: 'paragraph', items: ['BulletedList', 'NumberedList', 'Blockquote']},
                             //{name: 'editing', items: ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
@@ -82,15 +83,17 @@
                         ],
                         disableNativeSpellChecker: false,
                         uiColor: '#FAFAFA',
+                        //uiColor: '#F44336',
                         height: '400px',
-                        width: '100%'
+                        width: '100%',
+                        //extraPlugins: 'panelbutton,colorbutton'          
                     };
                     options = angular.extend(options, scope[attrs.ckeditor]);
 
                     var instance = (isTextarea) ? CKEDITOR.replace(element[0], options) : CKEDITOR.inline(element[0], options),
                         configLoaderDef = $q.defer();
 
-                    element.bind('$destroy', function () {
+                    element.bind('$destroy', function() {
                         if (instance && CKEDITOR.instances[instance.name]) {
                             CKEDITOR.instances[instance.name].destroy();
                         }
@@ -113,9 +116,9 @@
                         if (!data.length) {
                             return;
                         }
-
                         var item = data.pop() || EMPTY_HTML;
                         isReady = false;
+
                         instance.setData(item, function () {
                             setModelData(setPristine);
                             isReady = true;
@@ -125,7 +128,7 @@
                     //instance.on('pasteState',   setModelData);
                     instance.on('change', setModelData);
                     instance.on('blur', setModelData);
-                    //instance.on('key',          setModelData); // for source view
+                    // for source view
 
                     instance.on('instanceReady', function () {
                         scope.$broadcast('ckeditor.ready');
@@ -146,6 +149,17 @@
                         }
                     };
                 };
+                /*
+                CKEDITOR.stylesSet.add('my_styles', [
+                    // Block-level styles
+                    //{ name: 'Blue Title', element: 'h2', styles: { 'color': 'Blue' } },
+                    //{ name: 'Red Title' , element: 'h3', styles: { 'color': 'Red' } },
+
+                    // Inline styles
+                    { name: 'Красный текст', element: 'span', styles: { 'color': 'Red' } },
+                    { name: 'Зеленный текст', element: 'span', styles: { 'color': 'green' }}
+                ]);
+                */
 
                 if (CKEDITOR.status === 'loaded') {
                     loaded = true;
