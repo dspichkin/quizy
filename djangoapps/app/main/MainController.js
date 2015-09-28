@@ -325,9 +325,13 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                                         return;
                                     }
                                 } else {
-                                    $location.path('/');
                                     $scope.main.run(function() {
                                         $mdDialog.hide()
+                                        if (data.account_type == 2) {
+                                            $scope.main.go_lesson_page();
+                                        } else {
+                                            $scope.main.go_courses_page();
+                                        }
                                     });
                                 }
                             }, function(e) {
