@@ -7,14 +7,14 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
 
     // Editor options.
     $scope.editorOptions = {
-        language: 'ru',
+        language: 'en',
         allowedContent: true,
         entities: false,
         height: '200px',
         resize_enabled: false,
-        stylesSet: 'my_styles',
+        //stylesSet: 'my_styles',
         extraPlugins: 'panelbutton,colorbutton,redbutton'
-        // extraPlugins: 'panelbutton,colorbutton'
+        
     };
 
 
