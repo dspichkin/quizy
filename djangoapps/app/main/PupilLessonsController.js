@@ -7,7 +7,7 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
 
     $scope.model = {
         lessons: [],
-
+        nolessons: false
     };
 
 
@@ -32,9 +32,14 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
         if ($scope.user.account_type == 2) {
             $http.get('/api/mylessons/').then(function(data) {
                 $scope.model.lessons = [];
-                for (var i = 0, len = data.data.length; i < len; i++) {
-                    data.data[i].created_at = Date.parse(data.data[i].created_at);
-                    $scope.model.lessons.push(data.data[i]);
+                if (data.data.length > 0) {
+                    for (var i = 0, len = data.data.length; i < len; i++) {
+                        data.data[i].created_at = Date.parse(data.data[i].created_at);
+                        $scope.model.lessons.push(data.data[i]);
+                        
+                    }
+                } else {
+                    $scope.model.nolessons = true;
                 }
                 //console.log($scope.model.lessons)
             }, function(error) {

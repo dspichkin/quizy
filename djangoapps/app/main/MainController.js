@@ -362,6 +362,31 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
 
 
 
+    $scope.show_tip = function($event, template) {
+        $mdDialog.show({
+          targetEvent: $event,
+          templateUrl: template,
+          disableParentScroll: true,
+          clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+
+                $scope.model.login = {
+                    email: '',
+                    password: '',
+                    form_errors: {},
+                    loading: false,
+                    show_recall: false
+                };
+                $scope.form_errors = {};
+                $scope.closeDialog = function($event) {
+                    $mdDialog.hide();
+                };
+
+            }
+        });
+    };
     //===================================
 
     $scope.main.run();
