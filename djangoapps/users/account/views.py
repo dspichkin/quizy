@@ -187,6 +187,48 @@ def ajax_login(request):
 
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny,))
+def ajax_signup(request):
+
+    if request.method == 'POST':
+        # self.object = self.request.user
+        error = {
+            'form_errors': {}
+        }
+        req = json.loads(request.body.decode("utf-8"))
+        email = req.get('email')
+        if not email:
+            error['form_errors'] = {
+                "login": [u"Это поле обязательно."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+
+        if validateEmail(email) is False:
+            error['form_errors'] = {
+                "login": [u"Неверный формат Email."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+
+        password1 = req.get('password1')
+        if not password1:
+            error['form_errors'] = {
+                "password": [u"Это поле обязательно."]
+            }
+            return Response(error, status=status.HTTP_200_OK)
+
+        users = Account.objects.filter(email__iexact=email)
+        if users:
+            error['errors'] = u"Указанный Email уже зарегистирован."
+            return Response(error, status=status.HTTP_200_OK)
+
+        account = Account.objects.create(email=email, account_type=2)
+        account.set_password(password1)
+        account.save()
+
+        return Response(UserSerializer(account).data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', 'POST'])
+@permission_classes((AllowAny,))
 def ajax_recall(request):
 
     if request.method == 'POST':
@@ -251,7 +293,7 @@ class CloseableSignupMixin(object):
         }
         return self.response_class(**response_kwargs)
 
-
+"""
 class SignupView(RedirectAuthenticatedUserMixin, CloseableSignupMixin,
                  AjaxCapableProcessFormViewMixin, FormView):
     template_name = "account/signup.html"
@@ -305,7 +347,7 @@ class AjaxSignupView(SignupView):
 
 ajax_signup = AjaxSignupView.as_view()
 
-
+"""
 class ConfirmEmailView(JSONResponseMixin, TemplateResponseMixin, View):
 
     def get_template_names(self):

@@ -362,6 +362,105 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
 
 
 
+    $scope.show_tip = function($event, template) {
+        $mdDialog.show({
+            targetEvent: $event,
+            templateUrl: template,
+            disableParentScroll: true,
+            clickOutsideToClose: true,
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+
+                $scope.closeDialog = function($event) {
+                    $mdDialog.hide();
+                };
+
+            }
+        });
+    };
+
+
+
+    $scope.main.reg = function($event) {
+        $mdDialog.show({
+            targetEvent: $event,
+            templateUrl: '/assets/partials/accounts/reg.html',
+            disableParentScroll: true,
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+
+                $scope.reg = {
+                    email: '',
+                    password1: '',
+                    password2: '',
+                    errors: '',
+                    loading: false,
+                };
+                $scope.disabled = true;
+                $scope.registrated = false;
+
+                $scope.closeDialog = function($event) {
+                    $mdDialog.hide();
+                };
+
+                $scope.make_dirty_data = function() {
+                    if ($scope.reg.email == "" || $scope.reg.password1 == "" || $scope.reg.password2 == "") {
+                        $scope.disabled = true;
+                    } else {
+                        $scope.disabled = false;
+                    }
+                }
+
+                function validateEmail(email) {
+                    var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+                    return re.test(email);
+                }
+
+                $scope.submit = function() {
+                    if (!validateEmail($scope.reg.email)) {
+                        $scope.reg.errors = 'Неверный формат адреса';
+                        return;
+                    } else {
+                        if ($scope.reg.password1 == "") {
+                            $scope.reg.errors = 'Пароль обязятелен';
+                            return;
+                        }
+                        if ($scope.reg.password1 != $scope.reg.password2) {
+                            $scope.reg.errors = 'Пароль не совпадает с подтверждением';
+                            return;
+                        }
+                        $scope.reg.errors = '';
+                        var _data = {
+                            email: $scope.reg.email,
+                            password1: $scope.reg.password1,
+                            password2: $scope.reg.password2
+                        };
+                        $http.post('/accounts/ajax-signup/', JSON.stringify(_data)).then(
+                            function(data) {
+                                if (data.data.errors && data.data.errors != "") {
+                                    $scope.reg.errors = data.data.errors;
+                                    return;
+                                } else {
+                                    data.data.errors == "";
+                                    $scope.registrated = true;
+                                }
+                            },
+                            function(error) {
+                                $log.error(error);
+                            }
+                        );
+                    }
+                    //"email": $("#id_email").val(),
+                    //"password1": $("#id_password1").val(),
+                    //"password2": $("#id_password2").val(),
+                }
+
+            }
+        });
+    };
+
     //===================================
 
     $scope.main.run();
