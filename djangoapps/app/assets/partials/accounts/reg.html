@@ -1,0 +1,46 @@
+<md-dialog aria-label="" style="width:50%;">
+  <md-content>
+        <div class="content" style="padding: 20px;">
+            <div ng-show="!registrated">
+                <md-input-container style="text-align: left;
+                    width: 100%;padding: 0;
+                    float: left;">
+                    <label>Ваш email</label>
+
+                    <input class="variant_text" type="text" ng-model="reg.email"
+                        ng-change="make_dirty_data()">
+                </md-input-container>
+                <md-input-container style="text-align: left;
+                    width: 100%;padding: 0;
+                    float: left;">
+                    <label>Ваш пароль</label>
+
+                    <input class="variant_text" type="password" ng-model="reg.password1"
+                        ng-change="make_dirty_data()">
+                </md-input-container>
+                <md-input-container style="text-align: left;
+                    width: 100%;padding: 0;
+                    float: left;">
+                    <label>Подтверждения пароля</label>
+
+                    <input class="variant_text" type="password" ng-model="reg.password2"
+                        ng-change="make_dirty_data()">
+                </md-input-container>
+                <p style="color:red;height: 20px;width: 100%;overflow: hidden;">{{reg.errors}}</p>
+
+                <div style="float: right;margin: 20px;">
+                    <button type="button" ng-click="submit($event)" class="shadow btn-secondary" style="margin: 0 16px 0px 0;" ng-disabled="disabled">
+                        Регистироваться
+                    </button>
+                    <a href="" class="cancel" ng-click="closeDialog()">Отмена</a>
+                </div>
+            </div>
+            <div ng-show="registrated" style="text-align: center;">
+                <h4 style="margin: 0 0 20px 0;">Вы зарегистировались с логином {{reg.email}}</h4>
+                <button type="button" ng-click="closeDialog()" class="shadow btn-secondary" style="0px 0px 0px 0;">
+                    ОК
+                </button>
+            </div>
+        </div>
+  </md-content>
+</md-dialog>

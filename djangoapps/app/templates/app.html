@@ -117,7 +117,6 @@
         В помощь ученикам и учителям English with Experts
         <!--A snazzy solution for managing students’ homework-->
     </div>
-
     <div style="top: 0;
     position: absolute;
     right: 0;margin-right: 14px;
@@ -126,12 +125,12 @@
     -o-transition: top .3s ease-out 0.5s;
     transition: top .3s ease-out 0.5s;"
     ng-style="{'top': model.menu.positionLoginTextTop}"
-    ng-if="user.loaded">
+    >
 
         <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="main.login($event)">
             Login 
         </div>
-        <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="reg($event)">
+        <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="main.reg($event)">
             Registration
         </div>
         
@@ -176,7 +175,7 @@
                     <span>Enrolled students</span>
                     <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                 </div>
-                 <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
+                <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
                     <span>Statistics</span>
                     <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                 </div>
@@ -222,8 +221,8 @@
             position: absolute;
             width: 100%;">
 
-            <div style="text-align: center;">
-                <div class="tabs" style="height:48px;display: inline-block;width: 384px;">
+            <div style="">
+                <div class="tabs" style="height:48px;display: inline-block;width: 600px;">
                     <div class="tabs-canvas">
                         <div class="tabs-wrapper">
                             <div class="tab-item" ripple ng-click="main.go_home_page()">
@@ -238,11 +237,11 @@
                                 <span>Lessons</span>
                                 <div ng-class="{'active_menu': main.active_menu=='lessons'}"></div>
                             </div>
-                            <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_pupils_page()">
+                            <div ng-show="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_pupils_page()">
                                 <span>Enrolled students</span>
                                 <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                             </div>
-                             <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
+                            <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
                                 <span>Statistics</span>
                                 <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                             </div>
