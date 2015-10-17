@@ -75,27 +75,27 @@
 
 
                 <div ng-if="model.lesson_dialog.data.active == false">
-                    <h4>Урок остановлен преподавателем</h4>
+                    <h4><span translate>Lesson stoped by teacher</span></h4>
                 </div>
 
                 <div ng-if="get_answer_pupil()">
-                    <div ripple class="btn-secondary shadow" style="position:relative" ng-click="add_answer_pupil()">Написать</div>
+                    <div ripple class="btn-secondary shadow" style="position:relative" ng-click="add_answer_pupil()"><span translate>Write</span></div>
                 </div>
 
                 <div ng-repeat="step in model.lesson_dialog.data.steps.slice().reverse()">
 
 
                     <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && step.mode == 'finish' && model.lesson_dialog.data.active != false">
-                        <h4>Урок находится в ожидание отклика от преподавателя<h4>
+                        <h4><span translate>The lesson is waiting for a response from the teacher</span><h4>
                     </div>
                     <div ng-if="$first == true && !get_answer_pupil() && step.type=='teacher' && step.mode != 'finish' && model.lesson_dialog.data.active != false">
-                        <h4>Урок находится в ожидание отклика от преподавателя<h4>
+                        <h4><span translate>The lesson is waiting for a response from the teacher</span><h4>
                     </div>
 
                     <div ng-if="$first == true && !get_answer_pupil() && step.type=='pupil' && 
                     !step.mode && model.lesson_dialog.data.active != false">
                         <p style="margin:10px;color:red;">
-                            После написания задания обязательно нажмите кнопку "Отправить преподавателю"
+                            <span translate>After writing tasks required to click Submit teacher</span>
                         </p>
                     </div>
                     
@@ -119,9 +119,9 @@
 
 
 
-                            <p style="float:right">Ученик</p>
+                            <p style="float:right"><span translate>Pupil</span></p>
 
-                            <div style="float:right;margin:0 10px;" ng-if="step.estimate">Оценка преподавателя: 
+                            <div style="float:right;margin:0 10px;" ng-if="step.estimate"><span translate>Teacher evaluation:</span>
                                     TA {{step.estimate.estimate_task}} /
                                     CC {{step.estimate.coherence_task}} /
                                     LR {{step.estimate.lexical_task}} /
@@ -129,7 +129,7 @@
                                 </div>
                             
                             <!-- <p>Номер попытки: {{step.number}}</p> -->
-                            <div style="margin: 0px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
+                            <div style="margin: 0px 0 10px 0;"><span translate>Number of words</span>: {{get_number_words(step.text)}}</div>
 
                             <p compile="step.text"></p>
                             <!-- <pre>{{step.text}}</pre> -->
@@ -157,12 +157,12 @@
 
 
 
-                            <p style="float:right">Ученик</p>
-                            <p  ng-if="$first == true" class="btn-primary" style="float:right;cursor:pointer;margin: -4px 14px 0px 0px;" ng-click="commit_step($event, step.number)">Отправить преподавателю</p>
-                            <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Удалить</p>
-                            <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)">Редактировать</p>
+                            <p style="float:right"><span translate>Pupil</span></p>
+                            <p  ng-if="$first == true" class="btn-primary" style="float:right;cursor:pointer;margin: -4px 14px 0px 0px;" ng-click="commit_step($event, step.number)"><span translate>Send to teacher</span></p>
+                            <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)"><span translate>Delete</span></p>
+                            <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)"><span translate>Edit</span></p>
                             <!-- <p>Номер попытки: {{step.number}}</p> -->
-                            <div style="margin: 0px 0 10px 0;">Количество слов: {{get_number_words(step.text)}}</div>
+                            <div style="margin: 0px 0 10px 0;"><span translate>Number of words</span>: {{get_number_words(step.text)}}</div>
 
                             <p compile="step.text"></p>
                             <!-- <pre>{{step.text}}</pre> -->
@@ -174,10 +174,10 @@
 
                         <div ng-if="$first == true">
 
-                            <div  ng-if="$first == true" class="btn-primary shadow" ng-click="save_step(step.number)"> Сохранить</div>
-                            <div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)"> Удалить</div>
+                            <div  ng-if="$first == true" class="btn-primary shadow" ng-click="save_step(step.number)"> <span translate>Save</span></div>
+                            <div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)"> <span translate>Delete</span></div>
                         </div>
-                        <div style="margin: 20px 0 0 0;">Количество слов: {{model.number_words}}</div>
+                        <div style="margin: 20px 0 0 0;"><span translate>Number of words</span>: {{model.number_words}}</div>
                         <!--
                         <textarea style="resize: none;height: 200px;margin: 20px 0px 0px 0px;width: 100%;padding:10px;" ng-model="model.lesson_dialog.temptext" ng-change="change_text()">
                         -->
@@ -202,8 +202,8 @@
                                 text-align: left;
                                 display: inline-block;">
 
-                            <p style="float:right">Преподаватель</p>
-                            <p>Комментарии преподавателя</p>
+                            <p style="float:right"><span translate>Teacher</span></p>
+                            <p><span translate>Comments from teacher</span></p>
                             <p compile="step.text"></p>
                         </div>
                     </div>
@@ -225,7 +225,7 @@
                 text-align: left;">
 
                 <div ng-if="model.lesson_dialog.lesson.timer" class="shadow" style="text-align: center;padding: 5px 10px 5px 10px;">
-                    <h3 style="margin: 0;">Таймер урока</h3>
+                    <h3 style="margin: 0;"><span translate>Timer of lesson</span></h3>
                     <div style="width:100%;">
                         <div style="margin: 0 auto;
     width: 179px;
@@ -233,12 +233,12 @@
     font-weight: 500;" ng-style="timer_success == true && {'background-color': '#CEECCA'}">{{model.timer | secondsToTimeString: 'ss'}}</div>
                     </div>
                     <div style="margin:10px;">
-                        <button type="button" class="btn-secondary" ng-click="runTimer()" ng-class="{'btn-disabled': disable_runtimer == true}" ng-disabled="disable_runtimer == true">Запустить</button>
-                        <button type="button" class="btn-secondary" ng-click="stopTimer()">Стоп</button>
+                        <button type="button" class="btn-secondary" ng-click="runTimer()" ng-class="{'btn-disabled': disable_runtimer == true}" ng-disabled="disable_runtimer == true"><span translate>Run</span></button>
+                        <button type="button" class="btn-secondary" ng-click="stopTimer()"><span translate>Stop</span></button>
                     </div>
                     <div style="margin:10px;">
-                        <button type="button" class="btn-primary" ng-click="resetTimer()">Сброс</button>
-                        <button type="button" class="btn-primary" ng-click="inputTimer($event)" ng-class="{'btn-disabled': disable_runtimer == true}" ng-disabled="disable_runtimer == true">Изменить</button>
+                        <button type="button" class="btn-primary" ng-click="resetTimer()"><span translate>Reset</span></button>
+                        <button type="button" class="btn-primary" ng-click="inputTimer($event)" ng-class="{'btn-disabled': disable_runtimer == true}" ng-disabled="disable_runtimer == true"><span translate>Change</span></button>
                     </div>
                 </div>
                 

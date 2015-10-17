@@ -9,7 +9,7 @@
 <div class="shadow lesson_panel">
 
 <div class="col-md-12 lessons_header">
-    <div class="col-md-2 mylesson_title">Courses</div>
+    <div class="col-md-2 mylesson_title"><span translate>Courses</span></div>
     <div class="col-md-3 pull-left search_panel" style="padding:0;height: 60px;">
         <!--
         <md-input-container style="font-size: 18px;
@@ -30,16 +30,16 @@
     <table ng-table="tableParams" show-filter="true" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
         <thead style="background-color:#e3eaf1;height:60px">
             <th class="table_th">
-                Course actions
+                <span translate>Course actions</span>
             </th>
             <th class="table_th">
-                Name
+                <span translate>Name of course</span>
             </th>
             <th class="table_th">
-                Description
+                <span translate>Description</span>
             </th>
             <th class="table_th" style="width: 200px;">
-                <div style="width:200px;float:left;">Number of enrolls</div>
+                <div style="width:200px;float:left;"><span translate>Number of enrolls</span></div>
             </th>
         </thead>
 
@@ -57,9 +57,9 @@
                 </td>
                 <td style="width: 200px;text-align:left">
                     <span ng-if="course.name">{{course.name}}</span>
-                    <span ng-if="!course.name">no name </span>
+                    <span ng-if="!course.name"><span translate>no name</span></span>
                     <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
-                        margin: 5px 0;" ng-click="go_course_lessons(course.id)">Lessons ...</div>
+                        margin: 5px 0;" ng-click="go_course_lessons(course.id)"><span translate>Lessons ...</span></div>
                 </td>
                 <td style="min-width: 200px;text-align:left">
                     <span>{{course.description | htmlToPlaintext | limitTo: 100 }}{{course.description.length > 100 ? '...' : ''}}</span>
@@ -91,7 +91,7 @@
     <div style="display: inline-block;
     margin: 6px 7px 0 0;
     font-size: 23px;font-weight: 300;">
-        <span ng-bind-html="model.page.from_page"></span>-<span ng-bind-html="model.page.to_page"></span> to <span ng-bind-html="model.page.count"></span>
+        <span ng-bind-html="model.page.from_page"></span>-<span ng-bind-html="model.page.to_page"></span> <span translate>from</span> <span ng-bind-html="model.page.count"></span>
     </div>
     <div ng-if="model.page.previous" ng-click="load_courses(model.page.previous)" style="display: inline-block;border: 1px solid #c3c3c3;
     padding: 4px 0 0 0;">

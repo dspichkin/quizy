@@ -1,5 +1,5 @@
 'use strict';
-var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $timeout, $log, gettextCatalog) {
+var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $timeout, $log, $cookies, gettextCatalog) {
     $scope.user = {
         username: 'guest',
         is_authenticated: false,
@@ -17,9 +17,11 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
     $scope.model = {
         selectedLanguage: "ru",
         languages: [{
+            pclass: "flag_ru",
             title: "Русский",
             value: "ru"
         }, {
+            pclass: "flag_en",
             title: "English",
             value: "en"
         }],
@@ -208,18 +210,21 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         }).then(function(data) {
             $scope.user = data;
             $scope.user.loaded = true;
-            if (data.hasOwnProperty('language')) {
-                $scope.model.selectedLanguage = data.language;
-                gettextCatalog.setCurrentLanguage($scope.model.selectedLanguage);
+            if ($scope.user.is_authenticated === true) {
+                if (data.hasOwnProperty('language')) {
+                    $scope.model.selectedLanguage = data.language;
+                    gettextCatalog.setCurrentLanguage($scope.model.selectedLanguage);
+                }
+            } else {
+                var _language = $cookies.get('language');
+                if (_language) {
+                    gettextCatalog.setCurrentLanguage(_language);
+                    $scope.model.selectedLanguage = _language;
+                 } else {
+                    gettextCatalog.setCurrentLanguage('ru');
+                 }
             }
-
-            console.log(gettextCatalog)
             
-            gettextCatalog.debug = true;
-
-            var fmts = gettext('This');
-            console.log('fmts ', fmts)
-
             if (callback) {
                 callback();
             }
@@ -455,11 +460,11 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                         };
                         $http.post('/accounts/ajax-signup/', JSON.stringify(_data)).then(
                             function(data) {
-                                if (data.data.errors && data.data.errors != "") {
+                                if (data.data.errors && data.data.errors !== "") {
                                     $scope.reg.errors = data.data.errors;
                                     return;
                                 } else {
-                                    data.data.errors == "";
+                                    data.data.errors = "";
                                     $scope.registrated = true;
                                 }
                             },
@@ -471,10 +476,19 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                     //"email": $("#id_email").val(),
                     //"password1": $("#id_password1").val(),
                     //"password2": $("#id_password2").val(),
-                }
-
+                };
             }
         });
+    };
+
+    $scope.change_language = function() {
+        var _data = {
+            'next': '',
+            'language': $scope.model.selectedLanguage
+        };
+        $cookies.put('language', $scope.model.selectedLanguage);
+        gettextCatalog.setCurrentLanguage($scope.model.selectedLanguage);
+        $http.post('/i18n/setlang/', _data);
     };
 
     //===================================
@@ -483,5 +497,6 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
 };
 
 
-module.exports = ['$scope', '$state', '$sce', '$http', '$mdDialog', '$location', '$timeout', '$log', 'gettextCatalog', MainCtrl];
+module.exports = ['$scope', '$state', '$sce', '$http', '$mdDialog',
+    '$location', '$timeout', '$log', '$cookies', 'gettextCatalog', MainCtrl];
 

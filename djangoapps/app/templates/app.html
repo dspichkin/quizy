@@ -36,18 +36,21 @@
     
     <style>
         md-tabs .md-tab.md-active, md-tabs .md-tab.md-focused {
-                color: rgb(255,255,255);
+            color: rgb(255,255,255);
         }
         .tabsdemoDynamicHeight md-content {
-  background-color: transparent !important; }
-  .tabsdemoDynamicHeight md-content md-tabs {
-    background: #f6f6f6;
-    border: 1px solid #e1e1e1; }
-    .tabsdemoDynamicHeight md-content md-tabs md-tabs-canvas {
-      background: white; }
-  .tabsdemoDynamicHeight md-content h1:first-child {
-    margin-top: 0; }
-
+            background-color: transparent !important; 
+        }
+        .tabsdemoDynamicHeight md-content md-tabs {
+            background: #f6f6f6;
+            border: 1px solid #e1e1e1;
+        }
+        .tabsdemoDynamicHeight md-content md-tabs md-tabs-canvas {
+            background: white;
+        }
+        .tabsdemoDynamicHeight md-content h1:first-child {
+            margin-top: 0;
+        }
     </style>
     
 </head>
@@ -71,80 +74,56 @@
      -o-transition: all .2s ease-out 0.1s;
      transition: all .2s ease-out 0.1s;
      " >
-     <button ng-if="model.message.text.length > 1" class="md-raised pull-left md-button md-default-theme" ripple ng-click="model.message.next_message()" style="background-color: #FF9E37;    margin: -8px 43px 0 0px;"><span>Next</span></button>
+     <button ng-if="model.message.text.length > 1" class="md-raised pull-left md-button md-default-theme" ripple ng-click="model.message.next_message()" style="background-color: #FF9E37;margin: -8px 43px 0 0px;"><span>Next</span></button>
      <span ng-if="model.message.text.length > 1"> {{model.message.current_message + 1}} из {{model.message.text.length}}: </span>
      <span ng-bind-html="model.message.text[model.message.current_message]"></span>
 
      </div>
-<div style="width:100%;
-    min-width: 1040px;
-    overflow-x: hidden;
-    position: relative;
-    color: white;
-    height:300px;
-    background-repeat: no-repeat;
-    background-image: url('/assets/img/head_bg.png');
-    -webkit-transition: top .2s ease-out 0.1s;
-     -moz-transition: top .2s ease-out 0.1s;
-     -o-transition: top .2s ease-out 0.1s;
-     transition: top .2s ease-out 0.1s;" ng-style="{'top': model.menu.positionTop}" >
-     <!--
-    <div ng-show="user && user.is_authenticated" style="font-size:15px;padding: 10px 0 0 18px;" >Вы зашли под пользователем {{user.email}}</div>
-    -->
-
-    <div style="
-        height: 34px;
-    width: 100%;
-    padding: 0px 0px 0px 17px;
-    color: white;
-    position: absolute;
-    font-size: 40px;
-    top:65px;
-    -webkit-transition: top .2s ease-out 0.1s;
-    -moz-transition: top .2s ease-out 0.1s;
-    -o-transition: top .2s ease-out 0.1s;
-    transition: top .2s ease-out 0.1s;
-     "
-    ng-style="{
-        'left1': model.menu.positionTitleLeft,
-        'top1': model.menu.positionTitleTop}"
-    >
-    Тренажер IELTS Writing 
-    <!-- Teachers’ toolkit -->
+<div class="top-panel" ng-style="{'top': model.menu.positionTop}" >
+    
+    <div class="top-panel-title"
+        ng-style="{
+            'left1': model.menu.positionTitleLeft,
+            'top1': model.menu.positionTitleTop}"
+        >
+        <span translate>IELTS Writing Simulator</span>
+        <!-- Teachers’ toolkit -->
     </div>
-    <div style="position: absolute;
-        top: 39%;
-        left: 17px;">
-        В помощь ученикам и учителям English with Experts
+    <div style="position: absolute;top: 39%;left: 17px;">
+        <span translate>To help students and teachers English with Experts</span>
         <!--A snazzy solution for managing students’ homework-->
     </div>
-    <div style="top: 0;
-    position: absolute;
-    right: 0;margin-right: 14px;
-    -webkit-transition: top .3s ease-out 0.5s;
-    -moz-transition: top .3s ease-out 0.5s;
-    -o-transition: top .3s ease-out 0.5s;
-    transition: top .3s ease-out 0.5s;"
-    ng-style="{'top': model.menu.positionLoginTextTop}"
-    >
+    <div class="top-panel-right"
+        ng-style="{'top': model.menu.positionLoginTextTop}">
 
-        <div style="margin:15px 0 0 0; display:inline-block;">
-            <select id="language" name="language" ng-change="change_language()" ng-model="model.selectedLanguage">
-                <option ng-repeat="lang in model.languages" value="{{lang.value}}" ng-selected="model.selectedLanguage == lang.value">{{lang.title}}</option>
-            </select>
+        <div style="margin:4px 0 0 0; display:inline-block;">
+            <div style="display: inline-block;padding-top: 10px;float: left;">
+                <div ng-class="{
+                flag_ru: model.selectedLanguage == 'ru',
+                flag_en: model.selectedLanguage == 'en',
+                }"></div>
+            </div>
+            <md-input-container class="md-padding" style="margin-top: 2px;margin-right: 10px;padding:0;display: inline-block;">
+                <md-select ng-change="change_language()" ng-model="model.selectedLanguage" style="padding: 0;margin: 0;">
+                    <md-option ng-repeat="lang in model.languages" value="{{lang.value}}" ng-selected="model.selectedLanguage == lang.value">
+                        <div ng-class="lang.pclass"></div><div style="display: inline-block;position: absolute;top: 11px;">{{lang.title}}</div>
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+
         </div>
 
 
-        <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="main.login($event)">
+        <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="main.login($event)" translate>
             Login 
         </div>
-        <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="main.reg($event)">
+        <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="main.reg($event)" translate>
             Registration
         </div>
         
          <div class="btn-menu" ng-if="user.is_authenticated">
-            <div ng-if="user.is_authenticated" ripple ng-click="main.go_profile()" style="float: left;
-    margin: 0;cursor: pointer;width: 27px;"><i class="material-icons" style="font-size: 26px;color:#ff9e37">settings</i></div>
+            <div ng-if="user.is_authenticated" ripple ng-click="main.go_profile()" style="float: left;margin: 0;cursor: pointer;width: 27px;"><i class="material-icons" style="font-size: 26px;color:#ff9e37">settings</i></div>
 
             <md-menu>
                 <div style="margin: 0 0 0 33px;cursor: pointer;border-bottom: 1px solid #ff9e37;overflow: hidden;text-transform: initial;" aria-label="menu" ng-click="$mdOpenMenu()">{{user.email}}</div>
@@ -172,19 +151,19 @@
                     <div ng-class="{'active_menu': main.active_menu=='main'}"></div>
                 </div>
                 <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_courses_page()">
-                    <span>Courses</span>
+                    <span translate>Courses</span>
                     <div ng-class="{'active_menu': main.active_menu=='courses'}"></div>
                 </div>
                 <div ng-if="user && user.is_authenticated && user.account_type == 2" class="tab-item" ripple ng-click="main.go_lesson_page()">
-                    <span>Lessons</span>
+                    <span translate>Lessons</span>
                     <div ng-class="{'active_menu': main.active_menu=='lessons'}"></div>
                 </div>
                 <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_pupils_page()">
-                    <span>Enrolled students</span>
+                    <span translate>Enrolled students</span>
                     <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                 </div>
                 <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
-                    <span>Statistics</span>
+                    <span translate>Statistics</span>
                     <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                 </div>
                 <!--
@@ -234,23 +213,23 @@
                     <div class="tabs-canvas">
                         <div class="tabs-wrapper">
                             <div class="tab-item" ripple ng-click="main.go_home_page()">
-                                <span>Home</span>
+                                <span translate>Home</span>
                                 <div ng-class="{'active_menu': main.active_menu=='main'}"></div>
                             </div>
                             <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_courses_page()">
-                                <span>Courses</span>
+                                <span translate>Courses</span>
                                 <div ng-class="{'active_menu': main.active_menu=='courses'}"></div>
                             </div>
                             <div ng-if="user && user.is_authenticated && user.account_type == 2" class="tab-item" ripple ng-click="main.go_lesson_page()">
-                                <span>Lessons</span>
+                                <span translate>Lessons</span>
                                 <div ng-class="{'active_menu': main.active_menu=='lessons'}"></div>
                             </div>
                             <div ng-show="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_pupils_page()">
-                                <span>Enrolled students</span>
+                                <span translate>Enrolled students</span>
                                 <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                             </div>
                             <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
-                                <span>Statistics</span>
+                                <span translate>Statistics</span>
                                 <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                             </div>
                         </div>

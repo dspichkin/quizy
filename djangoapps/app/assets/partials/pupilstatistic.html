@@ -6,13 +6,13 @@
 		    <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
 		        <thead style="background-color:#e3eaf1;height:60px">
 		            <th class="table_th">
-		                Урок
+		                <span translate>Lesson</span>
 		            </th>
 		            <th class="table_th">
-		                Описание
+		                <span translate>Description</span>
 		            </th>
 		            <th class="table_th">
-		                Дата перемещения в статистику
+		                <span translate>Date of moving in Statistics</span>
 		            </th>
 		            <!--
 		            <th class="table_th">
@@ -30,7 +30,7 @@
 		                    <div ng-if="enroll.lesson.course.name" style="font-size:9px">{{enroll.lesson.course.name | htmlToPlaintext | limitTo: 25}}{{enroll.lesson.course.name.length > 25 ? '...' : ''}}</div>
 
 		                    <span ng-if="enroll.lesson.name">{{enroll.lesson.name | htmlToPlaintext | limitTo: 25}}{{enroll.lesson.name.length > 25 ? '...' : ''}}</span>
-		                    <span ng-if="!enroll.lesson.name">{Урок без имени</span>
+		                    <span ng-if="!enroll.lesson.name"><span translate>Lesson without name</span></span>
 		                    </div>
 		                    
 		                </td>
@@ -68,7 +68,7 @@
 		    <div style="display: inline-block;
 		    margin: 6px 7px 0 0;
 		    font-size: 23px;font-weight: 300;">
-		        <span ng-bind-html="model.page.from_page"></span>-<span ng-bind-html="model.page.to_page"></span> из <span ng-bind-html="model.page.count"></span>
+		        <span ng-bind-html="model.page.from_page"></span>-<span ng-bind-html="model.page.to_page"></span> <span translate>from</span> <span ng-bind-html="model.page.count"></span>
 		    </div>
 		    <div ng-if="model.page.previous" ng-click="load_statistic(model.page.previous)" style="display: inline-block;border: 1px solid #c3c3c3;
 		    padding: 4px 0 0 0;">

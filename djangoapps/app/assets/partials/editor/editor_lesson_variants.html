@@ -7,7 +7,7 @@
             <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" class="variant">
                 <div style="clear:both;margin: -17px 0 0 0;">
                     <md-input-container style="text-align: left;">
-                    <label>Input text</label>
+                    <label><span translate>Input text</span></label>
                         <textarea style="width:100%; height:200px;resize: none;" 
                             ng-model="item.text"
                             ng-change="make_dirty_data()"
@@ -27,7 +27,7 @@
         <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'radiobox'" class="variant_radiobox">
             
             <button class="btn btn-primary add_variant" ng-click="add_variant('radiobox')" style="margin: 0 0 20px 20px;">
-            Add answer</button>
+            <span translate>Add answer</span></button>
 
             <ul class="radio_variants">
                 <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" class="variant">
@@ -46,7 +46,7 @@
                         <md-input-container style="text-align: left;
                             width: 82%;
                             float: left;">
-                            <label>Possible answer</label>
+                            <label><span translate>Possible answer</span></label>
 
                             <input class="variant_text" type="text" ng-model="item.text"
                                 ng-change="make_dirty_data()"
@@ -66,7 +66,7 @@
                         <md-input-container style="text-align: left;
                             width: 82%;
                             margin: -30px 0px 0px 32px;">
-                            <label>Reflection response</label>
+                            <label><span translate>Reflection response</span></label>
 
                             <input class="variant_text" type="text" ng-model="item.reflexy"
                                 ng-change="make_dirty_data()"
@@ -78,7 +78,7 @@
         </div>
         <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'checkbox'" class="variant_checkbox">
             <button class="btn btn-primary add_variant " ng-click="add_variant('checkbox')" style="margin: 0 0 0 20px;">
-            Add answer</button>
+            <span translate>Add answer</span></button>
 
 
             <ul class="checkbox_variants">
@@ -97,7 +97,7 @@
                         <md-input-container style="text-align: left;
                             width: 82%;
                             float: left;">
-                            <label>Possible answer</label>
+                            <label><span translate>Possible answer</span></label>
                             <input class="variant_text" type="text" ng-model="item.text"
                                 ng-change="make_dirty_data()"
                                 ng-model-onblur ng-blur="finish_changed_variant(item.id)">
@@ -114,7 +114,7 @@
                         <md-input-container style="text-align: left;
                             width: 82%;
                             margin: -30px 0px 0px 32px;">
-                            <label>Reflection response</label>
+                            <label><span translate>Reflection response</span></label>
 
                             <input class="variant_text" type="text" ng-model="item.reflexy"
                                 ng-change="make_dirty_data()"
@@ -131,7 +131,7 @@
                 <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" class="variant">
                     <div style="clear:both;margin: -17px 0 0 0;">
                         <md-input-container style="text-align: left;">
-                        <label>Correct answer</label>
+                        <label><span translate>Correct answer</span></label>
                             <input class="variant_text" type="text" 
                             ng-model="item.text"
                             ng-change="make_dirty_data()"
@@ -144,7 +144,7 @@
 
         <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'pairs'" class="variant_pairs">
             <button class="btn btn-primary add_variant" ng-click="add_variant('pairs')" style="margin: 0 0 20px 20px;">
-            Add pair</button>
+            <span translate>Add pair</span></button>
 
             <ul class="checkbox_pairs">
                 <li ng-repeat="item in model.editor.current_lesson.pages[model.editor.current_page_index].variants" ng-if="item.pair_type == 'question'" class="variant">
@@ -152,7 +152,7 @@
                         display: inline-block;
                         width: 100%;">
                         <md-input-container style="text-align: left;width:43%;float: left;">
-                            <label>Left part of the answer</label>
+                            <label><span translate>Left part of the answer</span></label>
 
                                 <input class="variant_pair_page" style="width:100%;"
                                     type="text"
@@ -161,7 +161,7 @@
                                     ng-model-onblur ng-blur="finish_changed_variant(item.id)">
                         </md-input-container>
                         <md-input-container style="text-align: left;width:45%;float: left;margin: 0px 0px 0 10px;">
-                            <label>Right part of the answer</label>
+                            <label><span translate>Right part of the answer</span></label>
                             <input class="variant_pair_answer" style="width:100%;" type="text"
                                 ng-model="item.pair_object.text"
                                 ng-if="item.pair_object.pair_type == 'answer'"

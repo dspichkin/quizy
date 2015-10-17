@@ -4,7 +4,7 @@
                     
 
         <div class="col-md-12 lessons_header">
-            <div class="col-md-2 mylesson_title">My pupils</div>
+            <div class="col-md-2 mylesson_title"><span translate>My pupils</span></div>
             <div class="col-md-8 pull-left search_panel" style="padding: 0 12px;
                 height: 60px;
                 overflow: hidden;">
@@ -15,11 +15,11 @@
             <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
                 <thead style="background-color:#e3eaf1;height:60px">
                     <th class="table_th" style="text-align:center;">
-                        Pupil
+                        <span translate>Pupil</span>
                     </th>
                     <th class="table_th" style="width: 400px;">
                         <div style="width: 470px;float: left;">Enroll</div>
-                        <div style="">Result/Attempts</div>
+                        <div style=""><span translate>Result/Attempts</span></div>
                     </th>
                 </thead>
 
@@ -33,7 +33,7 @@
                         </td>
                         <td style="text-align:left;">
                             <div style="max-height: 200px;overflow-y: auto;">
-                                <div style="font-weight:500;color: #00A2EA">courses</div>
+                                <div style="font-weight:500;color: #00A2EA"><span translate>courses</span></div>
                                 <div class="enroll_pupil" ng-repeat="enroll in pupil.course_enrolls" style="display:block;width:100%;">
                                     <div style="margin: 0 0 0 0;
                                             max-height: 50px;
@@ -48,17 +48,17 @@
                                         </div> 
                                     </div>
 
-                                    <div class="remove_enroll" ng-click="remove_enroll(enroll.id)" style="    float: left;margin: 0px 6px 0 0;">
+                                    <div class="remove_enroll" ng-click="remove_enroll(enroll.id)" style="float: left;margin: 0px 6px 0 0;">
                                         <i class="material-icons icon-remove-enroll" style="font-size:12px;">mode_edit</i>
                                     </div>
                                     <div style="font-size: 12px;margin: 0 0 0 17px;">
-                                        <div ng-if="enroll.auto_enroll == true">auto enroll lessons</div>
-                                        <div ng-if="enroll.auto_enroll == false">custom enroll lesson</div>
+                                        <div ng-if="enroll.auto_enroll == true"><span translate>auto enroll lessons</span></div>
+                                        <div ng-if="enroll.auto_enroll == false"><span translate>custom enroll lesson</span></div>
                                     </div> 
                                 </div>
 
 
-                                <div style="font-weight:500;color: #ff9e37">lessons</div>
+                                <div style="font-weight:500;color: #ff9e37"><span translate>lessons</span></div>
                                 <div class="enroll_pupil" ng-repeat="enroll in pupil.lesson_enrolls" style="width:100%;">
                                     <div style="margin: 0 0 0 0;
                                             width: 500px;
@@ -118,7 +118,7 @@
         <div style="display: inline-block;
         margin: 6px 7px 0 0;
         font-size: 23px;font-weight: 300;">
-            <span ng-bind-html="model.page.from_page"></span>-<span ng-bind-html="model.page.to_page"></span> из <span ng-bind-html="model.page.count"></span>
+            <span ng-bind-html="model.page.from_page"></span>-<span ng-bind-html="model.page.to_page"></span> <span translate>from</span> <span ng-bind-html="model.page.count"></span>
         </div>
         <div ng-if="model.page.previous" ng-click="load_pupils(model.page.previous)" style="display: inline-block;border: 1px solid #c3c3c3;
         padding: 4px 0 0 0;">

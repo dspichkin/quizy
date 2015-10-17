@@ -9,13 +9,13 @@
                 <md-button ng-click="find_teacher($event)" class="md-raised pull-right" style="background-color: #FF9E37;">Найти преподавателя</md-button>
                 -->
                 <div style="padding: 100px;font-size: 20px;">
-                    <p>На вас пока не назначенно ни одного урока</p>
+                    <p><span translate>You have not assigned a single lesson yet</span></p>
                 </div>
             </div>
 
             <div ng-if="model.lessons.length > 0">
                 <div class="col-md-12 lessons_header">
-                    <div class="mylesson_title">Мои уроки</div>
+                    <div class="mylesson_title"><span translate>My lessons</span></div>
                     <!--
                     <md-button ng-click="find_teacher($event)" class="md-raised pull-right" style="background-color: #FF9E37;margin: -46px 18px 0 0;">Найти преподавателя</md-button>
                     -->
@@ -25,19 +25,19 @@
                         <table class="table lessons_list" style="margin-bottom: 0;">
                             <thead style="background-color:#e3eaf1;height:60px">
                                 <th class="table_th">
-                                    Запуск
+                                    <span translate>Run</span>
                                 </th>
                                 <th class="table_th">
-                                    Название урока
+                                    <span translate>Name of lesson</span>
                                 </th>
                                 <th class="table_th">
-                                    Краткое описание урока
+                                    <span translate>Short description</span>
                                 </th>
                                 <th class="table_th">
-                                    Кем назначен урок
+                                    <span translate>Teacher</span>
                                 </th>
                                 <th class="table_th">
-                                    Действия
+                                    <span translate>Action</span>
                                 </th>
                             </thead>
 
@@ -51,17 +51,14 @@
                                         <div style="display: flex;cursor: pointer;color:#337ab7" ng-click="play_lesson(item.id)" 
                                             ng-class="{enroll_row_required_attention1: item.required_attention_by_pupil}"><i class="material-icons">play_arrow</i>
                                             <div ng-if="item.required_attention_by_pupil"
-                                                style="color:red;position: absolute;top: 2px;left: 17px;font-size:10px;">Есть не прочитанный отзыв !</div>
+                                                style="color:red;position: absolute;top: 2px;left: 17px;font-size:10px;"><span translate>You have not read a review!</span></div>
                                             <div style="margin: 2px 0 0 6px;">
-                                             Выполнить</div>
-                                        <!--
-                                        <div ng-class="{enroll_required_attention: item.required_attention_by_pupil}" style="margin: -2px 0 0 0;"></div>
-                                        -->
+                                             <span translate>Run</span></div>
                                         </div>
                                     </td>
                                     <td style="width: 200px;text-align:left;padding: 17px 0 0 0;">
                                         <span ng-if="item.lesson.name">{{item.lesson.name | htmlToPlaintext | limitTo: 25 }}{{item.lesson.name.length >= 25 ? '...' : ''}}</span>
-                                        <span ng-if="!item.lesson.name">Урок без имени</span>
+                                        <span ng-if="!item.lesson.name"><span translate>Lesson without name</span></span>
                                     </td>
                                     <td style="min-width: 200px;max-width: 250px;text-align:left;padding: 17px 0 0 0;">
                                         <span>{{item.lesson.description | htmlToPlaintext | limitTo: 25 }}{{item.lesson.description.length >= 25 ? '...' : ''}}</span>
@@ -77,9 +74,9 @@
                                     <td style="text-align:left;width: 130px;">
                                         <div ng-if="item.success==null" style="width:100%;margin: 10px;cursor: pointer;" ng-click="reject_lesson($event, item.id)">
                                         <i class="material-icons" style="float: left;color: red;margin: -1px 5px 0 0;">sync_disabled</i>
-                                        Отвергнуть</div>
+                                        <span translate>Reject</span></div>
                                         <div ng-if="item.success!=null" style="width:100%;margin: 10px;cursor: pointer;"  ng-click="to_archive($event, item.id)">
-                                        <i class="material-icons" style="float: left;color: #2c8de1;margin: -1px 5px 0 0px;">archive</i>В архив</div>
+                                        <i class="material-icons" style="float: left;color: #2c8de1;margin: -1px 5px 0 0px;">archive</i><span translate>To archive</span></div>
                                     </td>
                                 </tr>
                             </tbody>

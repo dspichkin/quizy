@@ -1,6 +1,6 @@
 'use strict';
 
-//global.jQuery = global.$ = require('jquery');
+global.jQuery = global.$ = require('jquery');
 var angular = require('angular');
 if (!angular.version) {
     // эта версия Angular не работает с require
@@ -63,13 +63,8 @@ window.app = angular.module('quizy', [
     .run(function(gettextCatalog) {
         //states.run();
 
-        gettextCatalog.setStrings('ru', {"Home":"Домой"});
-
-
-        console.log(gettextCatalog)
-        
-
-        
+        gettextCatalog.loadRemote('/assets/js/translations.json');
+        gettextCatalog.debug = true;
 
     }); //states.run
 
@@ -109,40 +104,6 @@ app.config(function($controllerProvider, $mdThemingProvider, $httpProvider) {
     $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'; 
 
 });
-//.config(['$httpProvider', function($httpProvider) {
-//    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-//    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-//}])
 
 
-/*
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
 
-var csrftoken = getCookie('csrftoken');
-
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-    }
-});
-*/
