@@ -62,9 +62,14 @@ window.app = angular.module('quizy', [
     .config(states.config)
     .run(function(gettextCatalog) {
         //states.run();
+
+        gettextCatalog.setStrings('ru', {"Home":"Домой"});
+
+
         console.log(gettextCatalog)
-        gettextCatalog.setCurrentLanguage('en');
-        gettextCatalog.debug = true;
+        
+
+        
 
     }); //states.run
 
