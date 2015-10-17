@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
+# from __future__ import unicode_literals
 
 import datetime
 import os
@@ -8,11 +8,12 @@ import os
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.crypto import get_random_string
 from django.contrib.auth.models import (AbstractUser, BaseUserManager)
+from django.conf import settings
 
 from ..utils import build_absolute_uri
 # from .. import app_settings as users_app_settings
@@ -137,8 +138,8 @@ class AccountManager(BaseUserManager):
 
 
 class Organization(models.Model):
-    name = models.CharField('название', max_length=100)
-    slug = models.SlugField('код для URL')
+    name = models.CharField(_(u'название'), max_length=100)
+    slug = models.SlugField(_(u'код для URL'))
 
     def __unicode__(self):
         return self.name
@@ -162,36 +163,33 @@ AbstractUser._meta.get_field('email').null = False
 
 TEACHER, PUPIL = 1, 2
 ACCOUNT_TYPES = (
-    (TEACHER, 'Преподователь'),
-    (PUPIL, 'Ученик'),
+    (TEACHER, _(u'Преподователь')),
+    (PUPIL, _(u'Ученик')),
 )
 
 
 class Account(AbstractUser):
 
-    middle_name = models.CharField('отчество', max_length=50, blank=True)
-    avatar = models.ImageField('аватар', upload_to=avatar_uploader, max_length=1024, blank=True)
+    middle_name = models.CharField(_(u'отчество'), max_length=50, blank=True)
+    avatar = models.ImageField(_(u'аватар'), upload_to=avatar_uploader, max_length=1024, blank=True)
 
-    is_org = models.BooleanField('является ли администратором?', default=False)
-    org = models.ForeignKey(Organization, verbose_name='администрирует организацию',
+    is_org = models.BooleanField(_(u'является ли администратором?'), default=False)
+    org = models.ForeignKey(Organization, verbose_name=_(u'администрирует организацию'),
                             null=True, blank=True, related_name='admin', related_query_name='account')
-
-    member_of = models.ManyToManyField(Organization, verbose_name='к каким организациям относится',
+    member_of = models.ManyToManyField(Organization, verbose_name=_(u'к каким организациям относится'),
                                        blank=True, related_name='accounts',
                                        related_query_name='account')
-
     verified = models.BooleanField(verbose_name=_('verified'), default=False)
-
-    number_of_pupil = models.IntegerField('кол-во учеников', default=0)
-    account_type = models.IntegerField('тип аккаунта', default=1, choices=ACCOUNT_TYPES)
-
-    pupils = models.ManyToManyField('self', 'ученики', null=True, blank=True)
+    number_of_pupil = models.IntegerField(_(u'кол-во учеников'), default=0)
+    account_type = models.IntegerField(_(u'тип аккаунта'), default=1, choices=ACCOUNT_TYPES)
+    pupils = models.ManyToManyField('self', _(u'ученики'), null=True, blank=True)
+    language = models.CharField(_(u'выбранный язык интерфейса'), max_length="10", default='ru', choices=settings.LANGUAGES)
 
     objects = AccountManager()
 
     class Meta(AbstractUser.Meta):
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
+        verbose_name = _(u'Пользователь')
+        verbose_name_plural = _(u'Пользователи')
 
     def get_full_name(self):
         """
@@ -268,11 +266,11 @@ class User(Account):
 
 class SystemMessage(models.Model):
     user = models.ForeignKey(Account)
-    text = models.TextField('Текст сообщения')
+    text = models.TextField(_(u'Текст сообщения'))
 
     class Meta:
-        verbose_name = 'Системное сообщение'
-        verbose_name_plural = 'Системное сообщение'
+        verbose_name = _(u'Системное сообщение')
+        verbose_name_plural = _(u'Системное сообщение')
 
     def __unicode__(self):
         return '%s - %s' % (self.user, self.text[:100])

@@ -7,6 +7,7 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.shortcuts import render
+from django.views.i18n import javascript_catalog
 
 from rest_framework.routers import DefaultRouter
 
@@ -21,6 +22,10 @@ from quizy.pupil import (mylessons, answers, play, reject_lesson, mystatistic, e
 from quizy.page import PageViewSet
 from quizy.materials import courses, lessons
 # LessonsViewSet,
+
+js_info_dict = {
+    'packages': ('your.app.package',),
+}
 
 
 def app(request):
@@ -39,6 +44,9 @@ router.register('pages', PageViewSet)
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^i18n/', include('i18n.urls')),
+    url(r'^jsi18n/', javascript_catalog, js_info_dict),
 
     url(r'^quizy/', include('quizy.urls')),
 
@@ -66,7 +74,6 @@ urlpatterns = [
     url(r'^api/statistic/(\d+)?/?$', statistic, name='statistic'),
 
     url(r'^api/pages/(\d+)/upload/$', page_picture_upload, name='page_picture_upload'),
-    # url(r'^api/archive/(\d+)?/?$', lesson_archive, name='lesson_archive'),
 
     # Авторизация
     url(r'^accounts/', include('users.urls')),
@@ -81,5 +88,5 @@ if settings.DEBUG:
     from django.conf.urls.static import static
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-urlpatterns += [url(r'^.*$', app)]
+#urlpatterns += [url(r'^.*$', app)]
 

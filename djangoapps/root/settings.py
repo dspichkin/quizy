@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -36,6 +37,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = (
     'suit',
+    'suit_redactor',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,6 +50,7 @@ INSTALLED_APPS = (
     'rest_framework',
 
     'quizy',
+    'i18n',
 
     'users',
     'users.account',
@@ -66,6 +69,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'quizy.middleware.DisableCSRF'
@@ -73,13 +77,13 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'root.urls'
 
-TEMPLATE_CONTEXT_PROCESSORS = (
+#TEMPLATE_CONTEXT_PROCESSORS = (
     # Required by `allauth` template tags
-    'django.core.context_processors.request',
+#    'django.core.context_processors.request',
     # `allauth` specific context processors
-    'allauth.account.context_processors.account',
-    'allauth.socialaccount.context_processors.socialaccount',
-)
+#    'allauth.account.context_processors.account',
+#    'allauth.socialaccount.context_processors.socialaccount',
+#)
 
 TEMPLATES = [
     {
@@ -92,6 +96,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.core.context_processors.i18n',
 
                 # `users` specific context processors
                 'users.account.context_processors.account',
@@ -120,15 +125,16 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'ru-ru'
+LANGUAGE_CODE = 'ru'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+LOCALE_PATHS = (os.path.join(BASE_DIR, '..', 'locale'),)
 LANGUAGES = (
-    ('ru', 'Russian'),
+    ('ru', _('Russian')),
+    ('en', _('English')),
 )
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -139,9 +145,10 @@ STATICFILES_DIRS = (
 )
 STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'assets')
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
 MEDIA_URL = '/media/'
 
+THUMBNAIL_PRESERVE_FORMAT = True
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [

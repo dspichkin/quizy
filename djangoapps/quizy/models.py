@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+# from __future__ import unicode_literals
+
 import os
 import json
 import shutil
 import uuid
 
-from uuid import uuid1
 from random import randrange
 
 from django.utils import timezone
@@ -12,6 +13,7 @@ from django.db import models
 from django.conf import settings
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
+from django.utils.translation import ugettext as _
 
 from sorl.thumbnail import ImageField
 
@@ -44,18 +46,18 @@ def course_picture_upload(obj, fn):
 
 
 class Course(BaseModel):
-    is_active = models.BooleanField('активен?', default=True)
-    name = models.CharField('название курса', max_length=140, blank=True, null=True)
-    description = models.TextField('описание', blank=True)
+    is_active = models.BooleanField(_(u'активен?'), default=True)
+    name = models.CharField(_(u'название курса'), max_length=140, blank=True, null=True)
+    description = models.TextField(_(u'описание'), blank=True)
 
     created_by = models.ForeignKey('account.Account', related_name='courses',
-                                 verbose_name='создатель', blank=True, null=True)
+                                 verbose_name=_(u'создатель'), blank=True, null=True)
 
     teacher = models.ManyToManyField('account.Account', related_name='courses_teachers',
-                                 verbose_name='преподователь', blank=True, null=True)
+                                 verbose_name=_(u'преподователь'), blank=True, null=True)
 
-    code_errors = JSONField('ошибки редактирования урока', default={}, blank=True, null=True)
-    is_correct = models.BooleanField('урок составлен верно?', default=True)
+    code_errors = JSONField(_(u'ошибки редактирования урока'), default={}, blank=True, null=True)
+    is_correct = models.BooleanField(_(u'урок составлен верно?'), default=True)
 
     picture = ImageField(upload_to=course_picture_upload, blank=True, null=True)
 
@@ -64,14 +66,14 @@ class Course(BaseModel):
         return 'course'
 
     class Meta:
-        verbose_name = 'Курс'
-        verbose_name_plural = 'Курсы'
+        verbose_name = _(u'Курс')
+        verbose_name_plural = _(u'Курсы')
         app_label = 'quizy'
 
     def __unicode__(self):
         if self.name:
             return self.name
-        return u"Курс без именени"
+        return _(u"Курс без именени")
 
     @property
     def enroll_number(self):
@@ -110,54 +112,51 @@ class Lesson(BaseModel):
         return os.path.join('lessons', str(obj.uuid)[:8], 'media_%s%s' % (str(randrange(0, 9999)), ext))
 
     LESSON_TYPE_CHOICES = (
-        ('inside', 'внутренний'),
-        ('outside', 'внешний'),
+        ('inside', _(u'внутренний')),
+        ('outside', _(u'внешний')),
     )
 
     LESSON_FULL_TYPE_CHOICES = (
-        (1, 'внутренний урок'),
-        (2, 'урок на написание писем'),
+        (1, _(u'внутренний урок')),
+        (2, _(u'урок на написание писем')),
     )
 
-    is_active = models.BooleanField('активен?', default=True)
-
-    name = models.CharField('название урока', max_length=140, blank=True, null=True)
-
-    number = models.IntegerField('порядок следования', default=0)
-    description = models.TextField('описание', blank=True)
-
+    is_active = models.BooleanField(_(u'активен?'), default=True)
+    is_public = models.BooleanField(_(u'опубликовать для всех'), default=False)
+    name = models.CharField(_(u'название урока'), max_length=140, blank=True, null=True)
+    number = models.IntegerField(_(u'порядок следования'), default=0)
+    description = models.TextField(_(u'описание'), blank=True)
     created_by = models.ForeignKey('account.Account', related_name='lessons',
-                                 verbose_name='создатель', blank=True, null=True)
-
+                                 verbose_name=_(u'создатель'), blank=True, null=True)
     teacher = models.ManyToManyField('account.Account', related_name='lessons_teachers',
-                                 verbose_name='преподователь', blank=True, null=True)
+                                 verbose_name=_(u'преподователь'), blank=True, null=True)
 
-    course = models.ForeignKey('Course', verbose_name='курс', blank=True, null=True)
+    course = models.ForeignKey('Course', verbose_name=_(u'курс'), blank=True, null=True)
 
-    code_errors = JSONField('ошибки редактирования урока', default={}, blank=True, null=True)
-    is_correct = models.BooleanField('урок составлен верно?', default=True)
+    code_errors = JSONField(_(u'ошибки редактирования урока'), default={}, blank=True, null=True)
+    is_correct = models.BooleanField(_(u'урок составлен верно?'), default=True)
 
-    picture = models.ImageField('картинка урока', upload_to=lesson_picture_upload, blank=True, null=True)
+    picture = ImageField(_(u'картинка урока'), upload_to=lesson_picture_upload, blank=True, null=True)
 
-    lesson_type = models.CharField('тип урока', max_length=10, default='inside', choices=LESSON_TYPE_CHOICES)
-    full_lesson_type = models.IntegerField('тип урока', choices=LESSON_FULL_TYPE_CHOICES)
+    lesson_type = models.CharField(_(u'тип урока'), max_length=10, default='inside', choices=LESSON_TYPE_CHOICES)
+    full_lesson_type = models.IntegerField(_(u'тип урока'), choices=LESSON_FULL_TYPE_CHOICES)
 
-    path_content = models.CharField('путь к контенту', max_length=255, blank=True, null=True)
+    path_content = models.CharField(_(u'путь к контенту'), max_length=255, blank=True, null=True)
 
-    media = models.FileField('медиа урока', upload_to=media_question_upload, blank=True, null=True)
+    media = models.FileField(_(u'медиа урока'), upload_to=media_question_upload, blank=True, null=True)
 
-    timer = models.IntegerField('таймер урока (сек)', blank=True, null=True)
+    timer = models.IntegerField(_(u'таймер урока (сек)'), blank=True, null=True)
 
     class Meta:
         ordering = ('number', )
-        verbose_name = 'Урок'
-        verbose_name_plural = 'Уроки'
+        verbose_name = _(u'Урок')
+        verbose_name_plural = _(u'Уроки')
         app_label = 'quizy'
 
     def __unicode__(self):
         if self.name:
             return self.name
-        return u"Урок без именени"
+        return _(u"Урок без именени")
 
     def save(self, *args, **kwargs):
         if self.full_lesson_type == 2:
@@ -202,25 +201,25 @@ class CourseEnroll(BaseModel):
     Назначения на курсы индивидульных пользователей
     """
     learner = models.ForeignKey('account.Account', related_name='course_enrolls',
-                                verbose_name='обучаемый')
+                                verbose_name=_(u'обучаемый'))
     created_by = models.ForeignKey('account.Account', related_name='course_enrolls_created',
-                                verbose_name='кто создал назначение')
+                                verbose_name=_(u'кто создал назначение'))
     course = models.ForeignKey('Course', related_name='course_enrolls',
-                            verbose_name='курс', blank=True, null=True)
+                            verbose_name=_(u'курс'), blank=True, null=True)
 
-    auto_enroll = models.BooleanField('авто назначения на уроки', default=False)
+    auto_enroll = models.BooleanField(_(u'авто назначения на уроки'), default=False)
 
-    data = JSONField('данные', default={}, blank=True, null=True)
-    last_data = models.DateTimeField('дата последней попытки', null=True, blank=True)
-    number_of_attempt = models.IntegerField('кол-во попыток', default=0)
-    success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
-    is_archive = models.BooleanField('урок в архиве', default=False)
-    date_archive = models.DateTimeField('дата перемещения в архиве', null=True, blank=True)
+    data = JSONField(_(u'данные'), default={}, blank=True, null=True)
+    last_data = models.DateTimeField(_(u'дата последней попытки'), null=True, blank=True)
+    number_of_attempt = models.IntegerField(_(u'кол-во попыток'), default=0)
+    success = models.NullBooleanField(_(u'результат последней попытки прохождения'), null=True, blank=True)
+    is_archive = models.BooleanField(_(u'урок в архиве'), default=False)
+    date_archive = models.DateTimeField(_(u'дата перемещения в архиве'), null=True, blank=True)
     #  TODO: собирать статистику по прохождению
 
     class Meta:
-        verbose_name = 'Назначение на курс'
-        verbose_name_plural = 'Назначения на курсы'
+        verbose_name = _(u'Назначение на курс')
+        verbose_name_plural = _(u'Назначения на курсы')
         app_label = 'quizy'
 
     def __unicode__(self):
@@ -240,26 +239,26 @@ class LessonEnroll(BaseModel):
     Назначения на курсы индивидульных пользователей
     """
     learner = models.ForeignKey('account.Account', related_name='lesson_enrolls',
-                                verbose_name='обучаемый')
+                                verbose_name=_(u'обучаемый'))
     created_by = models.ForeignKey('account.Account', related_name='lesson_enrolls_created',
-                                verbose_name='кто создал назначение')
+                                verbose_name=_(u'кто создал назначение'))
     # course = models.ForeignKey('CourseEnroll', related_name='lesson_enrolls',
     #                        verbose_name='курс', blank=True, null=True)
     lesson = models.ForeignKey('Lesson', related_name='enrolls',
-                            verbose_name='урок', blank=True, null=True)
+                            verbose_name=_(u'урок'), blank=True, null=True)
 
-    data = JSONField('результат прохождения', default={}, blank=True, null=True)
+    data = JSONField(_(u'результат прохождения'), default={}, blank=True, null=True)
     # last_data = models.DateTimeField('дата последней попытки', null=True, blank=True)
-    number_of_attempt = models.IntegerField('кол-во попыток', default=0)
-    success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
-    date_success = models.DateTimeField('дата последней успешной попытки', null=True, blank=True)
+    number_of_attempt = models.IntegerField(_(u'кол-во попыток'), default=0)
+    success = models.NullBooleanField(_(u'результат последней попытки прохождения'), null=True, blank=True)
+    date_success = models.DateTimeField(_(u'дата последней успешной попытки'), null=True, blank=True)
     #  TODO: собирать статистику по прохождению
-    required_attention_by_teacher = models.NullBooleanField('требуется внимание со стороны преподователя', null=True, blank=True)
-    required_attention_by_pupil = models.NullBooleanField('требуется внимание со стороны студента', null=True, blank=True)
+    required_attention_by_teacher = models.NullBooleanField(_(u'требуется внимание со стороны преподователя'), null=True, blank=True)
+    required_attention_by_pupil = models.NullBooleanField(_(u'требуется внимание со стороны студента'), null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Назначение на урок'
-        verbose_name_plural = 'Назначения на уроки'
+        verbose_name = _(u'Назначение на урок')
+        verbose_name_plural = _(u'Назначения на уроки')
         app_label = 'quizy'
 
     def __unicode__(self):
@@ -306,36 +305,31 @@ def media_question_upload(obj, fn):
 
 class Page(models.Model):
     QUESTION_TYPE_CHOICES = (
-        ('radiobox', 'Вопрос с выбором одного ответа'),
-        ('checkbox', 'Вопрос с выбором нескольких ответов'),
-        ('text', 'Текстовый вопрос'),
-        ('pairs', 'Вопрос с подбором пары'),
-        ('words_in_text', 'Страница с подбором слов в тексте')
+        ('radiobox', _(u'Вопрос с выбором одного ответа')),
+        ('checkbox', _(u'Вопрос с выбором нескольких ответов')),
+        ('text', _(u'Текстовый вопрос')),
+        ('pairs', _(u'Вопрос с подбором пары')),
+        ('words_in_text', _(u'Страница с подбором слов в тексте'))
     )
 
     lesson = models.ForeignKey('Lesson', related_name='pages',
                             related_query_name='page',
-                            verbose_name='курс', editable=False)
+                            verbose_name=_(u'курс'), editable=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     type = models.CharField(
-        'тип вопроса', max_length=10, default='radio',
+        _(u'тип вопроса'), max_length=10, default='radio',
         choices=QUESTION_TYPE_CHOICES)
 
-    text = models.TextField('Вопрос', blank=True, null=True)
-    number = models.IntegerField('Порядок', default=1, blank=True, null=True)
+    text = models.TextField(_(u'Вопрос'), blank=True, null=True)
+    number = models.IntegerField(_(u'Порядок'), default=1, blank=True, null=True)
 
     media = models.FileField(upload_to=media_question_upload, blank=True, null=True)
 
-    is_correct = models.BooleanField('правильность заполнения вопроса', default=True)
-    code_errors = JSONField('коды ошибок', default={}, blank=True, null=True)
-
-    def __str__(self):
-        if self.text:
-            return self.text
-        return u"Вопрос с id %s" % self.id
+    is_correct = models.BooleanField(_(u'правильность заполнения вопроса'), default=True)
+    code_errors = JSONField(_(u'коды ошибок'), default={}, blank=True, null=True)
 
     def __unicode__(self):
         if self.text:
@@ -343,37 +337,32 @@ class Page(models.Model):
         return u"Вопрос с id %s" % self.id
 
     class Meta:
-        verbose_name = 'Страница'
-        verbose_name_plural = 'Страницы'
+        verbose_name = _(u'Страница')
+        verbose_name_plural = _(u'Страницы')
         ordering = ('number', 'created_at', 'text',)
 
 
 class Variant(models.Model):
     PAIR_TYPE_CHOICES = (
-        ('question', 'вопрос'),
-        ('answer', 'ответ')
+        ('question', _(u'вопрос')),
+        ('answer', _(u'ответ'))
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    text = models.TextField('текст ответа', null=True, blank=True)
-    pair = models.ForeignKey('self', null=True, blank=True, verbose_name='пара')
-    pair_type = models.CharField('тип пары', max_length=10, default='question', choices=PAIR_TYPE_CHOICES)
+    text = models.TextField(_(u'текст ответа'), null=True, blank=True)
+    pair = models.ForeignKey('self', null=True, blank=True, verbose_name=_(u'пара'))
+    pair_type = models.CharField(_(u'тип пары'), max_length=10, default='question', choices=PAIR_TYPE_CHOICES)
 
     right_answer = models.BooleanField(default=False)
 
     page = models.ForeignKey(Page, related_name="variants")
-    number = models.IntegerField('Порядок', default=1)
+    number = models.IntegerField(_(u'Порядок'), default=1)
 
-    is_correct = models.BooleanField('правильность заполнения вопроса', default=True)
-    code_errors = JSONField('коды ошибок', default={}, blank=True, null=True)
-    reflexy = models.TextField('текст рефлексии', null=True, blank=True)
-
-    def __str__(self):
-        if self.text:
-            return self.text
-        return u"Ответ на вопрос с id %s" % self.id
+    is_correct = models.BooleanField(_(u'правильность заполнения вопроса'), default=True)
+    code_errors = JSONField(_(u'коды ошибок'), default={}, blank=True, null=True)
+    reflexy = models.TextField(_(u'текст рефлексии'), null=True, blank=True)
 
     def __unicode__(self):
         if self.text:
@@ -381,8 +370,8 @@ class Variant(models.Model):
         return u"Ответ на вопрос с id %s" % self.id
 
     class Meta:
-        verbose_name = 'Ответ'
-        verbose_name_plural = 'Ответы'
+        verbose_name = _(u'Ответ')
+        verbose_name_plural = _(u'Ответы')
         ordering = ('number', 'created_at', 'text', )
 
     # def save(self, *args, **kwargs):
@@ -391,25 +380,25 @@ class Variant(models.Model):
 
 class Statistic(models.Model):
     REASON_CHOICES = (
-        ('success', 'Успешно выполено'),
-        ('reject', 'Отказался выполнять'),
-        ('done_time', 'Время вышло'),
-        ('not_done', 'Не приступал'),
+        ('success', _(u'Успешно выполено')),
+        ('reject', _(u'Отказался выполнять')),
+        ('done_time', _(u'Время вышло')),
+        ('not_done', _(u'Не приступал')),
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     lesson = models.ForeignKey('Lesson', related_name='statistics',
-                            verbose_name='урок', blank=True, null=True, on_delete=models.SET_NULL)
+                            verbose_name=_(u'урок'), blank=True, null=True, on_delete=models.SET_NULL)
     learner = models.ForeignKey('account.Account', related_name='statistics',
-                                verbose_name='обучаемый', blank=True, null=True, on_delete=models.SET_NULL)
-    number_of_attempt = models.IntegerField('кол-во попыток', default=0)
-    success = models.NullBooleanField('результат последней попытки прохождения', null=True, blank=True)
-    reason = models.CharField('причина перемещеня в статистику', max_length=10, choices=REASON_CHOICES, null=True, blank=True)
+                                verbose_name=_(u'обучаемый'), blank=True, null=True, on_delete=models.SET_NULL)
+    number_of_attempt = models.IntegerField(_(u'кол-во попыток'), default=0)
+    success = models.NullBooleanField(_(u'результат последней попытки прохождения'), null=True, blank=True)
+    reason = models.CharField(_(u'причина перемещеня в статистику'), max_length=10, choices=REASON_CHOICES, null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Статистика'
-        verbose_name_plural = 'Статистика'
+        verbose_name = _(u'Статистика')
+        verbose_name_plural = _(u'Статистика')
         ordering = ('-updated_at', '-created_at', )
 
     

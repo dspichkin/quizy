@@ -7,15 +7,22 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         csrfmiddlewaretoken: null
     };
 
-    window.scope = $scope;
+    //window.scope = $scope;
 
     // высота окна сообщения
-    var message_height = 48;
-    // высота короткой шапки
-    var short_header_height = 150;
-
-    var t = '<button class="md-raised pull-right md-button md-default-theme" ng-transclude="" ng-click="new_lesson()" style="background-color: #FF9E37;    margin: -8px 43px 0 0px;" tabindex="0"><span class="ng-scope">Обработать заявки</span><div class="md-ripple-container"></div></button>';
+    var message_height = 48,
+        // высота короткой шапки
+        short_header_height = 150,
+        t = '<button class="md-raised pull-right md-button md-default-theme" ng-transclude="" ng-click="new_lesson()" style="background-color: #FF9E37;    margin: -8px 43px 0 0px;" tabindex="0"><span class="ng-scope">Обработать заявки</span><div class="md-ripple-container"></div></button>';
     $scope.model = {
+        selectedLanguage: "ru",
+        languages: [{
+            title: "Русский",
+            value: "ru"
+        }, {
+            title: "English",
+            value: "en"
+        }],
         selected_menu: null,
         menu: {
             positionTop: '0px',
@@ -46,7 +53,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
     };
 
     $scope.main.reset_menu = function() {
-        if ($scope.model.message.is_active == true) {
+        if ($scope.model.message.is_active === true) {
             $scope.model.menu.positionTop = message_height + 'px';
             $scope.model.menu.positionBodyTop = (300 + message_height) + 'px';
         } else {
@@ -63,7 +70,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
     };
 
     $scope.main.make_short_header = function() {
-        if ($scope.model.message.is_active == true) {
+        if ($scope.model.message.is_active === true) {
             $scope.model.menu.positionTop = (-short_header_height + message_height) + 'px';
             $scope.model.menu.positionBodyTop = (short_header_height + message_height) + 'px';
         } else {
@@ -149,11 +156,10 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
             $scope.main.make_short_header();
             $scope.main.active_menu = 'lessons';
         }
-        
     };
 
     $scope.main.go_play = function(enroll_id) {
-        if (lesson_id) {
+        if (enroll_id) {
             $location.path('/play/' + enroll_id + '/');
             $scope.main.make_short_header();
             $scope.main.active_menu = 'lessons';
@@ -161,10 +167,10 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
     };
 
     $scope.main.go_statistic_page = function() {
-        if ($scope.user && $scope.user.is_authenticated == true && $scope.user.account_type == 2) {
+        if ($scope.user && $scope.user.is_authenticated === true && $scope.user.account_type == 2) {
             $location.path('/mystatistics/');
         }
-        if ($scope.user && $scope.user.is_authenticated == true && $scope.user.account_type == 1) {
+        if ($scope.user && $scope.user.is_authenticated === true && $scope.user.account_type == 1) {
             $location.path('/statistics/');
         }
         $scope.main.make_short_header();
@@ -202,6 +208,13 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         }).then(function(data) {
             $scope.user = data;
             $scope.user.loaded = true;
+            if (data.hasOwnProperty('language')) {
+                $scope.model.selectedLanguage = data.language;
+            }
+
+
+            var fmts = gettext('This');
+            console.log('fmts ', fmts)
 
             if (callback) {
                 callback();
@@ -281,7 +294,6 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                             function(data) {
                                 $scope.model.login.email = null;
                                 $scope.model.login.loading = false;
-                                console.log(data)
                                 if (data.hasOwnProperty('form_errors')) {
                                     if (data.form_errors) {
                                         $scope.model.login.form_errors = data.form_errors;
@@ -291,7 +303,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                                 } else {
                                     $location.path('/');
                                     $scope.main.run(function() {
-                                        $mdDialog.hide()
+                                        $mdDialog.hide();
                                     });
                                 }
                             }, function(e) {
@@ -300,12 +312,12 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                                 $log.error(e);
                             }
                         );
-                    }
+                    };
 
                     $scope.cancel_recall = function($event) {
                         $event.preventDefault();
                         $scope.model.login.show_recall = false;
-                    }
+                    };
 
                     $scope.submit = function($event) {
                         $event.preventDefault();
@@ -326,7 +338,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                                     }
                                 } else {
                                     $scope.main.run(function() {
-                                        $mdDialog.hide()
+                                        $mdDialog.hide();
                                         if (data.account_type == 2) {
                                             $scope.main.go_lesson_page();
                                         } else {
@@ -360,6 +372,42 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         });
     };
 
+
+
+    $scope.show_tip = function($event, template) {
+        $mdDialog.show({
+          targetEvent: $event,
+          templateUrl: template,
+          disableParentScroll: true,
+          clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+
+                $scope.model.login = {
+                    email: '',
+                    password: '',
+                    form_errors: {},
+                    loading: false,
+                    show_recall: false
+                };
+                $scope.form_errors = {};
+                $scope.closeDialog = function($event) {
+                    $mdDialog.hide();
+                };
+
+            }
+        });
+    };
+
+    $scope.change_language = function() {
+        var _data = {
+            'next': '',
+            'language': $scope.model.selectedLanguage
+        };
+        $http.post('/i18n/setlang/', _data).then(function(data) {
+        });
+    };
 
 
     //===================================

@@ -1,0 +1,1138 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-17 13:00+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: app/templates/account/account_inactive.html:5
+#: app/templates/account/account_inactive.html:8
+msgid "Account Inactive"
+msgstr ""
+
+#: app/templates/account/account_inactive.html:10
+msgid "This account is inactive."
+msgstr ""
+
+#: app/templates/account/ajax_login.html:17 app/templates/account/login.html:6
+#: app/templates/account/login.html.py:10 app/templates/account/login.html:41
+msgid "Sign In"
+msgstr ""
+
+#: app/templates/account/ajax_login.html:69
+#: app/templates/account/ajax_signup.html:138
+#: app/templates/account/login.html:23
+msgid "or"
+msgstr ""
+
+#: app/templates/account/ajax_signup.html:15
+#: app/templates/account/ajax_signup.html:126
+#: app/templates/account/signup.html:8 app/templates/account/signup.html:18
+#: app/templates/socialaccount/signup.html:8
+#: app/templates/socialaccount/signup.html:19
+msgid "Sign Up"
+msgstr ""
+
+#: app/templates/account/ajax_signup.html:17
+#: app/templates/account/signup.html:10
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+
+#: app/templates/account/email.html:5
+msgid "Account"
+msgstr ""
+
+#: app/templates/account/email.html:8
+msgid "E-mail Addresses"
+msgstr ""
+
+#: app/templates/account/email.html:10
+msgid "The following e-mail addresses are associated with your account:"
+msgstr ""
+
+#: app/templates/account/email.html:24
+msgid "Verified"
+msgstr ""
+
+#: app/templates/account/email.html:26
+msgid "Unverified"
+msgstr ""
+
+#: app/templates/account/email.html:28
+msgid "Primary"
+msgstr ""
+
+#: app/templates/account/email.html:34
+msgid "Make Primary"
+msgstr ""
+
+#: app/templates/account/email.html:35
+msgid "Re-send Verification"
+msgstr ""
+
+#: app/templates/account/email.html:36
+#: app/templates/socialaccount/connections.html:35
+#: suit/templates/admin/edit_inline/stacked.html:36
+#: suit/templates/admin/edit_inline/tabular.html:80
+msgid "Remove"
+msgstr ""
+
+#: app/templates/account/email.html:43
+msgid "Warning:"
+msgstr ""
+
+#: app/templates/account/email.html:43
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+
+#: app/templates/account/email.html:48
+msgid "Add E-mail Address"
+msgstr ""
+
+#: app/templates/account/email.html:53
+msgid "Add E-mail"
+msgstr ""
+
+#: app/templates/account/email.html:62
+msgid "Do you really want to remove the selected e-mail address?"
+msgstr ""
+
+#: app/templates/account/email/email_confirmation_message.txt:1
+#, python-format
+msgid ""
+"Hello from %(site_name)s!\n"
+"\n"
+"You're receiving this e-mail because user %(user_display)s at "
+"%(site_domain)s has given yours as an e-mail address to connect their "
+"account.\n"
+"\n"
+"To confirm this is correct, go to %(activate_url)s\n"
+msgstr ""
+
+#: app/templates/account/email/email_confirmation_message.txt:7
+#, python-format
+msgid ""
+"Thank you from %(site_name)s!\n"
+"%(site_domain)s"
+msgstr ""
+
+#: app/templates/account/email/email_confirmation_subject.txt:3
+msgid "Подтвердити e-mail адрес"
+msgstr ""
+
+#: app/templates/account/email/password_reset_key_message.txt:1
+#, python-format
+msgid ""
+"Hello from %(site_name)s!\n"
+"\n"
+"You're receiving this e-mail because you or someone else has requested a "
+"password for your user account at %(site_domain)s.\n"
+"It can be safely ignored if you did not request a password reset. Click the "
+"link below to reset your password."
+msgstr ""
+
+#: app/templates/account/email/password_reset_key_message.txt:8
+#, python-format
+msgid "In case you forgot, your username is %(username)s."
+msgstr ""
+
+#: app/templates/account/email/password_reset_key_message.txt:10
+#, python-format
+msgid ""
+"Thank you for using %(site_name)s!\n"
+"%(site_domain)s"
+msgstr ""
+
+#: app/templates/account/email/password_reset_key_subject.txt:3
+msgid "Password Reset E-mail"
+msgstr ""
+
+#: app/templates/account/email_confirm.html:6
+#: app/templates/account/email_confirm.html:10
+#: app/templates/account/email_confirmed.html:6
+#: app/templates/account/email_confirmed.html:11
+#: app/templates/account/invite_confirm.html:6
+#: app/templates/account/invite_confirm.html:10
+#: app/templates/account/invite_confirmed.html:6
+#: app/templates/account/invite_confirmed.html:11
+msgid "Confirm E-mail Address"
+msgstr ""
+
+#: app/templates/account/email_confirm.html:16
+#: app/templates/account/invite_confirm.html:16
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s."
+msgstr ""
+
+#: app/templates/account/email_confirm.html:20
+#: app/templates/account/invite_confirm.html:20
+msgid "Confirm"
+msgstr ""
+
+#: app/templates/account/email_confirm.html:27
+#: app/templates/account/invite_confirm.html:27
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a href="
+"\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr ""
+
+#: app/templates/account/email_confirmed.html:15
+#: app/templates/account/invite_confirmed.html:15
+#, python-format
+msgid ""
+"You have confirmed that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-"
+"mail address for user %(user_display)s."
+msgstr ""
+
+#: app/templates/account/login.html:13
+#, python-format
+msgid ""
+"Please sign in with one\n"
+"of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign "
+"up</a>\n"
+"for a %(site_name)s account and sign in below:"
+msgstr ""
+
+#: app/templates/account/login.html:30
+#, python-format
+msgid ""
+"If you have not created an account yet, then please\n"
+"<a href=\"%(signup_url)s\">sign up</a> first."
+msgstr ""
+
+#: app/templates/account/login.html:40
+msgid "Forgot Password?"
+msgstr ""
+
+#: app/templates/account/logout.html:5 app/templates/account/logout.html:8
+#: app/templates/account/logout.html:17
+msgid "Sign Out"
+msgstr ""
+
+#: app/templates/account/logout.html:10
+msgid "Are you sure you want to sign out?"
+msgstr ""
+
+#: app/templates/account/messages/cannot_delete_primary_email.txt:2
+#, python-format
+msgid "You cannot remove your primary e-mail address (%(email)s)."
+msgstr ""
+
+#: app/templates/account/messages/email_confirmation_sent.txt:2
+#, python-format
+msgid "Confirmation e-mail sent to %(email)s."
+msgstr ""
+
+#: app/templates/account/messages/email_confirmed.txt:2
+#, python-format
+msgid "You have confirmed %(email)s."
+msgstr ""
+
+#: app/templates/account/messages/email_deleted.txt:2
+#, python-format
+msgid "Removed e-mail address %(email)s."
+msgstr ""
+
+#: app/templates/account/messages/logged_in.txt:4
+#, python-format
+msgid "Successfully signed in as %(name)s."
+msgstr ""
+
+#: app/templates/account/messages/logged_out.txt:2
+msgid "You have signed out."
+msgstr ""
+
+#: app/templates/account/messages/password_changed.txt:2
+msgid "Password successfully changed."
+msgstr ""
+
+#: app/templates/account/messages/password_set.txt:2
+msgid "Password successfully set."
+msgstr ""
+
+#: app/templates/account/messages/primary_email_set.txt:2
+msgid "Primary e-mail address set."
+msgstr ""
+
+#: app/templates/account/messages/unverified_primary_email.txt:2
+msgid "Your primary e-mail address must be verified."
+msgstr ""
+
+#: app/templates/account/password_change.html:5
+#: app/templates/account/password_change.html:8
+#: app/templates/account/password_change.html:13
+#: app/templates/account/password_reset_from_key.html:4
+#: app/templates/account/password_reset_from_key.html:7
+#: app/templates/account/password_reset_from_key_done.html:4
+#: app/templates/account/password_reset_from_key_done.html:7
+msgid "Change Password"
+msgstr ""
+
+#: app/templates/account/password_reset.html:6
+#: app/templates/account/password_reset.html:10
+#: app/templates/account/password_reset_done.html:6
+#: app/templates/account/password_reset_done.html:9
+msgid "Password Reset"
+msgstr ""
+
+#: app/templates/account/password_reset.html:15
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you "
+"an e-mail allowing you to reset it."
+msgstr ""
+
+#: app/templates/account/password_reset.html:20
+msgid "Reset My Password"
+msgstr ""
+
+#: app/templates/account/password_reset.html:23
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr ""
+
+#: app/templates/account/password_reset_done.html:15
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+
+#: app/templates/account/password_reset_from_key.html:7
+msgid "Bad Token"
+msgstr ""
+
+#: app/templates/account/password_reset_from_key.html:11
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+
+#: app/templates/account/password_reset_from_key.html:17
+msgid "change password"
+msgstr ""
+
+#: app/templates/account/password_reset_from_key.html:20
+#: app/templates/account/password_reset_from_key_done.html:8
+msgid "Your password is now changed."
+msgstr ""
+
+#: app/templates/account/password_set.html:5
+#: app/templates/account/password_set.html:8
+#: app/templates/account/password_set.html:13
+msgid "Set Password"
+msgstr ""
+
+#: app/templates/account/signup.html:5
+#: app/templates/socialaccount/signup.html:5
+msgid "Signup"
+msgstr ""
+
+#: app/templates/account/signup_closed.html:5
+#: app/templates/account/signup_closed.html:8
+msgid "Sign Up Closed"
+msgstr ""
+
+#: app/templates/account/signup_closed.html:10
+msgid "We are sorry, but the sign up is currently closed."
+msgstr ""
+
+#: app/templates/account/snippets/already_logged_in.html:5
+msgid "Note"
+msgstr ""
+
+#: app/templates/account/snippets/already_logged_in.html:5
+#, python-format
+msgid "you are already logged in as %(user_display)s."
+msgstr ""
+
+#: app/templates/account/verification_sent.html:5
+#: app/templates/account/verification_sent.html:10
+#: app/templates/account/verified_email_required.html:5
+#: app/templates/account/verified_email_required.html:8
+msgid "Verify Your E-mail Address"
+msgstr ""
+
+#: app/templates/account/verification_sent.html:12
+msgid ""
+"Мы отправили e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr ""
+
+#: app/templates/account/verified_email_required.html:12
+msgid ""
+"This part of the site requires us to verify that\n"
+"you are who you claim to be. For this purpose, we require that you\n"
+"verify ownership of your e-mail address. "
+msgstr ""
+
+#: app/templates/account/verified_email_required.html:16
+msgid ""
+"We have sent an e-mail to you for\n"
+"verification. Please click on the link inside this e-mail. Please\n"
+"contact us if you do not receive it within a few minutes."
+msgstr ""
+
+#: app/templates/account/verified_email_required.html:20
+#, python-format
+msgid ""
+"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your e-"
+"mail address</a>."
+msgstr ""
+
+#: app/templates/openid/login.html:9
+msgid "OpenID Sign In"
+msgstr ""
+
+#: app/templates/socialaccount/authentication_error.html:5
+#: app/templates/socialaccount/authentication_error.html:8
+msgid "Social Network Login Failure"
+msgstr ""
+
+#: app/templates/socialaccount/authentication_error.html:10
+msgid ""
+"An error occurred while attempting to login via your social network account."
+msgstr ""
+
+#: app/templates/socialaccount/connections.html:5
+#: app/templates/socialaccount/connections.html:8
+msgid "Account Connections"
+msgstr ""
+
+#: app/templates/socialaccount/connections.html:11
+msgid ""
+"You can sign in to your account using any of the following third party "
+"accounts:"
+msgstr ""
+
+#: app/templates/socialaccount/connections.html:43
+msgid ""
+"You currently have no social network accounts connected to this account."
+msgstr ""
+
+#: app/templates/socialaccount/connections.html:46
+msgid "Add a 3rd Party Account"
+msgstr ""
+
+#: app/templates/socialaccount/login_cancelled.html:5
+#: app/templates/socialaccount/login_cancelled.html:9
+msgid "Login Cancelled"
+msgstr ""
+
+#: app/templates/socialaccount/login_cancelled.html:13
+#, python-format
+msgid ""
+"You decided to cancel logging in to our site using one of your existing "
+"accounts. If this was a mistake, please proceed to <a href=\"%(login_url)s"
+"\">sign in</a>."
+msgstr ""
+
+#: app/templates/socialaccount/messages/account_connected.txt:2
+msgid "The social account has been connected."
+msgstr ""
+
+#: app/templates/socialaccount/messages/account_connected_other.txt:2
+msgid "The social account is already connected to a different account."
+msgstr ""
+
+#: app/templates/socialaccount/messages/account_disconnected.txt:2
+msgid "The social account has been disconnected."
+msgstr ""
+
+#: app/templates/socialaccount/signup.html:10
+#, python-format
+msgid ""
+"You are about to use your %(provider_name)s account to login to\n"
+"%(site_name)s. As a final step, please complete the following form:"
+msgstr ""
+
+#: quizy/apps.py:10
+msgid "СДО"
+msgstr "LMS"
+
+#: quizy/models.py:48 quizy/models.py:123
+msgid "активен?"
+msgstr "active?"
+
+#: quizy/models.py:49
+msgid "название курса"
+msgstr "course name"
+
+#: quizy/models.py:50 quizy/models.py:127
+msgid "описание"
+msgstr "description"
+
+#: quizy/models.py:53 quizy/models.py:129
+msgid "создатель"
+msgstr "created by"
+
+#: quizy/models.py:56 quizy/models.py:131
+msgid "преподователь"
+msgstr "teacher"
+
+#: quizy/models.py:58 quizy/models.py:135
+msgid "ошибки редактирования урока"
+msgstr "error"
+
+#: quizy/models.py:59 quizy/models.py:136
+msgid "урок составлен верно?"
+msgstr "is lesson correct?"
+
+#: quizy/models.py:68
+msgid "Курс"
+msgstr "Course"
+
+#: quizy/models.py:69
+msgid "Курсы"
+msgstr "Courses"
+
+#: quizy/models.py:75
+msgid "Курс без именени"
+msgstr "Course whithout name"
+
+#: quizy/models.py:114
+msgid "внутренний"
+msgstr "inside"
+
+#: quizy/models.py:115
+msgid "внешний"
+msgstr "outside lesson"
+
+#: quizy/models.py:119
+msgid "внутренний урок"
+msgstr "inside lesson"
+
+#: quizy/models.py:120
+msgid "урок на написание писем"
+msgstr "lesson of writing letters"
+
+#: quizy/models.py:124
+msgid "опубликовать для всех"
+msgstr "make public"
+
+#: quizy/models.py:125
+msgid "название урока"
+msgstr "lesson name"
+
+#: quizy/models.py:126
+msgid "порядок следования"
+msgstr "order"
+
+#: quizy/models.py:133 quizy/models.py:207 quizy/models.py:316
+msgid "курс"
+msgstr "course"
+
+#: quizy/models.py:138
+msgid "картинка урока"
+msgstr "picture of lesson"
+
+#: quizy/models.py:140 quizy/models.py:141
+msgid "тип урока"
+msgstr "type of lesson"
+
+#: quizy/models.py:143
+msgid "путь к контенту"
+msgstr "path to content"
+
+#: quizy/models.py:145
+msgid "медиа урока"
+msgstr "media of lesson"
+
+#: quizy/models.py:147
+msgid "таймер урока (сек)"
+msgstr "Timer lesson (s)"
+
+#: quizy/models.py:151
+msgid "Урок"
+msgstr "Lesson"
+
+#: quizy/models.py:152
+msgid "Уроки"
+msgstr "Lessons"
+
+#: quizy/models.py:158
+msgid "Урок без именени"
+msgstr ""
+
+#: quizy/models.py:203 quizy/models.py:241 quizy/models.py:393
+msgid "обучаемый"
+msgstr "pupil"
+
+#: quizy/models.py:205 quizy/models.py:243
+msgid "кто создал назначение"
+msgstr "who created assign"
+
+#: quizy/models.py:209
+msgid "авто назначения на уроки"
+msgstr "auto assign on lesson"
+
+#: quizy/models.py:211
+msgid "данные"
+msgstr "data"
+
+#: quizy/models.py:212
+msgid "дата последней попытки"
+msgstr "date of last attempt"
+
+#: quizy/models.py:213 quizy/models.py:251 quizy/models.py:394
+msgid "кол-во попыток"
+msgstr "number of attempts"
+
+#: quizy/models.py:214 quizy/models.py:252 quizy/models.py:395
+msgid "результат последней попытки прохождения"
+msgstr "the result of the last attempt to pass"
+
+#: quizy/models.py:215
+msgid "урок в архиве"
+msgstr "a lesson in the archive"
+
+#: quizy/models.py:216
+msgid "дата перемещения в архиве"
+msgstr "Date moving in the archive"
+
+#: quizy/models.py:220
+msgid "Назначение на курс"
+msgstr "Enroll on course"
+
+#: quizy/models.py:221
+msgid "Назначения на курсы"
+msgstr "Assigning on courses"
+
+#: quizy/models.py:247 quizy/models.py:391
+msgid "урок"
+msgstr "lesson"
+
+#: quizy/models.py:249
+msgid "результат прохождения"
+msgstr "result"
+
+#: quizy/models.py:253
+msgid "дата последней успешной попытки"
+msgstr "date of the last successful attempt"
+
+#: quizy/models.py:255
+msgid "требуется внимание со стороны преподователя"
+msgstr "required attention from the teacher"
+
+#: quizy/models.py:256
+msgid "требуется внимание со стороны студента"
+msgstr "required attention from the student"
+
+#: quizy/models.py:259
+msgid "Назначение на урок"
+msgstr "Assigning a lesson"
+
+#: quizy/models.py:260
+msgid "Назначения на уроки"
+msgstr "Assigning on lesson"
+
+#: quizy/models.py:307
+msgid "Вопрос с выбором одного ответа"
+msgstr "The question with the choice of one answer"
+
+#: quizy/models.py:308
+msgid "Вопрос с выбором нескольких ответов"
+msgstr "The question with the choice of several answers"
+
+#: quizy/models.py:309
+msgid "Текстовый вопрос"
+msgstr "Text question"
+
+#: quizy/models.py:310
+msgid "Вопрос с подбором пары"
+msgstr "The question with the selection of a pair"
+
+#: quizy/models.py:311
+msgid "Страница с подбором слов в тексте"
+msgstr "Page with the selection of words in the text"
+
+#: quizy/models.py:322
+msgid "тип вопроса"
+msgstr "type of question"
+
+#: quizy/models.py:325
+msgid "Вопрос"
+msgstr "Question"
+
+#: quizy/models.py:326 quizy/models.py:360
+msgid "Порядок"
+msgstr "Order"
+
+#: quizy/models.py:330 quizy/models.py:362
+msgid "правильность заполнения вопроса"
+msgstr "correctness of the question"
+
+#: quizy/models.py:331 quizy/models.py:363
+msgid "коды ошибок"
+msgstr "code of error"
+
+#: quizy/models.py:339
+msgid "Страница"
+msgstr "Page"
+
+#: quizy/models.py:340
+msgid "Страницы"
+msgstr "Pages"
+
+#: quizy/models.py:346
+msgid "вопрос"
+msgstr "question"
+
+#: quizy/models.py:347
+msgid "ответ"
+msgstr "answer"
+
+#: quizy/models.py:353
+msgid "текст ответа"
+msgstr "text of answer"
+
+#: quizy/models.py:354
+msgid "пара"
+msgstr "pair"
+
+#: quizy/models.py:355
+msgid "тип пары"
+msgstr "type of pair"
+
+#: quizy/models.py:364
+msgid "текст рефлексии"
+msgstr "text of reflexion"
+
+#: quizy/models.py:372
+msgid "Ответ"
+msgstr "Answer"
+
+#: quizy/models.py:373
+msgid "Ответы"
+msgstr "Answers"
+
+#: quizy/models.py:382
+msgid "Успешно выполено"
+msgstr "Success finished"
+
+#: quizy/models.py:383
+msgid "Отказался выполнять"
+msgstr "Refused to perform"
+
+#: quizy/models.py:384
+msgid "Время вышло"
+msgstr "Time out"
+
+#: quizy/models.py:385
+msgid "Не приступал"
+msgstr "Do not start"
+
+#: quizy/models.py:396
+msgid "причина перемещеня в статистику"
+msgstr "reason of displacement in Statistics"
+
+#: quizy/models.py:399 quizy/models.py:400
+msgid "Статистика"
+msgstr "Statistic"
+
+#: root/settings.py:135
+msgid "Russian"
+msgstr ""
+
+#: root/settings.py:136
+msgid "English"
+msgstr ""
+
+#: suit/templates/admin/actions.html:4
+msgid "Run the selected action"
+msgstr ""
+
+#: suit/templates/admin/actions.html:4
+msgid "Go"
+msgstr ""
+
+#: suit/templates/admin/actions.html:11
+msgid "Click here to select the objects across all pages"
+msgstr ""
+
+#: suit/templates/admin/actions.html:11
+#, python-format
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr ""
+
+#: suit/templates/admin/actions.html:13
+msgid "Clear selection"
+msgstr ""
+
+#: suit/templates/admin/base.html:55
+msgid "Welcome,"
+msgstr ""
+
+#: suit/templates/admin/base.html:60
+msgid "View site"
+msgstr ""
+
+#: suit/templates/admin/base.html:64
+msgid "Documentation"
+msgstr ""
+
+#: suit/templates/admin/base.html:67
+msgid "Change password"
+msgstr ""
+
+#: suit/templates/admin/base.html:70 suit/templates/admin/base.html.py:75
+msgid "Log out"
+msgstr ""
+
+#: suit/templates/admin/base.html:112 suit/templates/admin/change_form.html:51
+#: suit/templates/admin/change_list.html:41
+#: suit/templates/admin/delete_confirmation.html:8
+#: suit/templates/admin/delete_selected_confirmation.html:8
+#: suit/templates/admin/object_history.html:7 suit/templates/suit/menu.html:10
+msgid "Home"
+msgstr ""
+
+#: suit/templates/admin/base_site.html:5
+msgid "Django site admin"
+msgstr ""
+
+#: suit/templates/admin/base_site.html:9
+msgid "Django administration"
+msgstr ""
+
+#: suit/templates/admin/change_form.html:22
+msgid "You have unsaved changes"
+msgstr ""
+
+#: suit/templates/admin/change_form.html:57 suit/templates/admin/index.html:29
+msgid "Add"
+msgstr ""
+
+#: suit/templates/admin/change_form.html:68
+#: suit/templates/admin/object_history.html:15
+msgid "History"
+msgstr ""
+
+#: suit/templates/admin/change_form.html:70
+#: suit/templates/admin/edit_inline/stacked.html:15
+#: suit/templates/admin/edit_inline/tabular.html:31
+msgid "View on site"
+msgstr ""
+
+#: suit/templates/admin/change_form.html:115
+#: suit/templates/admin/change_list.html:54 suit/templates/admin/login.html:23
+msgid "Please correct the error below."
+msgstr ""
+
+#: suit/templates/admin/change_form.html:115
+#: suit/templates/admin/change_list.html:54 suit/templates/admin/login.html:23
+msgid "Please correct the errors below."
+msgstr ""
+
+#: suit/templates/admin/change_list.html:72
+#, python-format
+msgid "Add %(name)s"
+msgstr ""
+
+#: suit/templates/admin/change_list.html:101
+msgid "Filter"
+msgstr ""
+
+#: suit/templates/admin/change_list_results.html:19
+#, python-format
+msgid "Sorting priority: %(priority_number)s"
+msgstr ""
+
+#: suit/templates/admin/change_list_results.html:20
+msgid "Toggle sorting"
+msgstr ""
+
+#: suit/templates/admin/change_list_results.html:21
+msgid "Remove from sorting"
+msgstr ""
+
+#: suit/templates/admin/delete_confirmation.html:12
+#: suit/templates/admin/delete_confirmation.html:19
+#: suit/templates/admin/filer/folder/directory_table.html:42
+#: suit/templates/admin/submit_line.html:10
+msgid "Delete"
+msgstr ""
+
+#: suit/templates/admin/delete_confirmation.html:25
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would result in deleting "
+"related objects, but your account doesn't have permission to delete the "
+"following types of objects:"
+msgstr ""
+
+#: suit/templates/admin/delete_confirmation.html:34
+#, python-format
+msgid ""
+"Deleting the %(object_name)s '%(escaped_object)s' would require deleting the "
+"following protected related objects:"
+msgstr ""
+
+#: suit/templates/admin/delete_confirmation.html:43
+#, python-format
+msgid ""
+"Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? "
+"All of the following related items will be deleted:"
+msgstr ""
+
+#: suit/templates/admin/delete_confirmation.html:49
+#: suit/templates/admin/delete_selected_confirmation.html:54
+msgid "Yes, I'm sure"
+msgstr ""
+
+#: suit/templates/admin/delete_selected_confirmation.html:11
+#: suit/templates/admin/delete_selected_confirmation.html:18
+msgid "Delete multiple objects"
+msgstr ""
+
+#: suit/templates/admin/delete_selected_confirmation.html:24
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would result in deleting related "
+"objects, but your account doesn't have permission to delete the following "
+"types of objects:"
+msgstr ""
+
+#: suit/templates/admin/delete_selected_confirmation.html:33
+#, python-format
+msgid ""
+"Deleting the selected %(objects_name)s would require deleting the following "
+"protected related objects:"
+msgstr ""
+
+#: suit/templates/admin/delete_selected_confirmation.html:42
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(objects_name)s? All of the "
+"following objects and their related items will be deleted:"
+msgstr ""
+
+#: suit/templates/admin/edit_inline/stacked.html:37
+#: suit/templates/admin/edit_inline/tabular.html:79
+#, python-format
+msgid "Add another %(verbose_name)s"
+msgstr ""
+
+#: suit/templates/admin/edit_inline/tabular.html:19
+msgid "Delete?"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:13
+msgid "Name"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:23
+#: suit/templates/admin/filer/folder/directory_table.html:27
+#: suit/templates/admin/filer/folder/directory_table.html:29
+#, python-format
+msgid "Change '%(item_label)s' folder details"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:23
+msgid "Folder Icon"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:27
+#: suit/templates/admin/filer/folder/directory_table.html:43
+#: suit/templates/admin/index.html:23
+msgid "Change"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:30
+#, python-format
+msgid "1 folder"
+msgid_plural "%(counter)s folders"
+msgstr[0] ""
+msgstr[1] ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:30
+#, python-format
+msgid "1 file"
+msgid_plural "%(counter)s files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:30
+#: suit/templates/admin/filer/folder/directory_table.html:45
+msgid "Owner"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:37
+msgid "Select this file"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:39
+#: suit/templates/admin/filer/folder/directory_table.html:43
+#: suit/templates/admin/filer/folder/directory_table.html:44
+#, python-format
+msgid "Change '%(item_label)s' details"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:42
+#, python-format
+msgid "Delete '%(item_label)s'"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:45
+msgid "Permissions"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:45
+msgid "disabled"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:45
+msgid "enabled"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:49
+msgid "Move to clipboard"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:57
+msgid "there are no files or subfolders"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:64
+msgid "previous"
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:68
+#, python-format
+msgid ""
+"\n"
+"            Page %(number)s of %(num_pages)s\n"
+"            "
+msgstr ""
+
+#: suit/templates/admin/filer/folder/directory_table.html:74
+msgid "next"
+msgstr ""
+
+#: suit/templates/admin/filter.html:19
+#, python-format
+msgid " By %(filter_title)s "
+msgstr ""
+
+#: suit/templates/admin/index.html:16
+#, python-format
+msgid "Models in the %(name)s application"
+msgstr ""
+
+#: suit/templates/admin/index.html:39
+msgid "You don't have permission to edit anything."
+msgstr ""
+
+#: suit/templates/admin/index.html:47
+msgid "Recent Actions"
+msgstr ""
+
+#: suit/templates/admin/index.html:48
+msgid "My Actions"
+msgstr ""
+
+#: suit/templates/admin/index.html:52
+msgid "None available"
+msgstr ""
+
+#: suit/templates/admin/index.html:79
+msgid "Unknown content"
+msgstr ""
+
+#: suit/templates/admin/login.html:48
+msgid "Password:"
+msgstr ""
+
+#: suit/templates/admin/login.html:59
+msgid "Forgotten your password or username?"
+msgstr ""
+
+#: suit/templates/admin/login.html:65
+msgid "Log in"
+msgstr ""
+
+#: suit/templates/admin/object_history.html:27
+msgid "Date/time"
+msgstr ""
+
+#: suit/templates/admin/object_history.html:28
+msgid "User"
+msgstr ""
+
+#: suit/templates/admin/object_history.html:29
+msgid "Action"
+msgstr ""
+
+#: suit/templates/admin/object_history.html:43
+msgid ""
+"This object doesn't have a change history. It probably wasn't added via this "
+"admin site."
+msgstr ""
+
+#: suit/templates/admin/pagination.html:4
+#: suit/templates/admin/submit_line.html:18
+msgid "Save"
+msgstr ""
+
+#: suit/templates/admin/pagination.html:21
+msgid "Show all"
+msgstr ""
+
+#: suit/templates/admin/search_form.html:24
+msgid "Search"
+msgstr ""
+
+#: suit/templates/admin/search_form.html:28
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: suit/templates/admin/search_form.html:28
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr ""
+
+#: suit/templates/admin/submit_line.html:21
+msgid "Save and continue editing"
+msgstr ""
+
+#: suit/templates/admin/submit_line.html:23
+msgid "Save as new"
+msgstr ""
+
+#: suit/templates/admin/submit_line.html:25
+msgid "Save and add another"
+msgstr ""
+
+#: suit/widgets.py:163
+msgid "Time:"
+msgstr ""
+
+#: suit/widgets.py:267
+msgid "Add Another"
+msgstr ""
+
+#: suit/widgets.py:308
+msgid "Lookup"
+msgstr ""

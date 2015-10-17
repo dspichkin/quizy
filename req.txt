@@ -1,4 +1,4 @@
-Django==1.8.2
+Django==1.8.5
 Pillow==2.8.2
 django-json-field==0.5.7
 django-suit==0.3a1

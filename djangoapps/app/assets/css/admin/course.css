@@ -1,1 +1,7 @@
-#id_teacher{height:100px}
+#id_teacher {
+  height: 100px;
+}
+/* Suit admin with fileds*/
+.form-column {
+  width: 63%;
+}

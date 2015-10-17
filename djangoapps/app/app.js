@@ -19,7 +19,7 @@ require('angular-animate');
 require('angular-aria');
 require('angular-material');
 require('angular-material-icons');
-
+require('angular-gettext');
 
 //require('angular-parallax');
 
@@ -47,6 +47,7 @@ window.app = angular.module('quizy', [
         'ngMaterial',
         'ngMdIcons',
         'ngCkeditor',
+        'gettext',
 
         "com.2fdevs.videogular",
         "com.2fdevs.videogular.plugins.controls",
@@ -59,9 +60,16 @@ window.app = angular.module('quizy', [
         'quizy.filters'])
     .service('$data', require('./editor/EditDataService.js'))
     .config(states.config)
-    .run(states.run);
+    .run(function(gettextCatalog) {
+        //states.run();
+        console.log(gettextCatalog)
+        gettextCatalog.setCurrentLanguage('en');
+        gettextCatalog.debug = true;
 
-app.config(function($controllerProvider, $mdThemingProvider) {
+    }); //states.run
+
+
+app.config(function($controllerProvider, $mdThemingProvider, $httpProvider) {
     app.controllerProvider = $controllerProvider;
 
     $mdThemingProvider.definePalette('amazingPaletteName', {
@@ -88,6 +96,13 @@ app.config(function($controllerProvider, $mdThemingProvider) {
     $mdThemingProvider.theme('default')
     .primaryPalette('amazingPaletteName')
     .accentPalette('orange');
+
+    $httpProvider.defaults.transformRequest = function(data) {        
+        if (data === undefined) { return data; } 
+        return $.param(data);
+    };
+    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'; 
+
 });
 //.config(['$httpProvider', function($httpProvider) {
 //    $httpProvider.defaults.xsrfCookieName = 'csrftoken';

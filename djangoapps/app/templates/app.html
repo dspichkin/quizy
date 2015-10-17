@@ -1,4 +1,4 @@
-{% load static %}<!DOCTYPE html>
+{% load static i18n %}<!DOCTYPE html>
 <html lang="ru" >
 <head>
     <meta charset="utf-8">
@@ -16,6 +16,7 @@
     <link href="{% static "css/videogular.min.css" %}" rel="stylesheet">
     <link href="{% static "/assets/js/ckeditor/skins/moono/editor.css" %}" rel="stylesheet">
 
+    <script type="text/javascript" src="/jsi18n/"></script>
     <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
     <script type="text/javascript" src="/assets/js/jquery-ui.js"></script>
     <script type="text/javascript" src="/assets/js/ckeditor/ckeditor.js"></script>
@@ -107,12 +108,14 @@
     ng-style="{
         'left1': model.menu.positionTitleLeft,
         'top1': model.menu.positionTitleTop}"
-    >Teachers’ toolkit 
+    >
+        <span translate>Тренажер IELTS Writing</span>
+    <!-- Teachers’ toolkit -->
     </div>
-    <div style="position: absolute;
-    top: 39%;
-    left: 17px;">A snazzy solution for managing students’ homework</div>
-
+    <div style="position: absolute;top: 39%;left: 17px;">
+        В помощь ученикам и учителям English with Experts
+        <!--A snazzy solution for managing students’ homework-->
+    </div>
     <div style="top: 0;
     position: absolute;
     right: 0;margin-right: 14px;
@@ -122,6 +125,13 @@
     transition: top .3s ease-out 0.5s;"
     ng-style="{'top': model.menu.positionLoginTextTop}"
     ng-if="user.loaded">
+
+        <div style="margin:15px 0 0 0; display:inline-block;">
+            <select id="language" name="language" ng-change="change_language()" ng-model="model.selectedLanguage">
+                <option ng-repeat="lang in model.languages" value="{{lang.value}}" ng-selected="model.selectedLanguage == lang.value">{{lang.title}}</option>
+            </select>
+        </div>
+
 
         <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="main.login($event)">
             Login 
@@ -246,7 +256,7 @@
                 </div>
             </div>
             <div class="footer-copyright pull-right" style="margin: 5px 10px;">
-                © 2015 Copyright Text
+                © 2015 Copyright
             </div>
         </footer>
     </div>
