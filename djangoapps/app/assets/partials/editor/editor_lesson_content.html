@@ -6,7 +6,7 @@
             <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].is_correct==false" class="incorrect_page_content"></div>
 
             <p class="pull-left" style="padding:20px;font-size:20px;font-weight:400;" ng-if="model.editor.current_lesson.pages.length > 0">
-            Page № {{model.editor.current_lesson.pages[model.editor.current_page_index].number}}
+            <span translate>Page</span> № {{model.editor.current_lesson.pages[model.editor.current_page_index].number}}
             </p>
 
             <div class="col-md-1 pull-right" style="margin-right: 30px;margin-top: 10px;" ng-if="model.editor.current_lesson.pages.length > 0">
@@ -15,16 +15,16 @@
             </div>
 
             <div class="activity" style="right: 100px;top: 16px;position: absolute;">
-                <div ng-show="model.editor.loading">Saving ...</div>
-                <div ng-show="model.editor.unsaved">Changes not saved ...</div>
+                <div ng-show="model.editor.loading"><span translate>Saving ...</span></div>
+                <div ng-show="model.editor.unsaved"><span translate>Changes not saved</span></div>
             </div>
 
             <div  style="padding: 20px;font-size: 12px;position: absolute;top: 29px;color: #4988c9;">
-                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'checkbox'">Question to select multiple correct answers</p>
-                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'radiobox'">Question to choose one correct answer</p>
-                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'pairs'">Question with pairs</p>
-                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'text'">Question to enter one correct word</p>
-                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'words_in_text'">Question to enter the correct words</p>
+                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'checkbox'"><span translate>Question to select multiple correct answers</span></p>
+                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'radiobox'"><span translate>Question to choose one correct answer</span></p>
+                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'pairs'"><span translate>Question with pairs</span></p>
+                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'text'"><span translate>Question to enter one correct word</span></p>
+                <p ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].type == 'words_in_text'"><span translate>Question to enter the correct words</span></p>
             </div>
 
 
@@ -33,7 +33,7 @@
                 
                 <div style="width:100%;padding: 10px 20px 10px 20px;">
                     <md-input-container  style="text-align: left;">
-                        <label>Question</label>
+                        <label><span translate>Question</span></label>
                         <textarea style="width:100%; height:200px;resize: none;" 
                             ng-model="model.editor.current_lesson.pages[model.editor.current_page_index].text"
                             ng-change="make_dirty_data()"
@@ -44,12 +44,12 @@
 
                 <div style="width:100%;padding: 10px 20px 10px 20px;text-align: left;display: inline-table;">
                     <div>
-                        <div ripple class="btn-primary" accept="image/jpeg,image/png,image/gif,video/mp4,audio/mp3" ngf-accept="'*.png,*.jpg,*.mp3,*.mp4'" ngf-select ngf-change="page_picture_upload($files, $event)">Media of the question
+                        <div ripple class="btn-primary" accept="image/jpeg,image/png,image/gif,video/mp4,audio/mp3" ngf-accept="'*.png,*.jpg,*.mp3,*.mp4'" ngf-select ngf-change="page_picture_upload($files, $event)"><span translate>Media of the question</span>
                              <div style="height:2px;width:100%;background-color:red;"
                              ng-style="{width: progressUpload}"></div>
                         </div>
                     </div>
-                    <div class="remove_question_picture" ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].media" ng-click="remove_question_media()" style="text-decoration:underline;color: #4988C9;">Delete media</div>
+                    <div class="remove_question_picture" ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].media" ng-click="remove_question_media()" style="text-decoration:underline;color: #4988C9;"><span translate>Delete media</span></div>
                     <div ng-if="model.editor.current_lesson.pages[model.editor.current_page_index].media">
                         <md-card class="picture_lesson" style="width: 400px;margin-top: 70px;">
                             <img ng-if="model.editor.media_type == 'image'" ng-src="{{model.editor.current_lesson.pages[model.editor.current_page_index].media}}" class="md-card-image" alt="Картинка вопроса">
@@ -108,7 +108,7 @@
 
             </div>
             <div style="min-height:100px;margin:20px;" ng-if="model.editor.current_lesson.pages.length == 0">
-                <p>The lesson doesn't have pages. Create a page in the menu on the right.</p>
+                <p><span translate>The lesson doesn't have pages. Create a page in the menu on the right.</span></p>
             </div>
 
         </div>
@@ -125,27 +125,27 @@
                     padding: 19px 0 0 0;
                     position: relative;
                     margin-bottom: 40px;
-                "> PAGES
+                "><span translate>PAGES</span>
                     <div fab ripple class="fab-add-page" fab-class="fab-add-page" fab-class-menu="fab-add-page-menu" icon="icon-add" menu-right-x="58" menu-y="21" menu-width="380" menu-height="255">
                         <div><div ng-click="add_page('text')">
                             <i class="type-text-image" style="float: left;margin-right:10px"></i>
-                            Question to enter one correct word</div>
+                            <span translate>Question to enter one correct word</span></div>
                         </div>
                         <div><div ng-click="add_page('checkbox')">
                             <i class="type-checkbox-image" style="float: left;margin-right:10px"></i>
-                            Question to select multiple correct answers</div>
+                            <span translate>Question to select multiple correct answers</span></div>
                         </div>
                         <div><div ng-click="add_page('radiobox')">
                             <i class="type-radiobox-image" style="float: left;margin-right:10px"></i>
-                            Question to choose one correct answer</div>
+                            <span translate>Question to choose one correct answer</span></div>
                         </div>
                         <div><div ng-click="add_page('pairs')">
                             <i class="type-pairs-image" style="float: left;margin-right:10px"></i>
-                            Question with pairs</div>
+                            <span translate>Question with pairs</span></div>
                         </div>
                         <div><div ng-click="add_page('words_in_text')">
                             <i class="type-pairs-image" style="float: left;margin-right:10px"></i>
-                            Question to enter the correct words</div>
+                            <span translate>Question to enter the correct words</span></div>
                         </div>
                     </div>
 
@@ -167,7 +167,7 @@
                             <i ng-if="page.type == 'checkbox'" class="type-checkbox-image" style="float: left;margin: 14px 0 0 10px;"></i>
                             <i ng-if="page.type == 'pairs'" class="type-pairs-image" style="float: left;margin: 14px 0 0 10px;"></i>
                             <div style="display: inline-block;">
-                                <div class="list_pages_content_title"> Page № {{page.number}}</div>
+                                <div class="list_pages_content_title"><span translate>Page</span> № {{page.number}}</div>
                                 <div class="list_pages_content_text">
 
                                 {{page.text | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</div>

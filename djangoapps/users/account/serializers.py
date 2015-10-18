@@ -49,7 +49,8 @@ class UserSerializer(serializers.ModelSerializer):
             'role',
             'last_login',
             'date_joined',
-            'account_type'
+            'account_type',
+            'language'
         )
 
 

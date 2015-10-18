@@ -6,4 +6,4 @@ from django.apps import AppConfig
 
 class LMSConfig(AppConfig):
     name = 'quizy'
-    verbose_name = 'СДО'
+    verbose_name = 'LMS'

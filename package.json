@@ -25,6 +25,7 @@
     "angular-route": "./djangoapps/app/vendor/angular-route.min.js",
     "angular-aria": "./djangoapps/app/vendor/angular-aria.min.js",
     "angular-animate": "./djangoapps/app/vendor/angular-animate.min.js",
+    "angular-gettext": "./djangoapps/app/vendor/angular-gettext.min.js",
     "jquery": "./djangoapps/app/vendor/jquery.min.js",
     "videogular": "./djangoapps/app/vendor/videogular.min.js",
     "vg-controls": "./djangoapps/app/vendor/vg-controls.min.js",

@@ -1,8 +1,8 @@
 'use strict';
 
-app.ControllerName = function($scope, $http, $log, $mdDialog) {
-    $scope.model['lesson_dialog'] = $scope.model.outside.enroll;
-    $scope.model['lesson_dialog'].temptext = null;
+app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
+    $scope.model.lesson_dialog = $scope.model.outside.enroll;
+    $scope.model.lesson_dialog.temptext = null;
     $scope.model.lesson_dialog.loading = false;
 
     // Editor options.
@@ -23,7 +23,7 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
     // сброс флага внимания со стороны ученика
     // $scope.model.lesson_dialog.data.active == false
     if ($scope.model.lesson_dialog.hasOwnProperty('data')) {
-        if ($scope.model.lesson_dialog.required_attention_by_teacher == true) {
+        if ($scope.model.lesson_dialog.required_attention_by_teacher === true) {
             save();
         }
     }
@@ -47,7 +47,7 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
     };
 
     $scope.add_answer_teacher = function() {
-        $scope.model['lesson_dialog'].temptext = null;
+        $scope.model.lesson_dialog.temptext = null;
         var _text_pupil = "";
         if ($scope.model.lesson_dialog.data.steps.length > 0) {
             _text_pupil = $scope.model.lesson_dialog.data.steps[$scope.model.lesson_dialog.data.steps.length - 1].text;
@@ -93,7 +93,7 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
                 break;
             }
         }
-        if (index != null) {
+        if (index !== null) {
             $scope.model.lesson_dialog.data.steps.splice(index, 1);
             save();
         }
@@ -132,10 +132,10 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
             scope: $scope,        // use parent scope in template
             preserveScope: true,
             controller: function TimerController($scope, $mdDialog) {
-                scope.closeDialog = function($event) {
+                $scope.closeDialog = function($event) {
                     $mdDialog.hide();
                 };
-                scope.submit = function($event) {
+                $scope.submit = function($event) {
                     $event.preventDefault();
                     $scope.get_step_by_number(number, {
                         mode: 'finish'
@@ -159,7 +159,7 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
                 $scope.model.lesson_dialog.loading = false;
                 $log.error(error);
             });
-    };
+    }
 
     $scope.commit = function() {
         save();
@@ -168,7 +168,7 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
     $scope.get_number_words = function(text) {
         var _words = text.split(' ');
         if (_words && _words.length == 1) {
-            if (_words[0] == "") {
+            if (_words[0] === "") {
                 return 0;
             } else {
                 return _words.length;
@@ -176,7 +176,7 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
         } else {
             return _words.length;
         }
-    }
+    };
 
     /*
     Поставить оценку
@@ -190,14 +190,14 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
             preserveScope: true,
             controller: function TimerController($scope, $mdDialog) {
                 var curent_step = '';
-                for (var i = 0, len = scope.model.lesson_dialog.data.steps.length; i < len; i++) {
-                        if (scope.model.lesson_dialog.data.steps[i].number == step_number) {
-                            curent_step = scope.model.lesson_dialog.data.steps[i];
+                for (var i = 0, len = $scope.model.lesson_dialog.data.steps.length; i < len; i++) {
+                        if ($scope.model.lesson_dialog.data.steps[i].number == step_number) {
+                            curent_step = $scope.model.lesson_dialog.data.steps[i];
                         }
                     }
 
 
-                scope.model['estimate'] = {
+                $scope.model.estimate = {
                     commit_disabled: true,
                     estimate_task: '',
                     estimate_task_varinats: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
@@ -210,36 +210,36 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
                 };
                 if (curent_step) {
                     if (curent_step.estimate && curent_step.estimate.estimate_task)
-                        scope.model.estimate.estimate_task = curent_step.estimate.estimate_task;
+                        $scope.model.estimate.estimate_task = curent_step.estimate.estimate_task;
                     if (curent_step.estimate && curent_step.estimate.coherence_task)
-                        scope.model.estimate.coherence_task = curent_step.estimate.coherence_task;
+                        $scope.model.estimate.coherence_task = curent_step.estimate.coherence_task;
                     if (curent_step.estimate && curent_step.estimate.lexical_task)
-                        scope.model.estimate.lexical_task = curent_step.estimate.lexical_task;
+                        $scope.model.estimate.lexical_task = curent_step.estimate.lexical_task;
                     if (curent_step.estimate && curent_step.estimate.grammatical_task)
-                        scope.model.estimate.grammatical_task = curent_step.estimate.grammatical_task;
+                        $scope.model.estimate.grammatical_task = curent_step.estimate.grammatical_task;
                 }
 
-                scope.change = function() {
-                    if (is_ready() == true) {
-                        scope.model.estimate.commit_disabled = false;
+                $scope.change = function() {
+                    if (is_ready() === true) {
+                        $scope.model.estimate.commit_disabled = false;
                     }
                 };
 
-                scope.closeDialog = function($event) {
+                $scope.closeDialog = function($event) {
                     $mdDialog.hide();
                 };
 
-                scope.submit = function($event) {
+                $scope.submit = function($event) {
                     $event.preventDefault();
                     var _data = {
-                        estimate_task: scope.model.estimate.estimate_task,
-                        coherence_task: scope.model.estimate.coherence_task,
-                        lexical_task: scope.model.estimate.lexical_task,
-                        grammatical_task: scope.model.estimate.grammatical_task
+                        estimate_task: $scope.model.estimate.estimate_task,
+                        coherence_task: $scope.model.estimate.coherence_task,
+                        lexical_task: $scope.model.estimate.lexical_task,
+                        grammatical_task: $scope.model.estimate.grammatical_task
                     };
-                    for (var i = 0, len = scope.model.lesson_dialog.data.steps.length; i < len; i++) {
-                        if (scope.model.lesson_dialog.data.steps[i].number == step_number) {
-                            scope.model.lesson_dialog.data.steps[i].estimate = _data;
+                    for (var i = 0, len = $scope.model.lesson_dialog.data.steps.length; i < len; i++) {
+                        if ($scope.model.lesson_dialog.data.steps[i].number == step_number) {
+                            $scope.model.lesson_dialog.data.steps[i].estimate = _data;
                         }
                     }
 
@@ -249,16 +249,16 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
 
                 function is_ready() {
                     var _is_ready = true;
-                    if (scope.model.estimate.estimate_task == "") {
+                    if ($scope.model.estimate.estimate_task === "") {
                         _is_ready = false;
                     }
-                    if (scope.model.estimate.coherence_task == "") {
+                    if ($scope.model.estimate.coherence_task === "") {
                         _is_ready = false;
                     }
-                    if (scope.model.estimate.lexical_task == "") {
+                    if ($scope.model.estimate.lexical_task === "") {
                         _is_ready = false;
                     }
-                    if (scope.model.estimate.grammatical_task == "") {
+                    if ($scope.model.estimate.grammatical_task === "") {
                         _is_ready = false;
                     }
                     return _is_ready;
@@ -290,7 +290,7 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
             if (_ext.toLowerCase() == 'mp3') {
                 $scope.model.lesson_dialog.lesson.media_type = 'audio';
                 $scope.model.lesson_dialog.lesson.media_sources = [{
-                    src: $sce.trustAsResourceUrl(scope.model.lesson_dialog.lesson.media),
+                    src: $sce.trustAsResourceUrl($scope.model.lesson_dialog.lesson.media),
                     type: "audio/mp3"
                 }];
             }
@@ -298,6 +298,6 @@ app.ControllerName = function($scope, $http, $log, $mdDialog) {
                 $scope.model.lesson_dialog.lesson.media_type = 'image';
             }
         }
-    };
+    }
 
-}
+};

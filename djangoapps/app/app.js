@@ -1,6 +1,6 @@
 'use strict';
 
-//global.jQuery = global.$ = require('jquery');
+global.jQuery = global.$ = require('jquery');
 var angular = require('angular');
 if (!angular.version) {
     // эта версия Angular не работает с require
@@ -19,7 +19,7 @@ require('angular-animate');
 require('angular-aria');
 require('angular-material');
 require('angular-material-icons');
-
+require('angular-gettext');
 
 //require('angular-parallax');
 
@@ -47,6 +47,7 @@ window.app = angular.module('quizy', [
         'ngMaterial',
         'ngMdIcons',
         'ngCkeditor',
+        'gettext',
 
         "com.2fdevs.videogular",
         "com.2fdevs.videogular.plugins.controls",
@@ -59,7 +60,14 @@ window.app = angular.module('quizy', [
         'quizy.filters'])
     .service('$data', require('./editor/EditDataService.js'))
     .config(states.config)
-    .run(states.run);
+    .run(function(gettextCatalog) {
+        //states.run();
+
+        gettextCatalog.loadRemote('/assets/js/translations.json');
+        gettextCatalog.debug = true;
+
+    }); //states.run
+
 
 app.config(function($controllerProvider, $mdThemingProvider) {
     app.controllerProvider = $controllerProvider;
@@ -88,41 +96,9 @@ app.config(function($controllerProvider, $mdThemingProvider) {
     $mdThemingProvider.theme('default')
     .primaryPalette('amazingPaletteName')
     .accentPalette('orange');
+
+    
 });
-//.config(['$httpProvider', function($httpProvider) {
-//    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-//    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-//}])
 
 
-/*
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
 
-var csrftoken = getCookie('csrftoken');
-
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-    }
-});
-*/

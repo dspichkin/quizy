@@ -6,10 +6,10 @@
             <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
                 <thead style="background-color:#e3eaf1;height:60px">
                     <th class="table_th" style="text-align:left;">
-                        Pupil
+                        <span translate>Pupil</span>
                     </th>
                     <th class="table_th" style="width: 400px;">
-                        <div style="">Assign</div>
+                        <div style=""><span translate>Assign</span></div>
                     </th>
                 </thead>
 
@@ -50,10 +50,10 @@
                                             <div class="enroll_data" style="font-size:12px;margin: 7px 9px 0px 21px;">
                                                 / {{enroll.number_of_attempt}}  ({{enroll.created_at | date:'yyyy-MM-dd'}})
 
-                                                <span ng-if="enroll.reason=='success'">Успешно выполено</span>
-                                                <span ng-if="enroll.reason=='reject'">Отказался выполнять</span>
-                                                <span ng-if="enroll.reason=='done_time'">Время вышло</span>
-                                                <span ng-if="enroll.reason=='not_done'">Не приступал</span>
+                                                <span ng-if="enroll.reason=='success'"><span translate>Successfully executed</span></span>
+                                                <span ng-if="enroll.reason=='reject'"><span translate>Refused to perform</span></span>
+                                                <span ng-if="enroll.reason=='done_time'"><span translate>Time is over</span></span>
+                                                <span ng-if="enroll.reason=='not_done'"><span translate>Do not start</span></span>
                                             </div>
 
                                     </div> 

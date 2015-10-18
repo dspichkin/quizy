@@ -13,7 +13,7 @@
                 top: 41%;"></md-progress-circular>
     </div>
     <div class="login-form" ng-if="model.login.show_recall == false">
-        <h1>Sign In</h1>
+        <h1><span translate>Sign In</span></h1>
         <form id="login">
             <p style="text-align: left;">
                 <md-input-container style="text-align: left;padding: 0;">
@@ -29,7 +29,7 @@
 
             <p style="text-align: left;">
                 <md-input-container style="text-align: left;padding: 0;">
-                    <label>Password</label>
+                    <label><span translate>Password</span></label>
                     <input id="id_password" ng-class="{'input-error':form_errors.login.length}" autocomplete="off"  type="password" ng-model="model.login.password" name="password">
                 </md-input-container>
                 <ul class="errorlist" ng-how="model.login.form_errors.password" style="margin: 0;padding: 0;">
@@ -59,11 +59,11 @@
 
 
     <div class="login-form" ng-if="model.login.show_recall == true">
-        <h1>Смена пароля</h1>
+        <h1><span translate>Смена пароля</span></h1>
         <form id="login">
             <p style="text-align: left;">
                 <md-input-container style="text-align: left;padding: 0;">
-                    <label>Укажите вашу почту</label>
+                    <label><span translate>Укажите вашу почту</span></label>
                     <input id="id_login" ng-class="{'input-error':form_errors.login.length}" autocomplete="off"  type="text" ng-model="model.login.email" name="login">
                 </md-input-container>
                 <ul class="errorlist" ng-show="model.login.form_errors.login" style="margin: 0;padding: 0;">
@@ -77,8 +77,8 @@
                     <li ng-repeat="error in model.login.form_errors.other">{{error}}</li>
                 </ul>
 
-                <md-button type="submit" class="btn-secondary" ng-click="recall($event)">Отправить запрос на новый пароль</md-button>
-                <a class="button secondaryAction" href="#" ng-click="cancel_recall($event)">Отмена</a>
+                <md-button type="submit" class="btn-secondary" ng-click="recall($event)"><span translate>Отправить запрос на новый пароль</span></md-button>
+                <a class="button secondaryAction" href="#" ng-click="cancel_recall($event)"><span translate>Отмена</span></a>
 
 
             </div>
