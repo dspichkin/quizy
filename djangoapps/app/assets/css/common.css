@@ -1,3 +1,4 @@
+/*#0288d1;*/
 .shadow {
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
 }
@@ -10,7 +11,7 @@ button[disabled] {
   opacity: 0.5;
 }
 .btn-primary {
-  background-color: #0288d1;
+  background-color: #40a39f;
   border-color: #205D6F;
   color: white;
   display: inline-block;
@@ -103,10 +104,10 @@ button[disabled] {
   min-width: 1040px;
   overflow-x: hidden;
   position: relative;
-  color: white;
+  color: black;
   height: 300px;
   background-repeat: no-repeat;
-  background-image: url('/assets/img/head_bg.png');
+  background-image: url('/assets/img/head_bg.jpg');
   -webkit-transition: top 0.2s ease-out 0.1s;
   -moz-transition: top 0.2s ease-out 0.1s;
   -o-transition: top 0.2s ease-out 0.1s;
@@ -116,7 +117,7 @@ button[disabled] {
   height: 34px;
   width: 100%;
   padding: 0px 0px 0px 17px;
-  color: white;
+  color: black;
   position: absolute;
   font-size: 40px;
   top: 65px;
