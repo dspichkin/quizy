@@ -140,7 +140,7 @@
        
     </div>
 
-    <div class="tabs" style="position:absolute;bottom:0;height:48px;"
+    <div class="tabs" style="position:absolute;bottom:0;height:48px;width: 100%;"
         ng-style="{
             'left': model.menu.positionMainMenuLeft,
             'top': model.menu.positionMainMenuTop}">
@@ -166,6 +166,10 @@
                     <span translate>Statistics</span>
                     <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                 </div>
+                <div class="tab-item" ripple ng-click="main.go_articles_page()">
+                    <span translate>Articles</span>
+                    <div ng-class="{'active_menu': main.active_menu=='articles'}"></div>
+                </div>
                 <!--
                 <div class="tab-item" ripple ng-click="main.go_description()">
                     <span>Описание</span>
@@ -176,17 +180,7 @@
         </div>
     </div>
 </div>
-<div style="
-    min-width: 1040px;
-    background-color:#f4f5f6;
-    position: absolute;
-    width: 100%;
-    margin:0;
-    padding:0;
-    -webkit-transition: top .2s ease-out 0.1s;
-     -moz-transition: top .2s ease-out 0.1s;
-     -o-transition: top .2s ease-out 0.1s;
-     transition: top .2s ease-out 0.1s;" ng-style="{'top': model.menu.positionBodyTop}" >
+<div class="base_middle_panel" ng-style="{'top': model.menu.positionBodyTop}" >
 
     
 
@@ -196,11 +190,12 @@
     
     
     <div class="row" style="position: relative;
-        height: 140px;
+        height: 90px;
         background-color: #e18e47;
         margin: 8px 0 0 0;
+        background-image: url('/assets/img/slider-noise-bg.jpg');
         ">
-        <div style="background-color:rgb(233, 232, 232);height:60px;"></div>
+        <div style="background-color:#7c8f83;;height:10px;"></div>
 
         <footer class="page-footer" style="bottom: 0;
             color: white;
@@ -209,7 +204,7 @@
             width: 100%;">
 
             <div style="">
-                <div class="tabs" style="height:48px;display: inline-block;width: 600px;">
+                <div class="tabs" style="height:48px;display: inline-block;width: 100%;">
                     <div class="tabs-canvas">
                         <div class="tabs-wrapper">
                             <div class="tab-item" ripple ng-click="main.go_home_page()">
@@ -231,6 +226,10 @@
                             <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
                                 <span translate>Statistics</span>
                                 <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
+                            </div>
+                            <div class="tab-item" ripple ng-click="main.go_articles_page()">
+                                <span translate>Articles</span>
+                                <div ng-class="{'active_menu': main.active_menu=='articles'}"></div>
                             </div>
                         </div>
                     </div>

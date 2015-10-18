@@ -60,6 +60,7 @@ window.app = angular.module('quizy', [
         'quizy.filters'])
     .service('$data', require('./editor/EditDataService.js'))
     .config(states.config)
+    //.run(states.run)
     .run(function(gettextCatalog) {
         //states.run();
 

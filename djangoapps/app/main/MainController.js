@@ -194,6 +194,15 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         $scope.main.active_menu = 'profile';
     };
 
+    $scope.main.go_articles_page = function(slug) {
+        if (slug) {
+            $location.path('/articles/' + slug);
+        } else {
+            $location.path('/articles/');
+        }
+        $scope.main.make_short_header();
+        $scope.main.active_menu = 'articles';
+    };
 
 
     $scope.main.run = function(callback) {
@@ -260,7 +269,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         }
         $mdDialog.show({
               targetEvent: $event,
-              templateUrl: '/assets/partials/login.html',
+              templateUrl: '/assets/partials/accounts/login.html',
               disableParentScroll: true,
               clickOutsideToClose: true,
                 scope: $scope,        // use parent scope in template
