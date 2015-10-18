@@ -60,6 +60,7 @@ window.app = angular.module('quizy', [
         'quizy.filters'])
     .service('$data', require('./editor/EditDataService.js'))
     .config(states.config)
+    //.run(states.run)
     .run(function(gettextCatalog) {
         //states.run();
 
@@ -71,7 +72,23 @@ window.app = angular.module('quizy', [
 
 app.config(function($controllerProvider, $mdThemingProvider) {
     app.controllerProvider = $controllerProvider;
-
+    
+    /*
+    '50': 'ffcdd2',
+        '100': 'ffcdd2',
+        '200': 'ef9a9a',
+        '300': 'e57373',
+        '400': '29b6f6',
+        '500': '03a9f4',
+        '600': '039be5',
+        '700': '0288d1',
+        '800': '0277bd',
+        '900': '01579b',
+        'A100': '80d8ff',
+        'A200': '40c4ff',
+        'A400': '00b0ff',
+        'A700': '0091ea',
+        */
     $mdThemingProvider.definePalette('amazingPaletteName', {
         '50': 'ffcdd2',
         '100': 'ffcdd2',

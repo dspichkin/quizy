@@ -168,12 +168,30 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
                 }
             }
         })
+        .state('articles', {
+            url: "/articles/?",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/articles/base_articles.html",
+                    controller: 'ArticlesCtrl'
+                }
+            }
+        })
+        .state('selected_articles', {
+            url: "/articles/:slug",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/articles/base_articles.html",
+                    controller: 'ArticlesCtrl'
+                }
+            }
+        })
         .state('djangoAccounts', {
             url: "^/accounts/{url:.*}"
         })
         .state('djangoAdmin', {
             url: "^/admin/{url:.*}"
-        })
+        });
         /*
         .state('statistics', {
             url: "/statistics",
@@ -181,7 +199,6 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             controller: 'StatisticsController'
         })
         */
-
 
     $urlRouterProvider
         .when(/^\/accounts/, '/accounts/profile')
