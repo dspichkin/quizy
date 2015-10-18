@@ -8,7 +8,7 @@
         color: white;
         right: 0;">
 
-        <div ng-click="back_to_lessons()" style="text-decoration:underline;">Back to the list of lessons</div>
+        <div ng-click="back_to_lessons()" style="text-decoration:underline;"><span translate>Back to the list of lessons</span></div>
     </div>
 
 
@@ -27,8 +27,8 @@
                     <h2>{{model.lesson_dialog.lesson.name}}</h2>
                     
                     <div>
-                        <h3>Task</h3>
-                        <p style="font-size: 18px;">{{model.lesson_dialog.lesson.description}}</p>
+                        <h3><span translate>Task</span></h3>
+                        <p style="font-size: 18px;" ng-bind-html="model.lesson_dialog.lesson.description"></p>
                     </div>
 
 
@@ -95,35 +95,35 @@
 
                     <div class="" style="font-size: 18px;text-align:left;
                         font-weight: 300;" ng-if="model.lesson_dialog.data.active == true">
-                        Lesson is active
+                        <span translate>Lesson is active</span>
                     </div>
                     <div class="" style="font-size: 18px;
                         text-align:left;
                         font-weight: 300;margin: 0 0 0 -20px;" ng-if="model.lesson_dialog.data.active == false">
-                        Lesson is stoped
+                        <span translate>Lesson is stoped</span>
                     </div>
 
                     <div ng-if="model.lesson_dialog.data.steps.length == 0">
-                        <h4>The student has't made the task yet</h4>
+                        <h4><span translate>The student has't made the task yet</span></h4>
                     </div>
                     
 
 
                     <div ng-repeat="step in model.lesson_dialog.data.steps.slice().reverse() track by $index">
                         <div ng-if="!get_answer_teacher() && step.type=='teacher' && !step.mode" style="margin-top:20px;color:red;">
-                            <p>After completing the response is required to press the "Send feedback"</p>
+                            <p><span translate>After completing the response is required to press the 'Send feedback'</span></p>
                         </div>
 
 
                         <div ng-if="$first == true && !get_answer_teacher() && step.type == 'pupil' && step.mode != 'finish'">
-                            <h4>Lesson edited by pupil<h4>
+                            <h4><span translate>Lesson edited by pupil</span><h4>
                         </div>
                         <div ng-if="$first == true && !get_answer_teacher() && step.type == 'teacher' && step.mode == 'finish'">
-                            <h4>Lesson edited by pupil<h4>
+                            <h4><span translate>Lesson edited by pupil</span><h4>
                         </div>
 
                         <div ng-if="$first && get_answer_teacher()">
-                            <div ripple class="btn-secondary shadow" style="margin: 15px 0 0 0;position:relative;font-size: 18px;" ng-click="add_answer_teacher()" >Give feedback</div>
+                            <div ripple class="btn-secondary shadow" style="margin: 15px 0 0 0;position:relative;font-size: 18px;" ng-click="add_answer_teacher()"><span translate>Give feedback</span></div>
                         </div>
 
 
@@ -148,12 +148,8 @@
                                 </div>
                                 -->
 
-                                <p style="float:right">Teacher</p>
-                                
-
-
-                                <p>Comment</p>
-                                
+                                <p style="float:right"><span translate>Teacher</span></p>
+                                <p><span translate>Comment</span></p>
                                 <p style="font-size: 18px;" compile="step.text"></p>
 
 
@@ -175,8 +171,8 @@
                                 
                             
                             <div ng-if="$first == true">
-                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="save_step(step.number)">Save</div>
-                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)">Delete</div>
+                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="save_step(step.number)"><span translate>Save</span></div>
+                                <div  ng-if="$first == true" class="btn-primary shadow" ng-click="delete_step(step.number)"><span translate>Delete</span></div>
                             </div>
 
                         </div>
@@ -200,11 +196,11 @@
 
 
 
-                                <p style="float:right">Teacher</p>
-                                <p  ng-if="$first == true" class="btn-primary" style="float:right;cursor:pointer;margin: -9px 14px 0px 0px;" ng-click="commit_step($event, step.number)">Send feedback</p>
+                                <p style="float:right"><span translate>Teacher</span></p>
+                                <p  ng-if="$first == true" class="btn-primary" style="float:right;cursor:pointer;margin: -9px 14px 0px 0px;" ng-click="commit_step($event, step.number)"><span translate>Send feedback</span></p>
 
-                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)">Delete</p>
-                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 10px 10px;" ng-click="edit_step(step.number)">Edit</p>
+                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)"><span translate>Delete</span></p>
+                                <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 10px 10px;" ng-click="edit_step(step.number)"><span translate>Edit</span></p>
                                 <!--<p>Comment: {{step.number}}</p>-->
                                 
                                 <p style="font-size: 18px;" compile="step.text"></p>
@@ -225,18 +221,19 @@
                                     display: inline-block;">
 
                                 <div class="row" style="margin: -10px 0 8px 0px;">
-                                     <p style="float:right;margin: 6px 0 0 0;">Pupil</p>
+                                     <p style="float:right;margin: 6px 0 0 0;"><span translate>Pupil</span></p>
                                      <div class="btn btn-secondary" ripple style="float:right;margin:0 10px;" ng-click="estimate($event, step.number)">
-                                        Give a score
+                                        <span translate>Give a score</span>
                                     </div>
-                                    <div style="float:right;margin: 8px 8px 0px 0px;" ng-if="step.estimate">Current score: 
+                                    <div style="float:right;margin: 8px 8px 0px 0px;" ng-if="step.estimate">
+                                        <span translate>Current score</span>: 
                                         TA <b>{{step.estimate.estimate_task}}</b> /
                                         CC <b>{{step.estimate.coherence_task}}</b> /
                                         LR <b>{{step.estimate.lexical_task}}</b> /
                                         GA <b>{{step.estimate.grammatical_task}}</b>
                                     </div>
 
-                                    <div style="margin: 7px 0 0 0;">Number of words: <b>{{get_number_words(step.text)}}</b></div>
+                                    <div style="margin: 7px 0 0 0;"><span translate>Number of words</span>: <b>{{get_number_words(step.text)}}</b></div>
                                 </div>
                                
                                 

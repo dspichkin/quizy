@@ -35,7 +35,10 @@ def set_language(request):
             next = '/'
     response = http.HttpResponseRedirect(next)
     if request.method == 'POST':
-        lang_code = request.POST.get('language', None)
+
+        req = json.loads(request.body.decode("utf-8"))
+        lang_code = req.get('language', None)
+
         if lang_code and check_for_language(lang_code):
 
             if request.user.is_authenticated():

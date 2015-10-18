@@ -103,6 +103,18 @@
     	"Timer of lesson": "Таймер урока",
     	"Stop": "Стоп",
     	"Reset": "Сброс",
-    	"Change": "Изменить"
+    	"Change": "Изменить",
+
+    	"Back to the list of lessons": "Вернуться к списку уроков",
+    	"Task": "Задание",
+    	"Lesson is active": "Урок активен",
+    	"Lesson is stoped": "Урок остановлен",
+    	"The student has't made the task yet": "Студент пока еще не сделал задание",
+    	"After completing the response is required to press the 'Send feedback'": "После написание отзыва необходимо отправить его нажав на кнопку 'Отправит отзыв'",
+    	"Lesson edited by pupil": "Урок редактируется студентом",
+    	"Give feedback": "Отправить отзыв",
+    	"Comment": "Комментарий",
+    	"Send feedback": "Отправит отзыв",
+    	"Give a score": "Поставить отметку"
 	}
 }

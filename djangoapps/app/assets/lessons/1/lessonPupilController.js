@@ -141,10 +141,10 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                 scope: $scope,        // use parent scope in template
                 preserveScope: true,
                 controller: function TimerController($scope, $mdDialog) {
-                    scope.closeDialog = function($event) {
+                    $scope.closeDialog = function($event) {
                         $mdDialog.hide();
                     };
-                    scope.submit = function($event) {
+                    $scope.submit = function($event) {
                         $event.preventDefault();
                         $scope.get_step_by_number(number, {
                             mode: 'finish'

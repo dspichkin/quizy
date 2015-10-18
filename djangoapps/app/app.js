@@ -69,7 +69,7 @@ window.app = angular.module('quizy', [
     }); //states.run
 
 
-app.config(function($controllerProvider, $mdThemingProvider, $httpProvider) {
+app.config(function($controllerProvider, $mdThemingProvider) {
     app.controllerProvider = $controllerProvider;
 
     $mdThemingProvider.definePalette('amazingPaletteName', {
@@ -97,12 +97,7 @@ app.config(function($controllerProvider, $mdThemingProvider, $httpProvider) {
     .primaryPalette('amazingPaletteName')
     .accentPalette('orange');
 
-    $httpProvider.defaults.transformRequest = function(data) {        
-        if (data === undefined) { return data; } 
-        return $.param(data);
-    };
-    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'; 
-
+    
 });
 
 

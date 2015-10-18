@@ -486,6 +486,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
             'next': '',
             'language': $scope.model.selectedLanguage
         };
+        
         $cookies.put('language', $scope.model.selectedLanguage);
         gettextCatalog.setCurrentLanguage($scope.model.selectedLanguage);
         $http.post('/i18n/setlang/', _data);
