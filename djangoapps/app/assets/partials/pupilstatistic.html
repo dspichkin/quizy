@@ -1,6 +1,15 @@
 <div class="lesson" style="min-height:450px;text-align:center">
 	<div class="shadow lesson_panel">
-		<div ng-if="user && user.is_authenticated && user.account_type == 2" class="lessons_pupil" ng-style="model.lessons.length > 0 && {'min-height': '50px'}">
+		<!-- loading -->
+        <div ng-if="!loaded" style="width:100%;height:100%;position: absolute;">
+            <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+
+
+
+		<div ng-if="loaded==true && user && user.is_authenticated && user.account_type == 2" class="lessons_pupil" ng-style="model.lessons.length > 0 && {'min-height': '50px'}">
 
 			<div class="col-md-12" style="padding: 0;">
 		    <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
@@ -14,11 +23,9 @@
 		            <th class="table_th">
 		                <span translate>Date of moving in Statistics</span>
 		            </th>
-		            <!--
-		            <th class="table_th">
-		                Результат
+		            <th class="table_th" style="width: 200px;">
+		                <span translate>Result</span>
 		            </th>
-		            -->
 		        </thead>
 
 		        <tbody>
@@ -29,7 +36,12 @@
 		                    
 		                    <div ng-if="enroll.lesson.course.name" style="font-size:9px">{{enroll.lesson.course.name | htmlToPlaintext | limitTo: 25}}{{enroll.lesson.course.name.length > 25 ? '...' : ''}}</div>
 
-		                    <span ng-if="enroll.lesson.name">{{enroll.lesson.name | htmlToPlaintext | limitTo: 25}}{{enroll.lesson.name.length > 25 ? '...' : ''}}</span>
+		                    <span ng-if="enroll.lesson.name && enroll.lesson.lesson_type == 'inside'">{{enroll.lesson.name | htmlToPlaintext | limitTo: 25}}{{enroll.lesson.name.length > 25 ? '...' : ''}}</span>
+		                    <span ng-if="enroll.lesson.name && enroll.lesson.lesson_type == 'outside'">
+		                    	<a href="#" ng-click="show_data($event, enroll)" >{{enroll.lesson.name | htmlToPlaintext | limitTo: 25}}{{enroll.lesson.name.length > 25 ? '...' : ''}}
+		                    	</a>
+		                    </span>
+
 		                    <span ng-if="!enroll.lesson.name"><span translate>Lesson without name</span></span>
 		                    </div>
 		                    
@@ -44,14 +56,12 @@
 		                    <span>{{enroll.created_at | date:'yyyy-MM-dd'}}</span>
 		                    </div>
 		                </td>
-		                <!--
 		                <td style="min-width: 100px;text-align:left">
-		                    <span ng-if="enroll.success == 'success'">Успешно выполнено</span>
+		                    <span ng-if="enroll.success == true">Успешно выполнено</span>
 		                    <span ng-if="enroll.success == 'done_time'">Просроченно</span>
 		                    <span ng-if="enroll.reason == 'not_done'">Не приступал</span>
 		                    <span ng-if="enroll.reason == 'reject'">Отказался</span>
 		                </td>
-		                -->
 		            </tr>
 
 		        </tbody>

@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import json
+
 from HTMLParser import HTMLParser
 
 # from django.utils.encoding import force_unicode
 from django.core.mail import send_mail as sm
 from django.core.mail import EmailMultiAlternatives
+
+
+from rest_framework import serializers
 # from django.conf import settings
 
 
@@ -113,3 +118,23 @@ def normalize(data):
             clean_steps.append(clean_step)
         clean_data['steps'] = clean_steps
     return clean_data
+
+
+class JSONField(serializers.Field):
+    """
+    Сериализация JSON-полей
+    """
+    def __init__(self, default=None, **kwargs):
+        super(JSONField, self).__init__(**kwargs)
+        self.default = default
+
+    def to_representation(self, obj):
+        if isinstance(obj, basestring):
+            try:
+                return json.loads(obj)
+            except ValueError:
+                return json.loads(self.default)
+        return obj
+
+    def to_internal_value(self, data):
+        return json.dumps(data, ensure_ascii=False)

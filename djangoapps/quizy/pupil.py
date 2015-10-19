@@ -19,11 +19,15 @@ from quizy.models import (LessonEnroll, Statistic)
 from quizy.serializers.serializers import (LessonEnrollSerializer)
 from quizy.serializers.pupil import MyStatisticSerializer
 from quizy.pagination import ListPagination
-from quizy.utils import normalize
+# from quizy.utils import normalize
+
 
 # назначеные на меня уроки
 @api_view(['GET'])
 def mylessons(request):
+    """
+    возвращает список назначеных на студента уроков
+    """
     if not request.user.is_authenticated():
         return Response([], status=status.HTTP_200_OK)
 
@@ -45,10 +49,24 @@ def mylessons(request):
         Statistic.objects.get_or_create(lesson=enroll.lesson, learner=request.user,
             number_of_attempt=enroll.number_of_attempt, success=enroll.success, reason='success')
         enroll.delete()
+
+    # Сериализуем и сортируем полученные уроки
     enrolls = []
-    for enroll in LessonEnroll.objects.filter(learner=request.user).order_by('-created_at'):
+    lessonEnrolls = LessonEnroll.objects.filter(learner=request.user).extra(
+        select={'null_success': 'CASE WHEN quizy_lessonenroll.success IS NULL THEN 0 ELSE 1 END'}
+    ).order_by('null_success', 'success', '-created_at')
+    for enroll in lessonEnrolls:
         enrolls.append(LessonEnrollSerializer(enroll).data)
-    return Response(enrolls, status=status.HTTP_200_OK)
+
+    index = 0
+    elements = []
+    for en in list(enrolls):
+        if en.get('required_attention_by_pupil') is True:
+            elements.append(enrolls.pop(index))
+        index += 1
+    sortedenrolls = elements + enrolls
+
+    return Response(sortedenrolls, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
@@ -97,11 +115,14 @@ def play(request, enroll_pk=None):
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 def reject_lesson(request, enroll_pk):
+    """
+    перенос урока в архив
+    """
     enroll = get_object_or_404(LessonEnroll, pk=enroll_pk)
     if enroll.learner == request.user:
         statistic = Statistic.objects.create(lesson=enroll.lesson,
             learner=enroll.learner, number_of_attempt=enroll.number_of_attempt,
-            success=enroll.success)
+            success=enroll.success, data=enroll.data)
         if enroll.success is None:
             statistic.reason = 'reject'
             statistic.save()

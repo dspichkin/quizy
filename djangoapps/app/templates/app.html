@@ -59,8 +59,13 @@
 <body ng-app="quizy" ng-cloak ng-controller="MainCtrl">
     {% verbatim %}
 
+<div ng-if="!loaded" style="width:100%;height:100%;position: absolute;">
+    <div style="margin: 0 auto;width: 50%;margin-top: 20%;">
+        <md-progress-linear md-mode="indeterminate"></md-progress-linear>
+    </div>
+</div>
 
-<div ng-if="model.message.is_active" style="height: 34px;
+<div ng-if="loaded==true && model.message.is_active" style="height: 34px;
     background-color: rgb(54, 150, 66);
     padding: 14px 0px 0px 20px;
     color: white;
@@ -80,7 +85,7 @@
      <span ng-bind-html="model.message.text[model.message.current_message]"></span>
 
      </div>
-<div class="top-panel" ng-style="{'top': model.menu.positionTop}" >
+<div ng-if="loaded==true" class="top-panel" ng-style="{'top': model.menu.positionTop}" >
     
     <div class="top-panel-title"
         ng-style="{
@@ -163,8 +168,12 @@
                     <span translate>Enrolled students</span>
                     <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                 </div>
-                <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
+                <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_statistic_page()">
                     <span translate>Statistics</span>
+                    <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
+                </div>
+                <div ng-if="user && user.is_authenticated && user.account_type == 2" class="tab-item" ripple ng-click="main.go_statistic_page()">
+                    <span translate>Archive</span>
                     <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                 </div>
                 <div class="tab-item" ripple ng-click="main.go_articles_page()">
@@ -181,7 +190,7 @@
         </div>
     </div>
 </div>
-<div class="base_middle_panel" ng-style="{'top': model.menu.positionBodyTop}" >
+<div ng-if="loaded==true" class="base_middle_panel" ng-style="{'top': model.menu.positionBodyTop}" >
 
     
 
@@ -224,8 +233,12 @@
                                 <span translate>Enrolled students</span>
                                 <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                             </div>
-                            <div ng-if="user && user.is_authenticated" class="tab-item" ripple ng-click="main.go_statistic_page()">
+                            <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_statistic_page()">
                                 <span translate>Statistics</span>
+                                <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
+                            </div>
+                            <div ng-if="user && user.is_authenticated && user.account_type == 2" class="tab-item" ripple ng-click="main.go_statistic_page()">
+                                <span translate>Archive</span>
                                 <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                             </div>
                             <div class="tab-item" ripple ng-click="main.go_articles_page()">

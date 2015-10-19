@@ -1,6 +1,6 @@
 'use strict';
 window.utils = {};
-utils.getUrlVars = function(url)
+window.utils.getUrlVars = function(url)
 {
     var vars = [], hash;
     var hashes = url.slice(url.indexOf('?') + 1).split('&');

@@ -209,7 +209,7 @@ class CourseEnroll(BaseModel):
 
     auto_enroll = models.BooleanField(_(u'авто назначения на уроки'), default=False)
 
-    data = JSONField(_(u'данные'), default={}, blank=True, null=True)
+    data = JSONField(_(u'данные прохождения'), default={}, blank=True, null=True)
     last_data = models.DateTimeField(_(u'дата последней попытки'), null=True, blank=True)
     number_of_attempt = models.IntegerField(_(u'кол-во попыток'), default=0)
     success = models.NullBooleanField(_(u'результат последней попытки прохождения'), null=True, blank=True)
@@ -395,10 +395,11 @@ class Statistic(models.Model):
     number_of_attempt = models.IntegerField(_(u'кол-во попыток'), default=0)
     success = models.NullBooleanField(_(u'результат последней попытки прохождения'), null=True, blank=True)
     reason = models.CharField(_(u'причина перемещеня в статистику'), max_length=10, choices=REASON_CHOICES, null=True, blank=True)
+    data = JSONField(_(u'данные прохождения'), default={}, blank=True, null=True)
 
     class Meta:
-        verbose_name = _(u'Статистика')
-        verbose_name_plural = _(u'Статистика')
+        verbose_name = _(u'Статистика/Архив')
+        verbose_name_plural = _(u'Статистика/Архив')
         ordering = ('-updated_at', '-created_at', )
 
     
