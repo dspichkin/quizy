@@ -1,4 +1,10 @@
 'use strict';
+/*global
+window: false,
+module: false,
+setTimeout: false,
+$:false */ 
+
 var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $timeout, $log, $cookies, gettextCatalog) {
     $scope.user = {
         username: 'guest',
@@ -6,7 +12,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         loaded: false,
         csrfmiddlewaretoken: null
     };
-
+    $scope.loaded = false;
     //window.scope = $scope;
 
     // высота окна сообщения
@@ -233,7 +239,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                     gettextCatalog.setCurrentLanguage('ru');
                  }
             }
-            
+            $scope.loaded = true;
             if (callback) {
                 callback();
             }
@@ -436,12 +442,12 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                 };
 
                 $scope.make_dirty_data = function() {
-                    if ($scope.reg.email == "" || $scope.reg.password1 == "" || $scope.reg.password2 == "") {
+                    if ($scope.reg.email === "" || $scope.reg.password1 === "" || $scope.reg.password2 === "") {
                         $scope.disabled = true;
                     } else {
                         $scope.disabled = false;
                     }
-                }
+                };
 
                 function validateEmail(email) {
                     var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
@@ -453,7 +459,7 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                         $scope.reg.errors = 'Неверный формат адреса';
                         return;
                     } else {
-                        if ($scope.reg.password1 == "") {
+                        if ($scope.reg.password1 === "") {
                             $scope.reg.errors = 'Пароль обязятелен';
                             return;
                         }

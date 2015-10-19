@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import json
-
 from rest_framework import serializers
 # from utils.serializers import JSONField
 
@@ -9,6 +7,8 @@ from users.account.serializers import UserSerializer
 from users.account.models import Account
 from quizy.models import (Course, Lesson, CourseEnroll, LessonEnroll,
     Statistic)
+
+from quizy.utils import JSONField
 
 
 class CourseForPupilSerializer(serializers.ModelSerializer):
@@ -53,6 +53,7 @@ class PupilSerializer(serializers.ModelSerializer):
 class MyStatisticSerializer(serializers.ModelSerializer):
     lesson = LessonForPupilSerializer(read_only=True)
     learner = UserSerializer(read_only=True)
+    data = JSONField()
 
     class Meta:
         model = Statistic

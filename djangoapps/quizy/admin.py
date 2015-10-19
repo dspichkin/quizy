@@ -142,6 +142,17 @@ class VariantAdmin(admin.ModelAdmin):
 class StatisticAdmin(admin.ModelAdmin):
     list_display = ['lesson', 'learner', 'created_at', 'success', 'reason']
 
+    class Media:
+        css = {
+            'all': (
+                'lib/run_ace.css',
+            )
+        }
+        js = (
+            'lib/ace/ace.js',
+            'lib/run_ace.js',
+        )
+
 
 admin.site.unregister(Group)
 admin.site.register(Course, CourseAdmin)

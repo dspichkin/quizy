@@ -131,14 +131,14 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
                         });
                     };
 
-                    scope.cancelCreateAccount = function($event) {
+                    $scope.cancelCreateAccount = function($event) {
                         $scope.model.modal_enroll.show_create_account = false;
                         $scope.model.modal_enroll.inputed_address = null;
                         $scope.model.modal_enroll.error_message = null;
                         $scope.model.modal_enroll.show_error = false;
                     };
 
-                    scope.createAccount = function($event) {
+                    $scope.createAccount = function($event) {
                         var _data = {
                             lesson_id: $scope.assign_lesson_id,
                             email: $scope.model.modal_enroll.inputed_address

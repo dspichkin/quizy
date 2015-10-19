@@ -27,17 +27,15 @@ var TeacherStatisticCtrl = function($scope, $mdDialog, $http, $log, $location) {
     load_statistic();
 
 
-
-
     function load_statistic(url) {
         var _page;
         if (!url) {
-            var url = '/api/statistic/';
+            url = '/api/statistic/';
             if (_page) {
                 url += '?page=' + _page;
             }
         } else {
-            _page = utils.getUrlVars(url).page;
+            _page = window.utils.getUrlVars(url).page;
         }
         if (!_page) {
             _page = 1;

@@ -1,7 +1,10 @@
 'use strict';
+/*global
+window: false,
+module: false */ 
 
-
-var PupilStatisticCtrl = function($scope, $http, $log, $location) {
+var PupilStatisticCtrl = function($scope, $http, $log, $location, $mdDialog) {
+    $scope.loaded = false;
     $scope.model = {
         enrolls: []
     };
@@ -26,12 +29,12 @@ var PupilStatisticCtrl = function($scope, $http, $log, $location) {
     $scope.load_statistic = function(url) {
         var _page;
         if (!url) {
-            var url = '/api/mystatistic/';
+            url = '/api/mystatistic/';
             if (_page) {
                 url += '?page=' + _page;
             }
         } else {
-            _page = utils.getUrlVars(url).page;
+            _page = window.utils.getUrlVars(url).page;
         }
         if (!_page) {
             _page = 1;
@@ -40,6 +43,7 @@ var PupilStatisticCtrl = function($scope, $http, $log, $location) {
 
         $http.get(url).then(function(data) {
                 $scope.model.enrolls = data.data.results;
+
                 var page_length = 10;
                 var from_page = _page * page_length - page_length;
                 if (!from_page) {
@@ -56,12 +60,32 @@ var PupilStatisticCtrl = function($scope, $http, $log, $location) {
                     from_page: from_page,
                     to_page: to_page
                 };
+                $scope.loaded = true;
 
             }, function(error) {
+                $scope.loaded = true;
                 $log.error('Ошибка получения курсов', error);
             });
-    }
+    };
 
+
+     $scope.show_data = function($event, enroll) {
+        //var data = 'data'
+        $mdDialog.show({
+            targetEvent: $event,
+            templateUrl: '/assets/lessons/1/show_archive.html',
+            disableParentScroll: true,
+            clickOutsideToClose: true,
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.enroll = enroll;
+                $scope.closeDialog = function() {
+                    $mdDialog.hide();
+                };
+                
+            }
+        });
+    };
 
     // =============================
     $scope.load_statistic();
@@ -69,6 +93,6 @@ var PupilStatisticCtrl = function($scope, $http, $log, $location) {
 
 };
 
-module.exports = ['$scope', '$http', '$log', '$location', PupilStatisticCtrl];
+module.exports = ['$scope', '$http', '$log', '$location', '$mdDialog', PupilStatisticCtrl];
 
 
