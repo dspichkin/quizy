@@ -6,6 +6,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.forms import ModelForm
 from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from suit_redactor.widgets import RedactorWidget
 from sorl.thumbnail import get_thumbnail
@@ -55,8 +56,6 @@ class LessonEnrollAdmin(admin.ModelAdmin):
             'js/ace/ace.js',
             'js/run_ace.js',
         )
-
-from django.contrib.admin.widgets import FilteredSelectMultiple
 
 
 class LessonForm(ModelForm):
