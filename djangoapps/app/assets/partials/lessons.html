@@ -52,8 +52,12 @@
                                             ng-class="{enroll_row_required_attention1: item.required_attention_by_pupil}"><i class="material-icons">play_arrow</i>
                                             <div ng-if="item.required_attention_by_pupil"
                                                 style="color:red;position: absolute;top: 2px;left: 17px;font-size:10px;"><span translate>You have not read a review!</span></div>
+                                            <div ng-if="item.success == null" style="font-size: 10px;position: absolute;top: 0;left: 38px;">
+                                                <span translate>New lesson</span>
+                                            </div>
                                             <div style="margin: 2px 0 0 6px;">
-                                             <span translate>Run</span></div>
+                                                <span translate>Run</span>
+                                            </div>
                                         </div>
                                     </td>
                                     <td style="width: 200px;text-align:left;padding: 17px 0 0 0;">
