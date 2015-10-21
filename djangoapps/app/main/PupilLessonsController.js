@@ -1,13 +1,18 @@
 'use strict';
-
+/* globals
+require:false,
+$:false,
+module:false
+*/
 var _ = require('lodash-node');
 var Lesson = require('../models/lesson');
 
-var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location) {
+var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location, $timeout) {
 
     $scope.model = {
         lessons: [],
-        nolessons: false
+        nolessons: false,
+        loaded: false
     };
 
 
@@ -36,20 +41,25 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
                     for (var i = 0, len = data.data.length; i < len; i++) {
                         data.data[i].created_at = Date.parse(data.data[i].created_at);
                         $scope.model.lessons.push(data.data[i]);
-                        
                     }
                 } else {
                     $scope.model.nolessons = true;
                 }
+                $scope.model.loaded = true;
+                console.log($scope.model.lessons)
                 //console.log($scope.model.lessons)
             }, function(error) {
                 $log.error('Ошибка получения назначенных на меня уроков', error);
+                $scope.model.loaded = true;
             });
         }
     };
 
     $scope.play_lesson = function(enroll_id) {
-        $location.path('/play/' + enroll_id + '/');
+        $timeout(function() {
+            $location.path('/play/' + enroll_id + '/');
+        }, 500);
+        
     };
 
 
@@ -62,7 +72,7 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
             scope: $scope,        // use parent scope in template
             preserveScope: true,
             controller: function DialogController($scope, $mdDialog) {
-                $scope.model['modal'] = {
+                $scope.model.modal = {
                     loading: false
                 };
                 $scope.closeDialog = function() {
@@ -85,9 +95,43 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
 
             }
         });
-    }
+    };
 
+    $scope.to_archive = function($event, lesson_id) {
+        $mdDialog.show({
+            targetEvent: $event,
+            templateUrl: '/assets/partials/confirm/confirm_archive_lesson.html',
+            disableParentScroll: true,
+            clickOutsideToClose: true,
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,
+            controller: function DialogController($scope, $mdDialog) {
+                $scope.model.modal = {
+                    loading: false
+                };
+                $scope.closeDialog = function() {
+                    $mdDialog.hide();
+                };
 
+                $scope.submit = function($event) {
+                    $scope.model.modal.loading = true;
+                    $.post('/api/reject_lesson/' + lesson_id + '/').then(function(data) {
+                        $scope.model.modal.loading = false;
+                        $scope.load_lessons();
+                        $mdDialog.hide();
+                    }, function(error) {
+                        $scope.model.modal.loading = false;
+                        $log.error(error);
+                        $scope.load_lessons();
+                        $mdDialog.hide();
+                    });
+                };
+
+            }
+        });
+    };
+
+    /*
     $scope.to_archive = function($event, lesson_id) {
         $.post('/api/reject_lesson/' + lesson_id + '/').then(function(data) {
             $scope.load_lessons();
@@ -98,15 +142,15 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
             $scope.load_lessons();
             $mdDialog.hide();
         });
-    }
+    };
 
-
+    */
 
 
     // =============================
     $scope.load_lessons();
 
-}
+};
 
 
-module.exports = ['$scope', '$mdDialog', '$http', '$data', '$log', '$location', PupilLessonsCtrl];
+module.exports = ['$scope', '$mdDialog', '$http', '$data', '$log', '$location', '$timeout',PupilLessonsCtrl];

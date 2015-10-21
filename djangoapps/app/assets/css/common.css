@@ -6,6 +6,12 @@
   box-shadow: none;
   opacity: 0.5;
 }
+.primary {
+  color: #40a39f;
+}
+.secondary {
+  color: #ff9e37;
+}
 button[disabled] {
   box-shadow: none;
   opacity: 0.5;
@@ -157,4 +163,8 @@ button[disabled] {
 .hover_link:hover {
   opacity: 0.6;
   cursor: pointer;
+  background-color: #c3c3c3;
+}
+.hover_link:active {
+  box-shadow: initial;
 }

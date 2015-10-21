@@ -37,7 +37,8 @@ div:focus,
 input:focus,
 select:focus,
 textarea:focus,
-i:focus {
+i:focus,
+md-grid-tile-footer:focus {
   outline: 0 none !important;
   border-color: none;
   /* -webkit-box-shadow: none;*/
@@ -48,9 +49,6 @@ i:focus {
 }
 md-content {
   /* background-color: initial !important; */
-}
-md-dialog {
-  opacity: 1;
 }
 /* почему при выборе селекта нет фона 
 .md-select-menu-container.md-active md-select-menu {

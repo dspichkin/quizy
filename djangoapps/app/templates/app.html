@@ -110,7 +110,7 @@
                 }"></div>
             </div>
             <md-input-container class="md-padding" style="margin-top: 2px;margin-right: 10px;padding:0;display: inline-block;">
-                <md-select ng-change="change_language()" ng-model="model.selectedLanguage" style="padding: 0;margin: 0;">
+                <md-select ng-change="change_language()" ng-model="model.selectedLanguage" style="padding: 0;margin: 0;" aria-label="change language">
                     <md-option ng-repeat="lang in model.languages" value="{{lang.value}}" ng-selected="model.selectedLanguage == lang.value">
                         <div ng-class="lang.pclass"></div><div style="display: inline-block;position: absolute;top: 11px;">{{lang.title}}</div>
                     </md-option>

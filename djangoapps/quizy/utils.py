@@ -138,3 +138,23 @@ class JSONField(serializers.Field):
 
     def to_internal_value(self, data):
         return json.dumps(data, ensure_ascii=False)
+
+
+def is_enrolls_different(old_dict, new_dict):
+    """
+    Сравнение двух назанчений
+    """
+    if old_dict is None or new_dict is None:
+        return False
+
+    new_steps = new_dict.get('steps', [])
+    old_steps = old_dict.get('steps', [])
+    if len(new_steps) > 0 and len(old_steps) > 0:
+        last_new_step = new_steps[len(new_steps) - 1]
+        last_old_step = old_steps[len(old_steps) - 1]
+        # если кол-во шагов совпадает и последний шаг завершен
+        if len(new_steps) == len(old_steps):
+            if last_new_step.get('mode') != last_old_step.get('mode') and last_new_step.get('mode') == 'finish':
+                return True
+
+    return False

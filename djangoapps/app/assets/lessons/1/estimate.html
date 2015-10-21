@@ -1,5 +1,5 @@
 <md-dialog aria-label="List dialog">
-    <md-dialog-content> 
+    <md-dialog-content style="padding:20px;"> 
         <p>Writing task</p>
         <table>
             <thead>
@@ -48,10 +48,10 @@
 
     </md-dialog-content>
     <div class="md-actions">
-        <md-button ng-click="closeDialog()" class="md-primary">Cancel</md-button>
+        <md-button ng-click="closeDialog()" class="md-primary"><span translate>Cancel</span></md-button>
         <button type="button" ng-click="submit($event)" class="btn-secondary" style="margin-left: 10px;"
             ng-disabled="model.estimate.commit_disabled">
-            Give a score
+            <span translate>Give a score</span>
         </button>
     </div>
 </md-dialog>

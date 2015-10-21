@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'json_field',
     'rest_framework',
+    'sorl_thumbnail_serializer',
 
     'quizy',
     'i18n',

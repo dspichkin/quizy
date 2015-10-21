@@ -25,15 +25,14 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
         stylesSet: 'my_styles',
         extraPlugins: 'panelbutton,colorbutton'
     };
-
     // сброс флага внимания со стороны ученика
     // $scope.model.lesson_dialog.data.active == false
     if ($scope.model.lesson_dialog.hasOwnProperty('data')) {
-        if ($scope.model.lesson_dialog.required_attention_by_pupil == true) {
+        if ($scope.model.lesson_dialog.required_attention_by_pupil === true) {
             save();
         }
     }
-
+    console.log($scope.model.lesson_dialog)
     $scope.get_step_by_number = function(number, data) {
         for (var i = 0, len = $scope.model.lesson_dialog.data.steps.length; i < len; i++) {
             if ($scope.model.lesson_dialog.data.steps[i].number == number) {
@@ -42,6 +41,9 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                 }
                 if (data.hasOwnProperty('mode')) {
                     $scope.model.lesson_dialog.data.steps[i].mode = data.mode;
+                }
+                if (data.hasOwnProperty('number_words')) {
+                    $scope.model.lesson_dialog.data.steps[i].number_words = data.number_words;
                 }
                 return $scope.model.lesson_dialog.data.steps[i];
             }
@@ -65,7 +67,8 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
     $scope.save_step = function(number) {
         $scope.get_step_by_number(number, {
             text: $scope.model.lesson_dialog.temptext,
-            mode: null
+            mode: null,
+            number_words: $scope.model.number_words
         });
         save();
     };
@@ -90,9 +93,9 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
      */
     $scope.get_answer_pupil = function() {
         // если урок активен
-        if ($scope.model.lesson_dialog.data.active == true) {
+        if ($scope.model.lesson_dialog.data.active === true) {
             // если нет ответов или последний ответ был от учителя
-            if ($scope.model.lesson_dialog.data.steps.length == 0 ||
+            if ($scope.model.lesson_dialog.data.steps.length === 0 ||
                 ($scope.model.lesson_dialog.data.steps[$scope.model.lesson_dialog.data.steps.length - 1].type == 'teacher' &&
                     $scope.model.lesson_dialog.data.steps[$scope.model.lesson_dialog.data.steps.length - 1].mode == 'finish')) {
                 return true;
@@ -109,7 +112,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                 break;
             }
         }
-        if (index != null) {
+        if (index !== null) {
             $scope.model.lesson_dialog.data.steps.splice(index, 1);
             save();
         }
@@ -123,16 +126,16 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
               targetEvent: $event,
               template:
                     '<md-dialog aria-label="List dialog">' +
-                    '  <md-dialog-content>' +
-                    '    <p><b>Отправляем работу на проверку?</b>' +
-                    '    <p>После подтверждения редактирование будет невозможным. </p>' +
+                    '  <md-dialog-content style="padding:20px;">' +
+                    '    <p><b translate>Send your text to teacher?</b>' +
+                    '    <p translate>After confirming, you won’t be able to edit.</p>' +
                     '  </md-dialog-content>' +
                     '  <div class="md-actions">' +
                     '    <md-button ng-click="closeDialog()" class="md-primary">' +
-                    '      Отмена' +
+                    '      <span translate>Cancel</span>' +
                     '    </md-button>' +
                     '    <button type="button" ng-click="submit($event)" class="btn-secondary" style="margin-left: 10px;">' +
-                    '      Отправить' +
+                    '      <span translate>Send</span>' +
                     '    </button>' +
                     '  </div>' +
                     '</md-dialog>',
@@ -149,6 +152,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                         $scope.get_step_by_number(number, {
                             mode: 'finish'
                         });
+                        $scope.model.lesson_dialog.data.mode = 'wait_teacher';
                         save();
                         $mdDialog.hide();
                     };
@@ -156,9 +160,14 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
             });
     };
 
-    function save() {
+    function save(settings) {
         $scope.model.lesson_dialog.loading = true;
         var _data = $scope.model.lesson_dialog.data;
+        if (settings) {
+            for (var key in settings) {
+                _data[key] = settings[key];
+            }
+        }
         $http.put('/api/enroll_pupil/' + $scope.model.lesson_dialog.id + '/', JSON.stringify(_data))
             .then(function(result) {
                 $scope.model.lesson_dialog.loading = false;
@@ -167,21 +176,21 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                 $scope.model.lesson_dialog.loading = false;
                 $log.error(error);
             });
-    };
+    }
 
 
     $scope.runTimer = function() {
         var startTimer = function() {
-            if ($scope.timer_success == true) {
+            if ($scope.timer_success === true) {
                  $scope.timer_success = false;
             }
-            if ($scope.model.timer <= 0 || $scope.stop_timer == true) {
+            if ($scope.model.timer <= 0 || $scope.stop_timer === true) {
                 $scope.disable_runtimer = false;
                 $scope.stop_timer = false;
                 $scope.timer_success = true;
                 return;
             } else {
-                if ($scope.disable_runtimer == false) {
+                if ($scope.disable_runtimer === false) {
                     $scope.disable_runtimer = true;
                 }
                 $scope.model.timer -= 1;
@@ -195,7 +204,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
     };
     $scope.resetTimer = function() {
         $scope.stop_timer = true;
-        if ($scope.timer_success == true) {
+        if ($scope.timer_success === true) {
              $scope.timer_success = false;
         }
         if ($scope.model.lesson_dialog.lesson.timer) {
@@ -237,11 +246,11 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                     $scope.message = null;
                     $scope.timer = $scope.model.timer;
 
-                    scope.closeDialog = function($event) {
+                    $scope.closeDialog = function($event) {
                         $mdDialog.hide();
                     };
 
-                    scope.changeTimer = function() {
+                    $scope.changeTimer = function() {
                         if (!$scope.timer) {
                             $scope.timer = 0;
                         }
@@ -258,7 +267,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                         }
                     };
 
-                    scope.submit = function($event) {
+                    $scope.submit = function($event) {
                         $event.preventDefault();
                         if (!$scope.timer) {
                             $scope.timer = 0;
@@ -296,7 +305,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
             if (_ext.toLowerCase() == 'mp3') {
                 $scope.model.lesson_dialog.lesson.media_type = 'audio';
                 $scope.model.lesson_dialog.lesson.media_sources = [{
-                    src: $sce.trustAsResourceUrl(scope.model.lesson_dialog.lesson.media),
+                    src: $sce.trustAsResourceUrl($scope.model.lesson_dialog.lesson.media),
                     type: "audio/mp3"
                 }];
             }
@@ -304,7 +313,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                 $scope.model.lesson_dialog.lesson.media_type = 'image';
             }
         }
-    };
+    }
 
     $scope.change_text = function(text) {
         var _text;
@@ -335,7 +344,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                 var _t1 = [];
                 for (var j = 0; j < t.length; j++) {
                     t[j] = t[j].replace('\n', '');
-                    if (t[j] != '') {
+                    if (t[j] !== '') {
                         _t1 = _t1.concat(t[j]);
                     }
                 }
@@ -344,14 +353,14 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                     _words = _words.concat(_t1);
                 } else {
                     temp[i] = temp[i].replace('\n', '');
-                    if (temp[i] != '') {
+                    if (temp[i] !== '') {
                         _words.push(temp[i]);
                     }
                 }
             }
 
             if (_words && _words.length == 1) {
-                if (_words[0] == "") {
+                if (_words[0] === "") {
                     return 0;
                 } else {
                     return _words.length;

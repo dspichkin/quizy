@@ -82,7 +82,7 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/lessons/",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/lessons.html",
+                    templateUrl: "/assets/partials/lessons/lessons.html",
                     controller: "PupilLessonsCtrl"
                 }
             }

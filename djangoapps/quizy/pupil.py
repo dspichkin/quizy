@@ -2,13 +2,13 @@
 
 import json
 from datetime import timedelta
-from HTMLParser import HTMLParser
+# from HTMLParser import HTMLParser
 
 # from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
+# from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,6 +20,7 @@ from quizy.serializers.serializers import (LessonEnrollSerializer)
 from quizy.serializers.pupil import MyStatisticSerializer
 from quizy.pagination import ListPagination
 # from quizy.utils import normalize
+from quizy.utils import is_enrolls_different
 
 
 # назначеные на меня уроки
@@ -165,18 +166,31 @@ def enroll_pupil(request, enroll_pk):
     if request.method == 'PUT':
         data = json.loads(request.body.decode("utf-8"))
         # enroll.data = normalize(data)
-        enroll.data = data
 
         enroll.required_attention_by_pupil = False
-        if data.get('active') is False:
-            enroll.required_attention_by_teacher = False
-        else:
+        # if data.get('active') is False:
+        #    enroll.required_attention_by_teacher = False
+        # else:
+        #    enroll.required_attention_by_teacher = True
+
+        is_equal = is_enrolls_different(enroll.data, data)
+        if is_equal is True:
             enroll.required_attention_by_teacher = True
+            enroll.data = data
+            enroll.data['mode'] = 'wait_teacher'
+        else:
+            enroll.data = data
+
         enroll.success = True
         enroll.save()
 
         # Делаем пометку в статистики
-        statistic, created = Statistic.objects.get_or_create(lesson=enroll.lesson, learner=request.user)
+        raw_statistic = Statistic.objects.filter(lesson=enroll.lesson, learner=request.user)
+        if not raw_statistic:
+            statistic = Statistic.objects.create(lesson=enroll.lesson, learner=request.user)
+        else:
+            statistic = raw_statistic.latest('created_at')
+
         statistic.success = enroll.success = True
         statistic.save()
 

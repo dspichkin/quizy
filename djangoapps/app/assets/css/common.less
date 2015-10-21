@@ -12,6 +12,14 @@
 	opacity: 0.5;
 }
 
+.primary {
+    color: @primary_color;
+}
+
+.secondary {
+    color: @secondary_color;
+}
+
 button[disabled] {
     box-shadow: none;
     opacity: 0.5;
@@ -178,4 +186,9 @@ button[disabled] {
 .hover_link:hover {
     opacity: 0.6;
     cursor: pointer;
+    background-color: #c3c3c3;
+}
+
+.hover_link:active {
+    box-shadow: initial;
 }

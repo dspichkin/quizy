@@ -69,48 +69,79 @@
 
                 <div ng-repeat="step in enroll.data.steps.slice().reverse()">
                     
-                    <div ng-if="step.type=='pupil' && step.mode == 'finish'" style="width: 96%;text-align: left;">
+                    <div ng-if="step.type=='pupil' && step.mode == 'finish'" style="width: 100%;text-align: left;">
 
-                        <div style="margin: 20px 10px 20px 10px;
+                        <div style="margin: 0px;
                                 width: 100%;
-                                background-color: rgba(2, 99, 90, 0.18);
-                                padding: 10px;
-                                text-align: left;
-                                display: inline-block;
-                                position:relative;">
-
-
-                            <p style="float:right"><span translate>Pupil</span></p>
-
-                            <div style="float:right;margin:0 10px;" ng-if="step.estimate">
-                                <span translate>Teacher evaluation</span>:
-                                    TA {{step.estimate.estimate_task}} /
-                                    CC {{step.estimate.coherence_task}} /
-                                    LR {{step.estimate.lexical_task}} /
-                                    GA {{step.estimate.grammatical_task}}
-                                </div>
-                            
-                            <!-- <p>Номер попытки: {{step.number}}</p> -->
-                            <div style="margin: 0px 0 10px 0;"><span translate>Number of words</span>: {{get_number_words(step.text)}}</div>
-
-                            <p compile="step.text"></p>
-                        </div>
-                    </div>
-
-
-                    <!-- режим просмотра -->
-                    <div ng-if="step.type=='pupil' && !step.mode" style="width: 96%;text-align: left;">
-
-                        <div style="margin: 20px 10px 20px 10px;
-                                width: 100%;
-                                background-color: rgba(2, 99, 90, 0.18);
+                                border-bottom: 1px solid #c3c3c3;
                                 padding: 10px;
                                 text-align: left;
                                 display: inline-block;
                                 position:relative;">
 
                             <!-- loading -->
-                            <div ng-if="$first == true && model.lesson_dialog.loading == true" style="width:100%;height:100%;background-color: rgb(186, 226, 228);position: absolute;margin: -20px;">
+                            <div ng-if="$first == true && model.lesson_dialog.loading == true" style="width:100%;height:100%;position: absolute;margin: -20px;">
+                                <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
+                                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                                </div>
+                            </div>
+
+                            <div ng-if="!model.lesson_dialog.loading">
+                                <div class="layout-row">
+                                    <div class="flex-15" >
+                                        <div style="width: 80px;
+                                                height: 80px;
+                                                border: 1px solid #c3c3c3;
+                                                padding: 11px 0px 0px 14px;
+                                                border-radius: 50%;
+                                                display: inline-block;
+                                            ">
+                                            <div style="background-image: url('/assets/img/avatar_pupil.png');
+                                                background-repeat: no-repeat;
+                                                width: 50px;
+                                                height: 50px;
+                                                background-size: contain;"></div>
+                                        </div>
+                                        <div style="font-size: 10px;text-align: center;width: 90px;margin: 0px 0 0 0;">
+                                            {{model.lesson_dialog.learner.username | limitTo: 20 }}{{model.lesson_dialog.learner.username.length >= 20 ? '...' : ''}}
+                                        </div>
+                                    </div>
+                                    <div class="flex-80">
+
+                                        <div style="float:right">
+                                            <span ng-show="step.number_words" class="primary" style="float:right;margin: 0px 0 10px 0;"><b>
+                                                <span translate>Number of words</span>: {{step.number_words}}</b>
+                                            </span>
+                                            <div style="float:right;margin:0 10px;" ng-if="step.estimate"><span translate>Teacher evaluation</span>:
+                                                TA <b>{{step.estimate.estimate_task}}</b> /
+                                                CC <b>{{step.estimate.coherence_task}}</b> /
+                                                LR <b>{{step.estimate.lexical_task}}</b> /
+                                                GA <b>{{step.estimate.grammatical_task}}</b>
+                                            </div>
+
+                                        </div>
+
+                                        
+                                        <div><b><span translate>Pupil</span></b></div>
+                                        <p compile="step.text" style="margin:10px 0 0 0"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- режим просмотра -->
+                    <div  ng-if="step.type=='pupil' && !step.mode" style="width: 100%;text-align: left;">
+                        <div class="shadow" style="margin: 20px 10px 20px 0px;
+                                width: 100%;
+                                padding: 30px;
+                                text-align: left;
+                                display: inline-block;
+                                position:relative;">
+
+                            <!-- loading -->
+                            <div ng-if="$first == true && model.lesson_dialog.loading == true" style="width:100%;height:100%;position: absolute;margin: -20px;">
                                 <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
                                     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                                 </div>
@@ -118,37 +149,57 @@
 
 
 
-                            <p style="float:right"><span translate>Pupil</span></p>
-                            <p  ng-if="$first == true" class="btn-primary" style="float:right;cursor:pointer;margin: -4px 14px 0px 0px;" ng-click="commit_step($event, step.number)"><span translate>Send to teacher</span></p>
+                            <p  ng-if="$first == true" class="btn-primary" style="float:right;cursor:pointer;margin: -6px 0px 0px 0px;" ng-click="commit_step($event, step.number)"><span translate>Send to teacher</span></p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)"><span translate>Delete</span></p>
                             <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="edit_step(step.number)"><span translate>Edit</span></p>
                             <!-- <p>Номер попытки: {{step.number}}</p> -->
-                            <div style="margin: 0px 0 10px 0;"><span translate>Number of words</span>: {{get_number_words(step.text)}}</div>
+                            <div class="primary" style="float:left;margin: 0px 0 20px 0;"><span translate>Number of words</span>: {{get_number_words(step.text)}}</div>
 
-                            <p compile="step.text"></p>
-                            <!-- <pre>{{step.text}}</pre> -->
+                            <div style="clear:both;">
+                                <p compile="step.text"></p>
+                            </div>
                         </div>
                     </div>
-
 
                     
 
 
 
                     <!-- Отображение ответов преподавателя -->
-                    <div ng-if="step.type=='teacher' && step.mode=='finish'" style="width: 96%;text-align: right;">
-                        <div style="margin: 20px 10px 20px 10px;
+                    <div ng-if="step.type=='teacher' && step.mode=='finish'" style="width: 100%;text-align: right;">
+                        <div style="margin: 0px;
                                 width: 100%;
-                                background-color: rgba(99, 38, 2, 0.18);
+                                border-bottom: 1px solid #c3c3c3;
                                 padding: 10px;
                                 text-align: left;
                                 display: inline-block;">
 
-                            <p style="float:right"><span translate>Teacher</span></p>
-                            <p><span translate>Comments from teacher</span></p>
-                            <p compile="step.text"></p>
+                            <div class="layout-row">
+                                <div class="flex-15" >
+                                    <div style="width: 80px;
+                                            height: 80px;
+                                            border: 1px solid #c3c3c3;
+                                            padding: 11px 0px 0px 15px;
+                                            border-radius: 50%;
+                                            display: inline-block;
+                                        ">
+                                        <img style="width: 50px;
+                                            height: 50px;" src="/assets/img/avatar_teacher.png">
+                                    </div>
+                                    <div style="font-size: 10px;text-align: center;width: 98px;margin: 7px 0 0 0;">
+                                        {{step.writed_by | limitTo: 20 }}{{step.writed_by.length >= 20 ? '...' : ''}}
+                                    </div>
+                                </div>
+                                <div class="flex-80">
+                                    <p><b><span translate>Comments from teacher</span></b></p>
+                                    <p compile="step.text" style="margin:10px 0 0 0"></p>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
+
+
                 </div>
 
 

@@ -1,0 +1,159 @@
+<div class="lesson" style="min-height:450px;text-align:center">
+    <div class="shadow lesson_panel">
+
+        <div class="lessons_pupil" ng-style="model.lessons.length > 0 && {'min-height': '50px'}">
+            <!-- loading -->
+            <div ng-if="!model.loaded" style="width:90%;height:100%;position: absolute;">
+                <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
+                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                </div>
+            </div>
+
+            <div ng-if="model.loaded">
+
+                <div ng-if="model.lessons.length == 0 && model.nolessons == true">
+                    <!--
+                    <md-button ng-click="find_teacher($event)" class="md-raised pull-right" style="background-color: #FF9E37;">Найти преподавателя</md-button>
+                    -->
+                    <div style="padding: 100px;font-size: 20px;">
+                        <p><span translate>You have not assigned a single lesson yet</span></p>
+                    </div>
+                </div>
+
+                <div ng-if="model.lessons.length > 0">
+                    <div class="col-md-12 lessons_header">
+                        <div class="mylesson_title"><span translate>My lessons</span></div>
+                        <!--
+                        <md-button ng-click="find_teacher($event)" class="md-raised pull-right" style="background-color: #FF9E37;margin: -46px 18px 0 0;">Найти преподавателя</md-button>
+                        -->
+                    </div>
+                    <div class="col-md-12">
+                        <md-grid-list
+                            md-cols-sm="4" md-cols-md="4" md-cols-gt-md="4"
+                            md-row-height-gt-md="1:1.1" md-row-height="3:3"
+                            md-gutter="12px" md-gutter-gt-sm="8px"
+                            style="margin:20px;">
+                            <md-grid-tile class="gray shadow" ng-repeat="item in model.lessons"
+                                md-rowspan="1" md-colspan="1" md-colspan-sm="1"
+                                >
+                                <div class="" ng-style="{'background-image': 'url(' + item.lesson.thumbnail_picture + ')'}"
+                                    style="width: 100%;height: 100%;background-size: contain;background-repeat: no-repeat;"></div>
+                                <!--
+                                <div class="lesson_incorrect" ng-if="item.success==false"></div>
+                                <div class="lesson_correct" ng-if="item.success==true"></div>
+                                -->
+                                <div ng-if="item.success == null" style="font-size: 17px;position: absolute;top: 0;left: 0px;padding: 6px;background:#40a39f;color:white;">
+                                    <span translate>New lesson</span>
+                                </div>
+
+                                <div ng-if="item.required_attention_by_pupil && item.data.active != false" style="color:red;position: absolute;top: 2px;left: 5px;font-size:14px;"><span translate>You have not read a review!</span>
+                                </div>
+
+                                <div ng-if="item.data.active == false" style="color: green;position: absolute;top: 0px;left: 0px;font-size: 14px;font-weight: 500;width: 100%;height: 100%;background: #c3c3c3;opacity: 0.8;">
+                                    <span translate>Lesson is passed</span>
+                                </div>
+
+
+                                <div ng-if="item.data.mode == 'wait_teacher' && item.data.active != false"  style="color:black;position: absolute;top: 2px;left: 5px;font-size:14px;">
+                                    <span translate>The lesson is waiting for a response from the teacher</span>
+                                </div>
+                                
+
+
+
+
+                                <div style="position: absolute;top: 3px;right: 0px;">
+                                    <!-- <a class="icon-delete"  href="#"></a> -->
+                                    <a ng-if="item.success==null" class="reject_lesson" style="width:100%;margin: 0px;cursor: pointer;" ng-click="reject_lesson($event, item.id)">
+                                        <div class="icon-delete"  href="#" style="opacity: 0.5;margin: 7px;width: 19px;height: 19px;background-size: contain;"></div>
+                                            <!--<i class="material-icons" style="float: left;color: red;margin: -1px 5px 0 0;">sync_disabled</i> -->
+                                            <!-- <span translate>Reject</span> -->
+                                    </a>
+                                    <a ng-if="item.success!=null && item.data.active == false" style="width:100%;margin:0px;cursor: pointer;"  ng-click="to_archive($event, item.id)">
+                                        <div class="icon-delete"  href="#" style="opacity: 0.5;margin: 7px;width: 19px;height: 19px;background-size: contain;"></div>
+                                        <!-- <span translate>To archive</span> -->
+                                    </a>
+                                </div>
+
+
+                                <div style="text-align:left;overflow:auto;height: 20px;margin: 0 10px 0 10px;position: absolute;font-size: 12px;left: 0;bottom:20%;width: 100%;">
+                                    <div class="enroll_email" style="color:#2c8de1;float: left;margin: 0 10px 0 0;">
+                                        {{item.created_by.email | limitTo: 15 }}
+                                        {{item.created_by.email.length >= 15 ? '...' : ''}} 
+                                    </div>
+                                    <div style="float:right;margin: 0 15px 0px 0px;"> {{item.created_at | date:'yyyy-MM-dd HH:mm'}}</div> 
+                                </div>
+
+
+                                <div ng-show="show_desc==true" style="color:black;text-align:left;font-size: 15px;padding:10px;position:absolute;left:10px;top:10px;opacity:1;width:93%;background:#c3c3c3;border-radius:5px;">
+                                    <span>{{item.lesson.description | htmlToPlaintext | limitTo: 100 }}{{item.lesson.description.length >= 100 ? '...' : ''}}</span>
+                                </div>
+
+                                <md-button class="md-fab" aria-label="Eat cake" style="position: absolute;right: 0;bottom: 0;" ng-click="play_lesson(item.id)">
+                                    <i class="material-icons" style="margin: 10px 5px 0px 5px;font-size: 32px;">directions_run</i> 
+                                    <!--<md-icon md-svg-src="img/icons/cake.svg"></md-icon> -->
+                                </md-button>
+
+                                <md-grid-tile-footer class="hover_link" style="padding:10px" ng-init="show_desc=false"
+                                ng-click="show_desc=!show_desc">
+                                    <div style="color:black;text-align: left;">
+                                        <span ng-if="item.lesson.name">{{item.lesson.name | htmlToPlaintext | limitTo: 35 }}{{item.lesson.name.length >= 35 ? '...' : ''}}</span>
+                                        <span ng-if="!item.lesson.name"><span translate>Lesson without name</span></span>
+                                    </div>
+
+                                    
+
+                                </md-grid-tile-footer>
+                            </md-grid-tile>
+                        </md-grid-list>
+                    </div>
+                    
+
+                    <!--
+                    <div ng-if="model.lessons.length > 0">
+                        <div style="padding: 0;">
+                            <table class="table lessons_list" style="margin-bottom: 0;">
+                                <thead style="background-color:#e3eaf1;height:60px">
+                                    <th class="table_th">
+                                        <span translate>Run</span>
+                                    </th>
+                                    
+                                    <th class="table_th">
+                                        <span translate>Short description</span>
+                                    </th>
+                                    <th class="table_th">
+                                        <span translate>Teacher</span>
+                                    </th>
+                                    <th class="table_th">
+                                        <span translate>Action</span>
+                                    </th>
+                                </thead>
+
+                                <tbody>
+                                    <tr ng-repeat="item in model.lessons" ng-style="item.success == null && {'background-color': '#E8F0F5'}">
+                                       
+                                       
+                                        <td class="enroll_pupils" style="width: 270px;text-align:left;">
+                                            <div style="width: 270px;text-align:left;overflow:auto;height: 20px;margin: 10px;">
+                                                <div class="enroll_email" style="color:#2c8de1;text-decoration:underline;float: left;margin: 0 10px 0 0;"> {{item.created_by.email | limitTo: 15 }}
+                                                {{item.created_by.email.length >= 15 ? '...' : ''}} 
+                                                </div>
+                                                <div> ({{item.created_at | date:'yyyy-MM-dd HH:mm'}})</div> 
+                                            </div>
+                                        </td>
+                                        
+                                    </tr>
+                                </tbody>
+
+
+                            </table>
+
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

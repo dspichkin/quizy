@@ -31,7 +31,7 @@
 
             <div ng-if="loaded">
                 <div class="shadow" style="width: 100%;background-color: white;text-align: left;
-        padding: 20px;min-height: 400px;position: relative;">
+        padding: 10px 59px;min-height: 400px;position: relative;">
                     <h2>{{model.lesson_dialog.lesson.name}}</h2>
                     
                     <div>
@@ -131,7 +131,7 @@
                         </div>
 
                         <div ng-if="$first && get_answer_teacher()">
-                            <div ripple class="btn-secondary shadow" style="margin: 15px 0 0 0;position:relative;font-size: 18px;" ng-click="add_answer_teacher()"><span translate>Give feedback</span></div>
+                            <div ripple class="btn-primary shadow" style="float:right;margin: -20px 0 10px 0;position:relative;font-size: 18px;" ng-click="add_answer_teacher()"><span translate>Give feedback</span></div>
                         </div>
 
 
@@ -139,28 +139,39 @@
                         <div ng-if="step.type=='teacher' && step.mode == 'finish'" style="width: 100%;text-align: left;">
 
                             
-                            <div style="margin: 20px 10px 20px 10px;
+                            <div style="margin: 0;
                                     width: 100%;
-                                    background-color: rgba(99, 38, 2, 0.18);
-                                    padding: 20px;
+                                    border-bottom: 1px solid #c3c3c3;
+                                    padding: 10px;
                                     text-align: left;
                                     display: inline-block;
                                     position:relative;">
 
+                                <div class="layout-row">
+                                    <div class="flex-15" >
+                                        <div style="width: 100px;
+                                                height: 100px;
+                                                border: 1px solid #c3c3c3;
+                                                padding: 11px 0px 0px 15px;
+                                                border-radius: 50%;
+                                                display: inline-block;
+                                                margin: 16px 0 0 0;
+                                            ">
+                                            <img style="width: 70px;
+                                                height: 70px;" src="/assets/img/avatar_teacher.png">
+                                        </div>
 
-                                <!-- loading 
-                                <div ng-if="model.lesson_dialog.loading == true" style="width:100%;height:100%;background-color: rgb(220, 179, 155);position: absolute;margin: -20px;">
-                                    <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
-                                        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                                        <div style="font-size: 10px;text-align: center;width: 98px;margin: 7px 0 0 0;">
+                                            {{step.writed_by | limitTo: 20 }}{{step.writed_by.length >= 20 ? '...' : ''}}
+                                        </div>
+                                    </div>
+                                    <div class="flex-80">
+
+                                        <p style=""><b><span translate>Comments from teacher</span></b></p>
+                                        <p style="font-size: 18px;" compile="step.text"></p>
+
                                     </div>
                                 </div>
-                                -->
-
-                                <p style="float:right"><span translate>Teacher</span></p>
-                                <p><span translate>Comment</span></p>
-                                <p style="font-size: 18px;" compile="step.text"></p>
-
-
                             </div>
 
                         </div>
@@ -168,11 +179,6 @@
 
                         <div ng-if="step.type=='teacher' && step.mode == 'edit'" style="width: 100%;text-align: left;">
 
-                            <!--
-                            <textarea style="resize: none;height: 200px;margin: 20px 10px 20px 10px;width: 500px;padding:10px;" ng-model="model.lesson_dialog.temptext">
-                            </textarea>
-                            -->
-                           
                             <div style="resize: none;height: 300px;margin: 20px 10px 20px 10px;padding:10px;">
                                 <textarea ckeditor="editorOptions" ng-model="model.lesson_dialog.temptext"></textarea>
                             </div>
@@ -185,10 +191,10 @@
 
                         </div>
 
+                        <!-- режим редактирвоания -->
                         <div ng-if="step.type=='teacher' && !step.mode" style="width: 100%;text-align: right;">
-                            <div style="margin: 20px 10px 20px 10px;
+                            <div class="shadow" style="margin: 20px 10px 20px 0px;
                                     width: 100%;
-                                    background-color: rgba(99, 38, 2, 0.18);
                                     padding: 20px;
                                     text-align: left;
                                     display: inline-block;
@@ -196,7 +202,7 @@
 
 
                                 <!-- loading -->
-                                <div ng-if="$first == true && model.lesson_dialog.loading == true" style="width:100%;height:100%;background-color: rgb(220, 179, 155);position: absolute;margin: -20px;">
+                                <div ng-if="$first == true && model.lesson_dialog.loading == true" style="width:100%;height:100%;position: absolute;margin: -20px;">
                                     <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
                                         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
                                     </div>
@@ -204,13 +210,12 @@
 
 
 
-                                <p style="float:right"><span translate>Teacher</span></p>
                                 <p  ng-if="$first == true" class="btn-primary" style="float:right;cursor:pointer;margin: -9px 14px 0px 0px;" ng-click="commit_step($event, step.number)"><span translate>Send feedback</span></p>
 
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 0px 0px;" ng-click="delete_step(step.number)"><span translate>Delete</span></p>
                                 <p  ng-if="$first == true" style="float:right;cursor:pointer;text-decoration:underline;margin: 0 14px 10px 10px;" ng-click="edit_step(step.number)"><span translate>Edit</span></p>
-                                <!--<p>Comment: {{step.number}}</p>-->
                                 
+                                <p><b translate>Editable feedback</b></p>
                                 <p style="font-size: 18px;" compile="step.text"></p>
 
 
@@ -221,32 +226,49 @@
                         <!-- Отображение ответов ученика -->
                         <div ng-if="step.type=='pupil' && step.mode=='finish'" style="width: 100%;text-align: left;">
 
-                            <div style="margin: 20px 10px 20px 10px;
+                            <div style="margin: 0px;
                                     width: 100%;
-                                    background-color: rgba(2, 99, 90, 0.18);
-                                    padding: 20px;
+                                    border-bottom: 1px solid #c3c3c3;
+                                    padding: 10px;
                                     text-align: left;
                                     display: inline-block;">
-
-                                <div class="row" style="margin: -10px 0 8px 0px;">
-                                     <p style="float:right;margin: 6px 0 0 0;"><span translate>Pupil</span></p>
-                                     <div class="btn btn-secondary" ripple style="float:right;margin:0 10px;" ng-click="estimate($event, step.number)">
-                                        <span translate>Give a score</span>
+                                <div class="layout-row">
+                                    <div class="flex-15" >
+                                        <div style="width: 100px;
+                                                height: 100px;
+                                                border: 1px solid #c3c3c3;
+                                                padding: 11px 0px 0px 15px;
+                                                border-radius: 50%;
+                                                display: inline-block;
+                                                margin: 16px 0 0 0;
+                                            ">
+                                            <img style="width: 70px;
+                                                height: 70px;" src="/assets/img/avatar_pupil.png">
+                                        </div>
+                                        <div style="font-size: 10px;text-align: center;width: 98px;margin: 7px 0 0 0;">{{model.lesson_dialog.learner.username | limitTo: 20 }}{{model.lesson_dialog.learner.username.length >= 20 ? '...' : ''}}</div>
                                     </div>
-                                    <div style="float:right;margin: 8px 8px 0px 0px;" ng-if="step.estimate">
-                                        <span translate>Current score</span>: 
-                                        TA <b>{{step.estimate.estimate_task}}</b> /
-                                        CC <b>{{step.estimate.coherence_task}}</b> /
-                                        LR <b>{{step.estimate.lexical_task}}</b> /
-                                        GA <b>{{step.estimate.grammatical_task}}</b>
-                                    </div>
+                                    <div class="flex-80">
+                                        <div style="float:right">
+                                            <div class="btn btn-secondary" ripple style="float:right;margin:0 10px;" ng-click="estimate($event, step.number)">
+                                                <span translate>Give a score</span>
+                                            </div>
+                                            <div style="float:right;margin: 7px 7px 0px 7px;" ng-if="step.estimate">
+                                                <span translate>Current score</span>: 
+                                                TA <b>{{step.estimate.estimate_task}}</b> /
+                                                CC <b>{{step.estimate.coherence_task}}</b> /
+                                                LR <b>{{step.estimate.lexical_task}}</b> /
+                                                GA <b>{{step.estimate.grammatical_task}}</b>
+                                            </div>
 
-                                    <div style="margin: 7px 0 0 0;"><span translate>Number of words</span>: <b>{{get_number_words(step.text)}}</b></div>
+                                            <div class="primary" style="float:left;margin: 7px 0 0 0;"><span translate>Number of words</span>: <b>{{get_number_words(step.text)}}</b></div>
+                                        </div>
+
+                                        <p style="margin: 0 0 10px 0;"><b><span translate>Pupil</span></b></p>
+                                        <div style="margin: 20px 0 0 0;">
+                                            <p style="font-size: 18px;" compile="step.text"></p>
+                                        </div>
+                                    </div>
                                 </div>
-                               
-                                
-                                <p style="font-size: 18px;" compile="step.text"></p>
-                                <!-- <pre style="font-size: 18px;" compile="step.text"></pre> -->
                             </div>
                         </div>
 

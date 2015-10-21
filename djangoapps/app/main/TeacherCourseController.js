@@ -1,4 +1,9 @@
 'use strict';
+/* globals
+$:false,
+require:false,
+module: false
+*/
 
 var _ = require('lodash-node');
 var Course = require('../models/course');
@@ -49,13 +54,13 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
         $scope.assign_lesson_id = lesson_id;
         $mdDialog.show({
               targetEvent: $event,
-              templateUrl: '/assets/partials/assign_lesson.html',
+              templateUrl: '/assets/partials/lessons/assign_lesson.html',
               disableParentScroll: true,
               clickOutsideToClose: true,
                 scope: $scope,        // use parent scope in template
                 preserveScope: true,
                 controller: function DialogController($scope, $mdDialog) {
-                    $scope.model['modal_enroll'] = {
+                    $scope.model.modal_enroll = {
                         inputed_address: "",
                         show_error: false,
                         error_message: "",
@@ -68,12 +73,13 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
                             url = '/api/get_mypupil/?email=' + email;
                         }
                         $.get(url).then(function(data) {
+                            $scope.model.modal_enroll.error_message = "";
                             $scope.model.modal_enroll.mypupils = data;
                             $scope.$digest();
                         },
                         function(error) {
                             $scope.model.modal_enroll.show_error = true;
-                            $scope.model.modal_enroll.error_message = "Invalid request";
+                            $scope.model.modal_enroll.error_message = "Email is incorrect";
                             $scope.$digest();
                             $log.error(error);
                         });
@@ -94,7 +100,7 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
                     $scope.change_inputed_address = function() {
                         $scope.get_mypupils($scope.model.modal_enroll.inputed_address);
 
-                        if ($scope.model.modal_enroll.inputed_address != "") {
+                        if ($scope.model.modal_enroll.inputed_address !== "") {
                             $scope.submit_disabled = false;
                         } else {
                             $scope.submit_disabled = true;
@@ -108,14 +114,15 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
                         $scope.model.modal_enroll.loading = true;
                         $.post('/api/enroll/', JSON.stringify(_data)).then(function(data) {
                             $scope.model.modal_enroll.loading = false;
+                            $scope.model.modal_enroll.error_message = "";
 
                             if (data.hasOwnProperty('code')) {
                                 if (data.code == 404) {
                                     $scope.model.modal_enroll.show_error = true;
                                     $scope.model.modal_enroll.error_message = "Указаный вами email " +
                                         $scope.model.modal_enroll.inputed_address + " не найден среди зарегистрированных учеников.";
-                                    $scope.model.modal_enroll.show_create_account = true;
-                                    $scope.$apply();
+                                    // $scope.model.modal_enroll.show_create_account = true;
+                                    $scope.$digest();
                                 }
                             } else {
                                 $mdDialog.hide();
@@ -125,7 +132,7 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
                             }
                         }, function(error) {
                             $scope.model.modal_enroll.show_error = true;
-                            $scope.model.modal_enroll.error_message = "Invalid request";
+                            $scope.model.modal_enroll.error_message = "Email is incorrect";
                             $scope.$apply();
                             $log.error(error);
                         });

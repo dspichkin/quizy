@@ -73,6 +73,9 @@ app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
                 if (data.hasOwnProperty('estimate')) {
                     $scope.model.lesson_dialog.data.steps[i].estimate = data.estimate;
                 }
+                if (data.hasOwnProperty('writed_by')) {
+                    $scope.model.lesson_dialog.data.steps[i].writed_by = data.writed_by;
+                }
                 return $scope.model.lesson_dialog.data.steps[i];
             }
         }
@@ -102,6 +105,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
 
     $scope.save_step = function(number) {
         $scope.get_step_by_number(number, {
+            writed_by: $scope.user.email,
             text: $scope.model.lesson_dialog.temptext,
             mode: null
         });
@@ -114,16 +118,16 @@ app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
             targetEvent: $event,
             template:
                 '<md-dialog aria-label="List dialog">' +
-                '  <md-dialog-content>' +
-                '   <p>Ready to send the feedback to the student?</p>' +
-                '   <p>After confirming, you won’t be able to edit your comments.</p>' +
+                '  <md-dialog-content style="padding: 20px;">' +
+                '   <p><b translate>Ready to send the feedback to the student?</b></p>' +
+                '   <p translate>After confirming, you won’t be able to edit your comments.</p>' +
                 '  </md-dialog-content>' +
                 '  <div class="md-actions">' +
                 '    <md-button ng-click="closeDialog()" class="md-primary">' +
-                '      Cancel' +
+                '      <span translate>Cancel</span>' +
                 '    </md-button>' +
                 '    <button type="button" ng-click="submit($event)" class="btn-secondary" style="margin-left: 10px;">' +
-                '      Confirm' +
+                '      <span translate>Confirm</span>' +
                 '    </button>' +
                 '  </div>' +
                 '</md-dialog>',
@@ -150,6 +154,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
 
     function save() {
         var _data = $scope.model.lesson_dialog.data;
+        console.log($scope.model.lesson_dialog.data)
         $scope.model.lesson_dialog.loading = true;
         $http.put('/api/enroll_teacher/' + $scope.model.lesson_dialog.id + '/', JSON.stringify(_data))
             .then(function(result) {

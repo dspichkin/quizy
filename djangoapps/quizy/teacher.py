@@ -17,7 +17,7 @@ from quizy.serializers.serializers import (LessonEnrollSerializer, CourseEnrollS
 from quizy.pagination import ListPagination
 from quizy.serializers.pupil import PupilSerializer
 from quizy.views import validateEmail
-from quizy.utils import normalize
+from quizy.utils import normalize, is_enrolls_different
 
 from users.account.models import Account
 
@@ -41,11 +41,17 @@ def enroll_teacher(request, enroll_pk):
     if request.method == 'PUT':
         data = json.loads(request.body.decode("utf-8"))
         # enroll.data = normalize(data)
-        enroll.data = data
-        enroll.required_attention_by_teacher = False
-        enroll.required_attention_by_pupil = True
+        # проверяем на наличие новых завершенных шагов
+        is_equal = is_enrolls_different(enroll.data, data)
+        if is_equal is True:
+            enroll.required_attention_by_pupil = True
+            enroll.success = True
+            enroll.data = data
+            enroll.data['mode'] = 'wait_pupil'
+        else:
+            enroll.data = data
 
-        enroll.success = True
+        enroll.required_attention_by_teacher = False
         enroll.save()
 
     enroll = LessonEnrollSerializer(instance=enroll).data

@@ -3,7 +3,7 @@
 import json
 
 from rest_framework import serializers
-
+from sorl_thumbnail_serializer.fields import HyperlinkedSorlImageField
 
 from users.account.serializers import UserSerializer
 from quizy.models import (Course, Lesson, CourseEnroll, LessonEnroll,
@@ -63,12 +63,19 @@ class CourseEnrollSerializer(serializers.ModelSerializer):
 
 
 class LessonForEnrollSerializer(serializers.ModelSerializer):
-    pages = PageSerializer(many=True, read_only=True)
+    # pages = PageSerializer(many=True, read_only=True)
     code_errors = JSONField()
     content = JSONField()
+    thumbnail_picture = HyperlinkedSorlImageField(
+        '158x100',
+        options={"crop": "center"},
+        source='picture',
+        read_only=True
+    )
 
     class Meta:
         model = Lesson
+        # exclude = ("pages",)
 
 
 class LessonEnrollSerializer(serializers.ModelSerializer):

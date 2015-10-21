@@ -1,0 +1,17 @@
+<md-dialog aria-label="Delete lesson" class="confirm_delete_lesson">
+  <md-content>
+        <div class="content">
+            <p>Вы собираетесь перенести выбранный урок в архив.</p>
+            <p>Вы уверены, что хотите сделать это?</p>
+            <div class="md-actions" style="margin: 38px -18px 0px 0px;">
+                <md-button ng-click="closeDialog()" class="md-primary">
+                    <span translate>Cancel</span>
+                </md-button>
+                <button type="button" ng-click="submit($event)" class="btn-secondary" style="margin-left: 10px;">
+                    <span translate>Confirm</span>
+                </button>
+            </div>
+
+        </div>
+  </md-content>
+</md-dialog>
