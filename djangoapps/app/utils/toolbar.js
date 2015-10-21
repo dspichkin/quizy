@@ -13,10 +13,10 @@ module.exports = ['$compile',
                 var element = elem[0];
                 var height = element.offsetHeight;
                 var min_height = $(element).css('min-height');
-                console.log("!!!", height);
+
                 window.addEventListener("scroll", function(event) {
                     //testScroll(event)
-                    console.log("22", this.scrollY)
+
                     if (this.scrollY > height - 40) {
                         $(element).css('position', 'fixed');
                         $(element).css('height', '40px');

@@ -67,7 +67,7 @@ class LessonForEnrollSerializer(serializers.ModelSerializer):
     code_errors = JSONField()
     content = JSONField()
     thumbnail_picture = HyperlinkedSorlImageField(
-        '158x100',
+        '100x100',
         options={"crop": "center"},
         source='picture',
         read_only=True

@@ -37,7 +37,7 @@
                                 md-rowspan="1" md-colspan="1" md-colspan-sm="1"
                                 >
                                 <div class="" ng-style="{'background-image': 'url(' + item.lesson.thumbnail_picture + ')'}"
-                                    style="width: 100%;height: 100%;background-size: contain;background-repeat: no-repeat;"></div>
+                                    style="width: 100%;height: 100%;background-size: cover;background-repeat: no-repeat;"></div>
                                 <!--
                                 <div class="lesson_incorrect" ng-if="item.success==false"></div>
                                 <div class="lesson_correct" ng-if="item.success==true"></div>
@@ -46,11 +46,13 @@
                                     <span translate>New lesson</span>
                                 </div>
 
-                                <div ng-if="item.required_attention_by_pupil && item.data.active != false" style="color:red;position: absolute;top: 2px;left: 5px;font-size:14px;"><span translate>You have not read a review!</span>
+                                <div ng-if="item.required_attention_by_pupil && item.data.active != false" style="font-size: 17px;position: absolute;top: 0;left: 0px;padding: 6px;background:rgb(255,171,64);color:white;"><span translate>You have not read a review!</span>
                                 </div>
 
-                                <div ng-if="item.data.active == false" style="color: green;position: absolute;top: 0px;left: 0px;font-size: 14px;font-weight: 500;width: 100%;height: 100%;background: #c3c3c3;opacity: 0.8;">
-                                    <span translate>Lesson is passed</span>
+                                <div ng-if="item.data.active == false" style="position: absolute;top: 0px;left: 0px;font-size: 14px;width: 100%;height: 100%;background: #c3c3c3;opacity: 0.8;">
+                                    <div style="font-size: 17px;position: absolute;top: 0;left: 0px;padding: 6px;background:#40a39f;color:black;">
+                                        <span translate>Lesson is passed</span>
+                                    </div>
                                 </div>
 
 
@@ -85,8 +87,8 @@
                                 </div>
 
 
-                                <div ng-show="show_desc==true" style="color:black;text-align:left;font-size: 15px;padding:10px;position:absolute;left:10px;top:10px;opacity:1;width:93%;background:#c3c3c3;border-radius:5px;">
-                                    <span>{{item.lesson.description | htmlToPlaintext | limitTo: 100 }}{{item.lesson.description.length >= 100 ? '...' : ''}}</span>
+                                <div ng-show1="show_desc==true" style="color:black;text-align:left;font-size: 15px;padding:10px;position:absolute;left:10px;top:18%;opacity:1;width:93%;background:white;border-radius:5px;">
+                                    <span>{{item.lesson.description | htmlToPlaintextSpace | limitTo: 120 }}{{item.lesson.description.length >= 120 ? '...' : ''}}</span>
                                 </div>
 
                                 <md-button class="md-fab" aria-label="Eat cake" style="position: absolute;right: 0;bottom: 0;" ng-click="play_lesson(item.id)">
@@ -94,8 +96,7 @@
                                     <!--<md-icon md-svg-src="img/icons/cake.svg"></md-icon> -->
                                 </md-button>
 
-                                <md-grid-tile-footer class="hover_link" style="padding:10px" ng-init="show_desc=false"
-                                ng-click="show_desc=!show_desc">
+                                <md-grid-tile-footer style="padding:10px;background: #c3c3c3;">
                                     <div style="color:black;text-align: left;">
                                         <span ng-if="item.lesson.name">{{item.lesson.name | htmlToPlaintext | limitTo: 35 }}{{item.lesson.name.length >= 35 ? '...' : ''}}</span>
                                         <span ng-if="!item.lesson.name"><span translate>Lesson without name</span></span>
@@ -109,48 +110,7 @@
                     </div>
                     
 
-                    <!--
-                    <div ng-if="model.lessons.length > 0">
-                        <div style="padding: 0;">
-                            <table class="table lessons_list" style="margin-bottom: 0;">
-                                <thead style="background-color:#e3eaf1;height:60px">
-                                    <th class="table_th">
-                                        <span translate>Run</span>
-                                    </th>
-                                    
-                                    <th class="table_th">
-                                        <span translate>Short description</span>
-                                    </th>
-                                    <th class="table_th">
-                                        <span translate>Teacher</span>
-                                    </th>
-                                    <th class="table_th">
-                                        <span translate>Action</span>
-                                    </th>
-                                </thead>
-
-                                <tbody>
-                                    <tr ng-repeat="item in model.lessons" ng-style="item.success == null && {'background-color': '#E8F0F5'}">
-                                       
-                                       
-                                        <td class="enroll_pupils" style="width: 270px;text-align:left;">
-                                            <div style="width: 270px;text-align:left;overflow:auto;height: 20px;margin: 10px;">
-                                                <div class="enroll_email" style="color:#2c8de1;text-decoration:underline;float: left;margin: 0 10px 0 0;"> {{item.created_by.email | limitTo: 15 }}
-                                                {{item.created_by.email.length >= 15 ? '...' : ''}} 
-                                                </div>
-                                                <div> ({{item.created_at | date:'yyyy-MM-dd HH:mm'}})</div> 
-                                            </div>
-                                        </td>
-                                        
-                                    </tr>
-                                </tbody>
-
-
-                            </table>
-
-                        </div>
-                    </div>
-                    -->
+                    
                 </div>
             </div>
         </div>

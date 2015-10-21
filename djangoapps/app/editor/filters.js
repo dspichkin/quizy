@@ -1,9 +1,17 @@
 'use strict';
-
+/* globals
+module:false,
+angular:false
+*/
 module.exports = angular.module('quizy.filters', [])
     .filter('htmlToPlaintext', function() {
         return function(text) {
             return String(text).replace(/<[^>]+>/gm, '');
+        };
+    })
+    .filter('htmlToPlaintextSpace', function() {
+        return function(text) {
+            return String(text).replace(/<[^>]+>/gm, '').replace(/&nbsp;/g, " ");
         };
     })
     .filter('secondsToTimeString', function() {

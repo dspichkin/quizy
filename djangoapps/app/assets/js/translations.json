@@ -144,6 +144,7 @@
         "Create new account and assign the lesson?": "Создать новый аккаунт и назначить на него урок",
         "Yes": "Да",
         "No": "Нет",
-        "To assign": "Назначить"
+        "To assign": "Назначить",
+        "Lesson is passed": "Урок пройден"
 	}
 }
