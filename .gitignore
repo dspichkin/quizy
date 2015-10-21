@@ -16,4 +16,3 @@ settings_local*
 /compiler/node_modules/
 activate
 .virtualenv/*
-djangoapps/media/*
