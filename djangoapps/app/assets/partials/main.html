@@ -62,77 +62,152 @@
     </div>
 
 
-    <div class="row" style="height:500px;padding: 20px 0 0 0;">
-        <!--<h4>Описание</h4>-->
-        <!--<div class="row" style="width:100%; height:100%;">-->
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-4" style="height: 100%;padding: 0 10px 0px 0px;">
-                <div class="shadow" style="background-color: white;text-align:center;padding: 0 0 0 0;">   
-                    <div class="hover_link" style="background-image: url('/assets/img/new_1b.jpg');
-                            background-repeat: no-repeat;
-                            width: 100%;
-                            height: 348px;
-                            background-size: cover;
-                            margin: 0 auto;
-                            " ng-click="main.go_articles_page('aboutielts.html')">
-                    </div>
-                    <div style="height: 76px;background-color:white;padding: 0px 20px 10px 20px;">
-                        <h3>Об экзамене IELTS</h3>
-                        <div style="color:#2b8de2;text-decoration:underline;font-weight: 800;" ng-click="main.go_articles_page('aboutielts.html')"><span translate>READ MORE</span></div>
-                    </div>
+    <div class="row">
+        <md-grid-list
+            md-cols-sm="3.7" md-cols-md="3.7" md-cols-gt-md="3.7"
+            md-row-height-gt-md="1.2:1" md-row-height="2:2"
+            md-gutter="12px" md-gutter-gt-sm="8px" >
+            
+            <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1" style="background:white">
+                <div class="hover_link" style="background-image: url('/assets/img/new_1b.jpg');
+                        background-repeat: no-repeat;
+                        width: 100%;
+                        height: 100%;
+                        background-size: cover;
+                        margin: 0 auto;
+                        " ng-click="main.go_articles_page('aboutielts.html')">
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-4" style="height: 100%;padding: 0 10px 0px 0px;">
-                <div class="shadow" style="background-color: white;text-align:center;padding: 0 0 0 0;">
-                    <div class="hover_link" style="background-image: url('/assets/img/new_2b.jpg');
-                            background-repeat: no-repeat;
-                            width: 100%;
-                            height: 348px;
-                            background-size: cover;
-                            margin: 0 auto;
-                            " ng-click="main.go_articles_page('writing.html')">
+                    
 
+                <md-grid-tile-footer style="background:white;">
+                    <div style="color: black;padding: 0;">
+                            <div style="color:#2b8de2;font-size: 20px;" ng-click="main.go_articles_page('aboutielts.html')">
+                                <p>Об экзамене IELTS</p>
+                            </div>
                     </div>
-                    <div style="height: 76px;background-color:white;padding: 0px 20px 10px 20px;">
-                        <h3>IELTS Writing</h3>
-                        <div style="color:#2b8de2;text-decoration:underline;font-weight: 800;" ng-click="main.go_articles_page('writing.html')"><span translate>READ MORE</span></div>
+                    
+                </md-grid-tile-footer>
+            </md-grid-tile>
+            
+            <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1" style="background:white">
+                <div class="hover_link" style="background-image: url('/assets/img/new_2b.jpg');
+                        background-repeat: no-repeat;
+                        width: 100%;
+                        height: 100%;
+                        background-size: cover;
+                        margin: 0 auto;
+                        " ng-click="main.go_articles_page('writing.html')">
+
+                </div>
+                <md-grid-tile-footer style="background:white;">
+                    <div style="color: black;padding: 0;">
+                        <div style="color:#2b8de2;font-size: 20px;" ng-click="main.go_articles_page('writing.html')">
+                            <p>IELTS Writing</p>
+                        </div>
+                    </div>
+                </md-grid-tile-footer>
+            </md-grid-tile>
+            <md-grid-tile md-rowspan="1" md-colspan="1" md-colspan-sm="1" style="background:white">
+                <div class="hover_link" style="background-image: url('/assets/img/new_3b.jpg');
+                        background-repeat: no-repeat;
+                        width: 100%;
+                        height: 100%;
+                        background-size: cover;
+                        margin: 0 auto;
+                        " ng-click="main.go_articles_page('prepearing.html')">
+                </div>
+                <md-grid-tile-footer style="background:white;">
+                    <div style="color: black;padding: 0;">
+                        <div style="color:#2b8de2;font-size: 20px;" ng-click="main.go_articles_page('prepearing.html')">
+                            <p>Как готовиться к IELTS Writing?</p>
+                        </div>
+                    </div>
+                </md-grid-tile-footer>
+            </md-grid-tile>
+            
+        </md-grid-list>
+
+        
+    </div>
+
+
+    <div class="row" style="min-height: 100px;margin-top: 20px;">
+        <div style="width:100%;height:100%;background:white;min-height: 500px;">
+            <div style="display:inline-flex;margin: 5px 0 0 0;">
+                <span style="padding: 0px 0px 0px 20px;font-size: 26px;font-weight: 400;">Выбор уроков по категориям:</span>
+                <md-input-container class="md-padding" style="min-width: 200px;font-size: 20px;margin-top: 2px;margin-left: 40px;padding:0;display: inline-block;">
+                    <md-select ng-change="change_lesson_tag()" ng-model="model.selectedTag" style="padding: 0;margin: 0;" aria-label="select tag language">
+                        <md-option ng-repeat="tag in model.lessons_tags" value="{{tag.slug}}" ng-selected="model.selectedTag == tag.slug">
+                            <div style="display: inline-block;position: absolute;top: 11px;">{{tag.name}}</div>
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div style="float: right;text-align: right;margin: 8px 60px 20px 20px;" >
+                <div style="display: inline-flex;">
+                    <div style="display: inline-block;
+                    margin: 6px 7px 0 0;
+                    font-size: 23px;font-weight: 300;">
+                        <span ng-bind-html="page.from_page"></span>-<span ng-bind-html="page.to_page"></span> <span translate>from</span> <span ng-bind-html="page.count"></span>
+                    </div>
+                    <div ng-if="page.previous" ng-click="get_last_lessons(page.previous)" style="display: inline-block;border: 1px solid #c3c3c3;
+                    padding: 4px 0 0 0;">
+                        <i class="material-icons" style="font-size: 32px;">navigate_before</i>
+                    </div>
+                    {{model.page.next}}
+                    <div ng-if="page.next" ng-click="get_last_lessons(page.next)" style="display: inline-block;border: 1px solid #c3c3c3;
+                    padding: 4px 0 0 0;margin: 0 0px 0px 8px;">
+                        <i class="material-icons" style="font-size: 32px;">navigate_next</i>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-4" style="height: 100%;padding: 0 10px 0px 0px;">
-                <div class="shadow"  style="background-color: white;text-align:center;padding: 0 0 0 0;">
-                    <div class="hover_link" style="background-image: url('/assets/img/new_3b.jpg');
-                            background-repeat: no-repeat;
-                            width: 100%;
-                            height: 348px;
-                            background-size: cover;
-                            margin: 0 auto;
-                            " ng-click="main.go_articles_page('prepearing.html')">
-                    </div>
-                    <div style="height: 76px;background-color:white;padding: 0px 0px 0px 0px;">
-                        <h3>Как готовиться к IELTS Writing?</h3>
-                        <div style="color:#2b8de2;text-decoration:underline;font-weight: 800;" ng-click="main.go_articles_page('prepearing.html')"><span translate>READ MORE</span></div>
+
+
+            <div ng-show="!model.last_lessons_loaded" style="width:100%;height:100%;position: absolute;">
+                <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
+                    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+                </div>
+            </div>
+            <div ng-show="model.last_lessons_loaded" ng-if="model.last_lessons.length > 0">
+                <md-grid-list
+                            md-cols-sm="4" md-cols-md="4" md-cols-gt-md="4"
+                            md-row-height-gt-md="1:1" md-row-height="1:1"
+                            md-gutter="12px" md-gutter-gt-sm="8px"
+                            style="margin:20px;">
+                            
+                    <md-grid-tile class="gray shadow" ng-repeat="item in model.last_lessons"
+                        md-rowspan="1" md-colspan="1" md-colspan-sm="1"
+                        >
+                        <div class="" ng-style="{'background-image': 'url(' + item.thumbnail_picture + ')'}"
+                            style="width: 100%;height: 100%;background-size: cover;background-repeat: no-repeat;"></div>
                         
-                    </div>
-                </div>
+
+                        <div style="color:black;text-align:left;font-size: 15px;padding:10px;position:absolute;left:10px;top:18%;opacity:1;width:93%;background:white;border-radius:5px;">
+                            <span>{{item.description | htmlToPlaintextSpace | limitTo: 120 }}{{item.description.length >= 120 ? '...' : ''}}</span>
+                        </div>
+
+                        <md-button class="md-fab" aria-label="Run lesson" style="position: absolute;right: 0;bottom: 0;" ng-click="main.go_public_play(item.id)">
+                            <i class="material-icons" style="margin: 10px 5px 0px 5px;font-size: 32px;">directions_run</i> 
+                        </md-button>
+
+                        <md-grid-tile-footer style="padding:10px;background: #c3c3c3;">
+                            <div style="color:black;text-align: left;">
+                                <span ng-if="item.name">{{item.name | htmlToPlaintext | limitTo: 35 }}{{item.name.length >= 35 ? '...' : ''}}</span>
+                                <span ng-if="!item.name"><span translate>Lesson without name</span></span>
+                            </div>
+
+
+                        </md-grid-tile-footer>
+                    </md-grid-tile>
+                </md-grid-list>
+                
+
             </div>
-        <!-- </div> -->
+        </div>
+
+
+
+        
     </div>
-    <!--
-    <div class="col-md-12" style="height: 350px;
-    padding: 0;
-    margin-top: 58px;">
-        <h4>Отзывы</h4>
-        <div style="height: 100%;width:100%;">
-                <div style="
-                    background-image:url('/assets/img/testimonial.png');
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                    height: 100%;
-                    "
-                >
-                </div>
-            </div>
-    </div>
-    -->
     
 </div>

@@ -14,12 +14,12 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 
-from quizy.models import (Lesson, Page, CourseEnroll, LessonEnroll, Statistic)
+from quizy.models import (Lesson, Page, CourseEnroll, LessonEnroll, Statistic, Tag)
 from quizy.serializers.serializers import (LessonEnrollSerializer, LessonSerializer,
-PageSerializer, StatisticSerializer)
+PageSerializer, StatisticSerializer, LessonForEnrollSerializer, TagSerializer)
 
 # from quizy.serializers.pupil import PupilSerializer
-from quizy.pagination import ListPagination
+from quizy.pagination import (ListPagination, LessonPagination)
 
 from users.account.models import Account
 from users.account.serializers import UserSerializer, AdminSerializer
@@ -275,3 +275,35 @@ def statistic(request, statistic_pk):
         except Statistic.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
         return Response("OK", status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def get_last_lessons(request, tag_slug):
+    """
+    возвращет последние шесть урокоа для главной страницы
+    """
+    if request.method == "GET":
+        if tag_slug:
+            slug = Tag.objects.filter(slug=tag_slug)
+            lessons = Lesson.objects.filter(full_lesson_type=2, is_public=True, is_active=True, tag__in=slug).order_by('-updated_at')
+        else:
+            lessons = Lesson.objects.filter(full_lesson_type=2, is_public=True, is_active=True).order_by('-updated_at')
+        data_lessons = LessonForEnrollSerializer(lessons, many=True).data
+        paginator = LessonPagination()
+        result_page = paginator.paginate_queryset(data_lessons, request)
+        return paginator.get_paginated_response(result_page)
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def get_tags(request):
+    """
+    возвращет последние шесть урокоа для главной страницы
+    """
+    if request.method == "GET":
+        tags = Tag.objects.all().order_by('-name')
+        return Response(TagSerializer(tags, many=True).data, status=status.HTTP_200_OK)
+
+
+

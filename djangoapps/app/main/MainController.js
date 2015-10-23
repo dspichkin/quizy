@@ -31,6 +31,10 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
             title: "English",
             value: "en"
         }],
+        last_lessons_loaded:false,
+        last_lessons: [],
+        lessons_tags: [],
+        selectedTag: "all",
         selected_menu: null,
         menu: {
             positionTop: '0px',
@@ -166,9 +170,9 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         }
     };
 
-    $scope.main.go_play = function(enroll_id) {
-        if (enroll_id) {
-            $location.path('/play/' + enroll_id + '/');
+    $scope.main.go_play = function(id) {
+        if (id) {
+            $location.path('/play/' + id + '/');
             $scope.main.make_short_header();
             $scope.main.active_menu = 'lessons';
         }
@@ -188,6 +192,14 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
     $scope.main.go_test_play = function(lesson_id) {
         if (lesson_id) {
             $location.path('/play/demo/' + lesson_id + '/');
+            $scope.main.make_short_header();
+            $scope.main.active_menu = 'lessons';
+        }
+    };
+
+    $scope.main.go_public_play = function(public_lesson_id) {
+        if (public_lesson_id) {
+            $location.path('/play/public/' + public_lesson_id + '/');
             $scope.main.make_short_header();
             $scope.main.active_menu = 'lessons';
         }
@@ -240,6 +252,9 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
                  }
             }
             $scope.loaded = true;
+
+            $scope.get_last_lessons();
+
             if (callback) {
                 callback();
             }
@@ -267,6 +282,80 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
         //return userget;
         */
 
+    };
+
+    /*
+    Возвращает последние уроки для гланвой страницы
+    сначало грузим теги потом уроки
+    */
+    $scope.get_last_lessons = function(url) {
+        $scope.model.last_lessons_loaded = false;
+        $http.get('api/tags/').then(function(data) {
+            var array = [{slug: "all", "name": gettextCatalog.getString("All")}];
+            array = array.concat(data.data);
+            $scope.model.lessons_tags = array;
+
+            var _page;
+            if (!url) {
+                if ($scope.model.selectedTag && $scope.model.selectedTag != "all") {
+                    url = "/api/last_lessons/" + $scope.model.selectedTag + "/";
+                } else {
+                    url = "/api/last_lessons/";
+                }
+                if (_page) {
+                    url += '?page=' + _page;
+                }
+            } else {
+                _page = window.utils.getUrlVars(url).page;
+            }
+            if (!_page) {
+                _page = 1;
+            }
+
+            $http.get(url).then(function(data) {
+                
+                $scope.model.last_lessons = [];
+                for (var i = 0, len = data.data.results.length; i < len; i++) {
+                    $scope.model.last_lessons.push(data.data.results[i]);
+                }
+
+                var page_length = 8;
+                var from_page = _page * page_length - page_length;
+                if (!from_page) {
+                    from_page = 1;
+                }
+                var to_page = _page * page_length;
+                if (to_page > data.data.count) {
+                    to_page = data.data.count;
+                }
+                $scope.page = {
+                    next: data.data.next,
+                    count: data.data.count,
+                    previous: data.data.previous,
+                    from_page: from_page,
+                    to_page: to_page
+                };
+                
+                $scope.model.last_lessons_loaded = true;
+
+            }, function(error) {
+                $log.error('Ошибка получения последних уроков', error);
+                $scope.model.last_lessons_loaded = true;
+            });
+        }, function(error) {
+            $log.error('Ошибка получения категорий уроков', error);
+            $scope.model.last_lessons_loaded = true;
+        });
+
+
+        
+    };
+
+    $scope.change_lesson_tag = function() {
+        if (!$scope.model.selectedTag) {
+            $scope.model.selectedTag = "all";
+        }
+        $scope.get_last_lessons();
     };
 
     $scope.main.login = function($event) {
@@ -501,7 +590,6 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
             'next': '',
             'language': $scope.model.selectedLanguage
         };
-        
         $cookies.put('language', $scope.model.selectedLanguage);
         gettextCatalog.setCurrentLanguage($scope.model.selectedLanguage);
         $http.post('/i18n/setlang/', _data);

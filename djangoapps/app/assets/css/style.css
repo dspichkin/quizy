@@ -750,3 +750,7 @@ md-content {
   font-size: 14px;
   margin-left: 50px;
 }
+md-grid-tile-footer figcaption {
+  text-align: center;
+  width: 100%;
+}

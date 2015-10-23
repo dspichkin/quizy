@@ -1,8 +1,11 @@
 'use strict';
+/* globals
+app:false
 
+*/
 app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
 
-    $scope.model['lesson_dialog'] = $scope.model.play.enroll;
+    $scope.model.lesson_dialog = $scope.model.play.enroll;
     $scope.model.lesson_dialog.temptext = null;
     $scope.model.lesson_dialog.loading = false;
     // Переменные таймера
@@ -32,7 +35,6 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
             save();
         }
     }
-    console.log($scope.model.lesson_dialog)
     $scope.get_step_by_number = function(number, data) {
         for (var i = 0, len = $scope.model.lesson_dialog.data.steps.length; i < len; i++) {
             if ($scope.model.lesson_dialog.data.steps[i].number == number) {
@@ -93,7 +95,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
      */
     $scope.get_answer_pupil = function() {
         // если урок активен
-        if ($scope.model.lesson_dialog.data.active === true) {
+        if ($scope.model.lesson_dialog.hasOwnProperty('data') && $scope.model.lesson_dialog.data.active === true) {
             // если нет ответов или последний ответ был от учителя
             if ($scope.model.lesson_dialog.data.steps.length === 0 ||
                 ($scope.model.lesson_dialog.data.steps[$scope.model.lesson_dialog.data.steps.length - 1].type == 'teacher' &&
@@ -329,6 +331,15 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
             $scope.model.number_words = 0;
         }
     };
+    
+    
+
+
+    /**
+     *
+     * возвращает кол-во слов
+     *
+     */
     $scope.get_number_words = function(text) {
         if (text) {
             text = text.replace(/<(?:.|\n)*?>/gm, '');
@@ -371,6 +382,17 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
         }
     };
 
-
+    /*
+    Начать урок выбраный через главную страницу
+    */
+    $scope.start_lesson = function(lesson_id) {
+        $http.post('/api/start_lessons/' + lesson_id + '/')
+            .then(function(data) {
+                $scope.main.go_play(data.data.id);
+            }, function(error) {
+                $scope.model.lesson_dialog.loading = false;
+                $log.error(error);
+            });
+    };
 
 };

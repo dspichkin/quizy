@@ -7,12 +7,14 @@ from django.contrib.auth.models import Group
 from django.forms import ModelForm
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.utils.text import smart_split, unescape_string_literal
+from django.core.urlresolvers import reverse
 
 from suit_redactor.widgets import RedactorWidget
 from sorl.thumbnail import get_thumbnail
 
 from quizy.models import (Course, Lesson, CourseEnroll, LessonEnroll, Page, Variant,
-    Statistic)
+    Statistic, Tag)
 from users.account.models import Account
 # from quizy.forms import LessonForm
 
@@ -65,13 +67,14 @@ class LessonForm(ModelForm):
         }
 
     teacher = forms.ModelMultipleChoiceField(label=u'Преподователь', queryset=Account.objects.filter(account_type=1), widget=FilteredSelectMultiple(u"Преподователи", is_stacked=False))
+    tag = forms.ModelMultipleChoiceField(label=u'Метки', queryset=Tag.objects.all(), widget=FilteredSelectMultiple(u"Метки", is_stacked=False))
 
 
 class LessonAdmin(admin.ModelAdmin):
     form = LessonForm
-    list_display = ['course', 'name', 'number', 'full_lesson_type', 'is_active', 'is_correct', 'is_correct']
+    list_display = ['course', 'name', 'number', 'full_lesson_type', 'is_active', 'is_correct', 'is_public', 'is_correct', 'get_tags']
     search_fields = ('course', 'name', 'created_by')
-    list_filter = ('lesson_type', 'course', )
+    list_filter = ('lesson_type', 'course', 'is_public')
     readonly_fields = ('picture_thumbnail', 'media_thumbnail')
     fieldsets = (
         (
@@ -82,7 +85,7 @@ class LessonAdmin(admin.ModelAdmin):
         ), (
             u'Дополнительные', {
                 'classes': ('wide', 'full-width',),
-                'fields': ('created_by', 'teacher', 'full_lesson_type', 'media_thumbnail', 'media', 'timer')
+                'fields': ('created_by', 'teacher', 'full_lesson_type', 'media_thumbnail', 'media', 'tag', 'timer')
             }
         )
     )
@@ -111,7 +114,14 @@ class LessonAdmin(admin.ModelAdmin):
     media_thumbnail.short_description = 'предпросмотр медиа урока'
     media_thumbnail.allow_tags = True
 
+    def get_tags(self, obj):
+        """
+        Returns only related tags.
+        """
+        return ", ".join([x.name for x in obj.tag.all()])
+    get_tags.short_description = u'метки урока'
     # actions = ['delete_selected']
+
     class Media:
         css = {
             'all': (
@@ -138,6 +148,10 @@ class VariantAdmin(admin.ModelAdmin):
     pass
 
 
+class TagAdmin(admin.ModelAdmin):
+    pass
+
+
 class StatisticAdmin(admin.ModelAdmin):
     list_display = ['lesson', 'learner', 'created_at', 'success', 'reason']
 
@@ -158,6 +172,7 @@ admin.site.register(Course, CourseAdmin)
 admin.site.register(CourseEnroll, CourseEnrollAdmin)
 admin.site.register(LessonEnroll, LessonEnrollAdmin)
 admin.site.register(Lesson, LessonAdmin)
+admin.site.register(Tag, TagAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(Variant, VariantAdmin)
 admin.site.register(Statistic, StatisticAdmin)

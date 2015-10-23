@@ -17,7 +17,7 @@ from quizy.serializers.serializers import (LessonEnrollSerializer, CourseEnrollS
 from quizy.pagination import ListPagination
 from quizy.serializers.pupil import PupilSerializer
 from quizy.views import validateEmail
-from quizy.utils import normalize, is_enrolls_different
+from quizy.utils import is_enrolls_different
 
 from users.account.models import Account
 

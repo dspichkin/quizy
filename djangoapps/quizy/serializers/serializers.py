@@ -7,7 +7,7 @@ from sorl_thumbnail_serializer.fields import HyperlinkedSorlImageField
 
 from users.account.serializers import UserSerializer
 from quizy.models import (Course, Lesson, CourseEnroll, LessonEnroll,
-    Page, Variant, Statistic)
+    Page, Variant, Statistic, Tag)
 
 
 class JSONField(serializers.Field):
@@ -62,7 +62,16 @@ class CourseEnrollSerializer(serializers.ModelSerializer):
         exclude = ("data",)
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        exclude = ("id",)
+
+
 class LessonForEnrollSerializer(serializers.ModelSerializer):
+    """
+    используеться в get_last_lessons
+    """
     # pages = PageSerializer(many=True, read_only=True)
     code_errors = JSONField()
     content = JSONField()
@@ -72,6 +81,13 @@ class LessonForEnrollSerializer(serializers.ModelSerializer):
         source='picture',
         read_only=True
     )
+    thumbnail_picture_big = HyperlinkedSorlImageField(
+        '250x250',
+        options={"crop": "center"},
+        source='picture',
+        read_only=True
+    )
+    tag = TagSerializer(many=True)
 
     class Meta:
         model = Lesson

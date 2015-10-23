@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import os
 from datetime import timedelta
 # from HTMLParser import HTMLParser
 
@@ -8,6 +9,7 @@ from datetime import timedelta
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 # from django.db.models import Q
 
 from rest_framework.response import Response
@@ -15,9 +17,9 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 
-from quizy.models import (LessonEnroll, Statistic)
-from quizy.serializers.serializers import (LessonEnrollSerializer)
-from quizy.serializers.pupil import MyStatisticSerializer
+from quizy.models import (LessonEnroll, Statistic, Lesson)
+from quizy.serializers.serializers import (LessonEnrollSerializer, LessonForEnrollSerializer)
+from quizy.serializers.pupil import (MyStatisticSerializer, )
 from quizy.pagination import ListPagination
 # from quizy.utils import normalize
 from quizy.utils import is_enrolls_different
@@ -196,3 +198,57 @@ def enroll_pupil(request, enroll_pk):
 
     enroll = LessonEnrollSerializer(instance=enroll).data
     return Response(enroll, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', 'PUT'])
+@permission_classes((AllowAny, ))
+def public_play(request, lesson_pk=None):
+    """
+    Запуск публичного урока для демонстрации
+    """
+    if request.user.is_authenticated():
+        try:
+            enroll = LessonEnroll.objects.get(lesson=lesson_pk)
+            data = LessonEnrollSerializer(instance=enroll).data
+            data['type'] = 'enroll'
+            return Response(data, status=status.HTTP_200_OK)
+        except LessonEnroll.DoesNotExist:
+            pass
+    # если пользователь не авторизован или нет назначения на урок то возвращаем урок
+    lesson = get_object_or_404(Lesson, pk=lesson_pk)
+    data = LessonForEnrollSerializer(lesson).data
+    data['type'] = 'lesson'
+    return Response(data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def start_lessons(request, lesson_pk=None):
+    """
+    Запуск урока выбранный через главную страницу
+    """
+    if not request.user.is_authenticated():
+        return Response([], status=status.HTTP_200_OK)
+
+    lesson = get_object_or_404(Lesson, pk=lesson_pk)
+    enroll, created = LessonEnroll.objects.get_or_create(lesson=lesson, learner=request.user, created_by=request.user)
+    if lesson.lesson_type == 'outside':
+        # если урок внешний считываем деннаые по умолчанию и сохраняем их в назначение
+        path = os.path.join(settings.BASE_DIR, 'app', 'assets', 'lessons', lesson.path_content)
+        json_path = os.path.join(path, 'default.json')
+        if os.path.exists(json_path):
+            data = json.load(open(json_path))
+            enroll.data = data
+            enroll.save()
+
+    data = LessonEnrollSerializer(instance=enroll).data
+    data['type'] = 'enroll'
+    return Response(data, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+

@@ -1,12 +1,17 @@
 'use strict';
-
+/* globals
+require:false,
+$:false,
+app:false,
+module:false
+*/
 var Page = require('../models/page');
 var Lesson = require('../models/lesson');
 var Attempt = require('../models/attempt');
 
 var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
 
-
+    /*
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.run(function() {
             if (!$scope.user || !$scope.user.is_authenticated) {
@@ -15,11 +20,11 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
         });
         return;
     }
-
+    */
 
     $scope.show_debug = false;
 
-    $scope.model['play'] = {
+    $scope.model.play = {
         path: null,
         template: null,
         controller: null,
@@ -54,8 +59,7 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
                 $log.error('PlayBaseController: Ошибка получения назначенных уроков', error);
                 $scope.main.go_home_page();
             });
-
-    };
+    }
 
     function start_content(data) {
         $scope.model.play.lesson_type = data.data.lesson.lesson_type;
@@ -79,8 +83,6 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
 
     function load_lesson(lesson_id, callback) {
         return $http.get('/api/demo/play/' + lesson_id + "/").then(function(data) {
-                $scope.show_debug = true;
-
                 if (!data.data.lesson.lesson_type) {
                     $log.error("Ошибка определения типа урока");
                 }
@@ -89,7 +91,31 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
             }, function(error) {
                 $log.error('Ошибка получения назначенния уроков', error);
             });
-    };
+    }
+
+    function load_public_lesson(public_lesson_id, callback) {
+        return $http.get('/api/public/play/' + public_lesson_id + "/").then(function(data) {
+            
+            console.log("load_public_lesson", data)
+            if (!data.data.type) {
+                $log.error("Ошибка определения типа урока");
+            }
+            if (data.data.type == 'enroll') {
+                $scope.main.go_play(data.data.id);
+                //$scope.model.play.enroll = data.data;
+                //start_content(data);
+            }
+            if (data.data.type == 'lesson') {
+                data.data.lesson = data.data;
+                $scope.model.play.enroll = data.data;
+                start_content(data);
+            }
+
+        }, function(error) {
+            $log.error('Ошибка получения назначенния уроков', error);
+        });
+    }
+
 
     function start() {
         $scope.model.play.current_page_index = 0;
@@ -97,10 +123,12 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
             load_enroll($stateParams.enroll_id);
         } else if ($stateParams.lesson_id) {
             load_lesson($stateParams.lesson_id);
+        } else if ($stateParams.public_lesson_id) {
+            load_public_lesson($stateParams.public_lesson_id);
         } else {
             return;
         }
-    };
+    }
 
 
     $scope.back_to_lessons = function() {

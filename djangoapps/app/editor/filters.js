@@ -11,7 +11,7 @@ module.exports = angular.module('quizy.filters', [])
     })
     .filter('htmlToPlaintextSpace', function() {
         return function(text) {
-            return String(text).replace(/<[^>]+>/gm, '').replace(/&nbsp;/g, " ");
+            return String(text).replace(/<[^>]+>/gm, '').replace(/&nbsp;/g, ' ');
         };
     })
     .filter('secondsToTimeString', function() {

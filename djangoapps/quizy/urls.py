@@ -16,8 +16,10 @@ from quizy.views import (
     get_mypupil, create_pupil,
     statistic,
     new_page, enroll_course_pupil,
-    page_picture_upload)
+    get_last_lessons,
+    page_picture_upload, get_tags)
 
+from quizy.pupil import (public_play, start_lessons)
 
 router = DefaultRouter()
 router.register('pages', PageViewSet)
@@ -39,8 +41,13 @@ urlpatterns = patterns(
 
     url(r'^api/play/(\d+)?/?$', play, name='run_play'),
     url(r'^api/demo/play/(\d+)?/?$', demo_play, name='run_demo_play'),
+    url(r'^api/public/play/(\d+)?/?$', public_play, name='run_public_play'),
+
     url(r'^api/courses/(\d+)?/?$', courses, name='get_courses'),
     url(r'^api/lessons/(\d+)?/?$', lessons, name='get_lessons'),
+    url(r'^api/tags/?$', get_tags, name='get_tags'),
+    url(r'^api/last_lessons/(\w+)?/?$', get_last_lessons, name='get_last_lessons'),
+    url(r'^api/start_lessons/(\d+)/?$', start_lessons, name='start_lessons'),
     url(r'^api/lessons/(\d+)/new_page/$', new_page, name='new_page'),
     url(r'^api/lessons/(\d+)/upload/$', lesson_picture_upload, name='lesson_picture_upload'),
     url(r'^api/reject_lesson/(\d+)/$', reject_lesson, name='reject_lesson'),

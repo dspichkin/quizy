@@ -46,7 +46,6 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
                     $scope.model.nolessons = true;
                 }
                 $scope.model.loaded = true;
-                console.log($scope.model.lessons)
                 //console.log($scope.model.lessons)
             }, function(error) {
                 $log.error('Ошибка получения назначенных на меня уроков', error);

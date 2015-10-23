@@ -168,6 +168,15 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
                 }
             }
         })
+        .state('play_public', {
+            url: "/play/public/:public_lesson_id/?",
+            views: {
+                "main": {
+                    templateUrl: "/assets/partials/play/base_play.html",
+                    controller: 'PlayBaseCtrl'
+                }
+            }
+        })
         .state('articles', {
             url: "/articles/?",
             views: {

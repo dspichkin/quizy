@@ -9,17 +9,38 @@ import uuid
 from random import randrange
 
 from django.utils import timezone
-from django.db import models
+from django.db import models, IntegrityError, transaction
 from django.conf import settings
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext as _
+from django.template.defaultfilters import slugify as default_slugify
 
 from sorl.thumbnail import ImageField
 
 from json_field import JSONField
 
 # from users.account.models import Account
+try:
+    from unidecode import unidecode
+except ImportError:
+    unidecode = lambda tag: tag
+
+try:
+    atomic = transaction.atomic
+except AttributeError:
+    from contextlib import contextmanager
+
+    @contextmanager
+    def atomic(using=None):
+        sid = transaction.savepoint(using=using)
+        try:
+            yield
+        except IntegrityError:
+            transaction.savepoint_rollback(sid, using=using)
+            raise
+        else:
+            transaction.savepoint_commit(sid, using=using)
 
 
 class BaseModel(models.Model):
@@ -147,6 +168,8 @@ class Lesson(BaseModel):
 
     timer = models.IntegerField(_(u'таймер урока (сек)'), blank=True, null=True)
 
+    tag = models.ManyToManyField('Tag', related_name='lessons_tags', verbose_name=_(u'метки'), blank=True, null=True)
+
     class Meta:
         ordering = ('number', )
         verbose_name = _(u'Урок')
@@ -194,6 +217,60 @@ def pre_deleted_lesson(sender, instance, using, **kwargs):
     directory = os.path.join(settings.MEDIA_ROOT, 'lessons', str(instance.uuid)[:8])
     if os.path.exists(directory):
         shutil.rmtree(directory)
+
+
+class Tag(models.Model):
+    name = models.CharField(verbose_name=_(u'Имя'), unique=True, max_length=100)
+    slug = models.SlugField(verbose_name=_(u'Слаг'), unique=True, max_length=100)
+
+    class Meta:
+        verbose_name = _(u"Метка")
+        verbose_name_plural = _(u"Метки")
+
+    def __unicode__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.pk and not self.slug:
+            self.slug = self.slugify(self.name)
+            from django.db import router
+            using = kwargs.get("using") or router.db_for_write(
+                type(self), instance=self)
+            # Make sure we write to the same db for all attempted writes,
+            # with a multi-master setup, theoretically we could try to
+            # write and rollback on different DBs
+            kwargs["using"] = using
+            # Be oportunistic and try to save the tag, this should work for
+            # most cases ;)
+            try:
+                with atomic(using=using):
+                    res = super(Tag, self).save(*args, **kwargs)
+                return res
+            except IntegrityError:
+                pass
+            # Now try to find existing slugs with similar names
+            slugs = set(
+                self.__class__._default_manager
+                .filter(slug__startswith=self.slug)
+                .values_list('slug', flat=True)
+            )
+            i = 1
+            while True:
+                slug = self.slugify(self.name, i)
+                if slug not in slugs:
+                    self.slug = slug
+                    # We purposely ignore concurrecny issues here for now.
+                    # (That is, till we found a nice solution...)
+                    return super(Tag, self).save(*args, **kwargs)
+                i += 1
+        else:
+            return super(Tag, self).save(*args, **kwargs)
+
+    def slugify(self, tag, i=None):
+        slug = default_slugify(unidecode(tag))
+        if i is not None:
+            slug += "_%d" % i
+        return slug
 
 
 class CourseEnroll(BaseModel):
