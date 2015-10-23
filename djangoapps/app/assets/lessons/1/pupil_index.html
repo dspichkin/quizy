@@ -94,8 +94,11 @@
                 <!-- UNAUTHORIZATED USERS -->
 
                 <div ng-if="!user.is_authenticated" style="text-align: center;margin: 44px 0px 30px 0px;">
-                    <h2>Что бы начать урок вам необходимо зарегистрироваться</h2>
-                    <button type="button" class="btn-secondary" style="font-size: 30px;" ng-click="main.reg($event)"><span translate>Registration</span></button>
+                    <h2 translate>To start the lesson you need to login</h2>
+                    <div class="md-actions" style="margin: 24px 0px 0px 0px;">
+                        <button type="button" class="btn-secondary" style="font-size: 25px;" ng-click="main.login($event)"><span translate>Login</span></button>
+                        <button type="button" class="btn-secondary" style="font-size: 25px;" ng-click="main.reg($event)"><span translate>Registration</span></button>
+                    </div>
                 </div>
                 <div ng-if="user.is_authenticated && model.lesson_dialog.type == 'lesson'" style="text-align: center;margin: 44px 0px 30px 0px;">
                     <button type="button" class="btn-secondary" style="font-size: 30px;" ng-click="start_lesson(model.lesson_dialog.lesson.id)"><span translate>Начать урок</span></button>

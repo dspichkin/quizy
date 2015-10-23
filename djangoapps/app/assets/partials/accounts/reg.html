@@ -5,7 +5,7 @@
                 <md-input-container style="text-align: left;
                     width: 100%;padding: 0;
                     float: left;">
-                    <label>Ваш email</label>
+                    <label translate>Your email</label>
 
                     <input class="variant_text" type="text" ng-model="reg.email"
                         ng-change="make_dirty_data()">
@@ -13,7 +13,7 @@
                 <md-input-container style="text-align: left;
                     width: 100%;padding: 0;
                     float: left;">
-                    <label>Ваш пароль</label>
+                    <label translate>Your password</label>
 
                     <input class="variant_text" type="password" ng-model="reg.password1"
                         ng-change="make_dirty_data()">
@@ -21,7 +21,7 @@
                 <md-input-container style="text-align: left;
                     width: 100%;padding: 0;
                     float: left;">
-                    <label>Подтверждения пароля</label>
+                    <label translate>Confirm password</label>
 
                     <input class="variant_text" type="password" ng-model="reg.password2"
                         ng-change="make_dirty_data()">
@@ -30,13 +30,13 @@
 
                 <div style="float: right;margin: 20px;">
                     <button type="button" ng-click="submit($event)" class="shadow btn-secondary" style="margin: 0 16px 0px 0;" ng-disabled="disabled">
-                        Регистироваться
+                        <span translate>Registration</span>
                     </button>
-                    <a href="" class="cancel" ng-click="closeDialog()">Отмена</a>
+                    <a href="" class="cancel" ng-click="closeDialog()"><span translate>Cancel</span></a>
                 </div>
             </div>
             <div ng-show="registrated" style="text-align: center;">
-                <h4 style="margin: 0 0 20px 0;">Вы зарегистировались с логином {{reg.email}}</h4>
+                <h4 style="margin: 0 0 20px 0;"><span translate>You registrated with login</span> {{reg.email}}</h4>
                 <button type="button" ng-click="closeDialog()" class="shadow btn-secondary" style="0px 0px 0px 0;">
                     ОК
                 </button>
