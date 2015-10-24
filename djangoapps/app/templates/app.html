@@ -124,10 +124,11 @@
         <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="main.login($event)" translate>
             Login 
         </div>
+        <!-- 
         <div class="btn-menu" ng-if="!user.is_authenticated" ng-click="main.reg($event)" translate>
             Registration
         </div>
-        
+        -->
          <div class="btn-menu" ng-if="user.is_authenticated">
             <div ng-if="user.is_authenticated" ripple ng-click="main.go_profile()" style="float: left;margin: 0;cursor: pointer;width: 27px;"><i class="material-icons" style="font-size: 26px;color:#ff9e37">settings</i></div>
 

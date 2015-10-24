@@ -306,4 +306,25 @@ def get_tags(request):
         return Response(TagSerializer(tags, many=True).data, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@permission_classes((AllowAny,))
+def get_avatar(request):
+    """
+    возвращет аватар
+    """
+    if request.method == "GET":
+        print request.GET
+        email = request.GET.get('email').decode("utf-8")
+        if email:
+            try:
+                user = Account.objects.get(email=email)
+            except Account.DoesNotExist:
+                return Response("OK", status=status.HTTP_200_OK)
+            if user:
+                data = UserSerializer(user).data
+                print "data",data.get('thumbnail_avatar')
+                return Response(data.get('thumbnail_avatar'), status=status.HTTP_200_OK)
+        return Response("OK", status=status.HTTP_200_OK)
+
+
 

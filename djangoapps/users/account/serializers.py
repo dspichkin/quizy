@@ -2,10 +2,11 @@
 from __future__ import unicode_literals, print_function, division
 
 # from .models import User, Organization, EmailAddress
-from .models import User, Organization, EmailConfirmation
+
 from rest_framework import serializers
+from sorl_thumbnail_serializer.fields import HyperlinkedSorlImageField
 
-
+from .models import User, EmailConfirmation
 
 
 class SimpleUserSerializer(serializers.ModelSerializer):
@@ -31,7 +32,13 @@ class InviteSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    avatar = serializers.ReadOnlyField(source='get_avatar_url')
+    # avatar = serializers.ReadOnlyField(source='get_avatar_url')
+    thumbnail_avatar = HyperlinkedSorlImageField(
+        '100x100',
+        options={"crop": "center"},
+        source='avatar',
+        read_only=True
+    )
     fio = serializers.ReadOnlyField()
     # emails = EmailSerializer(source='emailaddress_set', many=True)
 
@@ -50,7 +57,8 @@ class UserSerializer(serializers.ModelSerializer):
             'last_login',
             'date_joined',
             'account_type',
-            'language'
+            'language',
+            'thumbnail_avatar'
         )
 
 

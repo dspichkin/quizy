@@ -288,67 +288,68 @@ var MainCtrl = function($scope, $state, $sce, $http, $mdDialog, $location, $time
     Возвращает последние уроки для гланвой страницы
     сначало грузим теги потом уроки
     */
+    $scope.model.lessons_tags = [
+        {
+            "slug": "all", 
+            "name": gettextCatalog.getString("All")
+        }, {
+            "slug": "general_ielts",
+            "name": "General Training IELTS"
+        }, {
+            "slug": "academic_ielts",
+            "name": "Academic IELTS"
+        }
+    ];
+
     $scope.get_last_lessons = function(url) {
         $scope.model.last_lessons_loaded = false;
-        $http.get('api/tags/').then(function(data) {
-            var array = [{slug: "all", "name": gettextCatalog.getString("All")}];
-            array = array.concat(data.data);
-            $scope.model.lessons_tags = array;
-
-            var _page;
-            if (!url) {
-                if ($scope.model.selectedTag && $scope.model.selectedTag != "all") {
-                    url = "/api/last_lessons/" + $scope.model.selectedTag + "/";
-                } else {
-                    url = "/api/last_lessons/";
-                }
-                if (_page) {
-                    url += '?page=' + _page;
-                }
+        var _page;
+        if (!url) {
+            if ($scope.model.selectedTag && $scope.model.selectedTag != "all") {
+                url = "/api/last_lessons/" + $scope.model.selectedTag + "/";
             } else {
-                _page = window.utils.getUrlVars(url).page;
+                url = "/api/last_lessons/";
             }
-            if (!_page) {
-                _page = 1;
+            if (_page) {
+                url += '?page=' + _page;
+            }
+        } else {
+            _page = window.utils.getUrlVars(url).page;
+        }
+        if (!_page) {
+            _page = 1;
+        }
+
+        $http.get(url).then(function(data) {
+            
+            $scope.model.last_lessons = [];
+            for (var i = 0, len = data.data.results.length; i < len; i++) {
+                $scope.model.last_lessons.push(data.data.results[i]);
             }
 
-            $http.get(url).then(function(data) {
-                
-                $scope.model.last_lessons = [];
-                for (var i = 0, len = data.data.results.length; i < len; i++) {
-                    $scope.model.last_lessons.push(data.data.results[i]);
-                }
+            var page_length = 8;
+            var from_page = _page * page_length - page_length;
+            if (!from_page) {
+                from_page = 1;
+            }
+            var to_page = _page * page_length;
+            if (to_page > data.data.count) {
+                to_page = data.data.count;
+            }
+            $scope.page = {
+                next: data.data.next,
+                count: data.data.count,
+                previous: data.data.previous,
+                from_page: from_page,
+                to_page: to_page
+            };
+            
+            $scope.model.last_lessons_loaded = true;
 
-                var page_length = 8;
-                var from_page = _page * page_length - page_length;
-                if (!from_page) {
-                    from_page = 1;
-                }
-                var to_page = _page * page_length;
-                if (to_page > data.data.count) {
-                    to_page = data.data.count;
-                }
-                $scope.page = {
-                    next: data.data.next,
-                    count: data.data.count,
-                    previous: data.data.previous,
-                    from_page: from_page,
-                    to_page: to_page
-                };
-                
-                $scope.model.last_lessons_loaded = true;
-
-            }, function(error) {
-                $log.error('Ошибка получения последних уроков', error);
-                $scope.model.last_lessons_loaded = true;
-            });
         }, function(error) {
-            $log.error('Ошибка получения категорий уроков', error);
+            $log.error('Ошибка получения последних уроков', error);
             $scope.model.last_lessons_loaded = true;
         });
-
-
-        
     };
 
     $scope.change_lesson_tag = function() {

@@ -4,6 +4,7 @@
 
 import datetime
 import os
+from random import randrange
 
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail
@@ -155,7 +156,7 @@ class Organization(models.Model):
 
 def avatar_uploader(obj, fn):
     name, ext = os.path.splitext(fn)
-    return os.path.join('avatars', obj.username + ext)
+    return os.path.join('avatars', '%s' % obj.pk, str(randrange(0, 9999)) + ext)
 
 AbstractUser._meta.get_field('email')._unique = True
 AbstractUser._meta.get_field('email').blank = False

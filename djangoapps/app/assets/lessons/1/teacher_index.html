@@ -157,8 +157,17 @@
                                                 display: inline-block;
                                                 margin: 16px 0 0 0;
                                             ">
-                                            <img style="width: 70px;
+                                            <img ng-if="!model.lesson_dialog.teacher_avatars[step.writed_by]" style="width: 70px;
                                                 height: 70px;" src="/assets/img/avatar_teacher.png">
+                                            <div ng-if="model.lesson_dialog.teacher_avatars[step.writed_by]" 
+                                                ng-style="{'background-image': 'url({{model.lesson_dialog.teacher_avatars[step.writed_by]}})'}"
+                                                style="
+                                                    background-repeat: no-repeat;
+                                                    width: 70px;
+                                                    height: 70px;
+                                                    background-size: contain;">
+                                            </div>
+
                                         </div>
 
                                         <div style="font-size: 10px;text-align: center;width: 98px;margin: 7px 0 0 0;">
@@ -234,7 +243,8 @@
                                     display: inline-block;">
                                 <div class="layout-row">
                                     <div class="flex-15" >
-                                        <div style="width: 100px;
+                                        <div 
+                                            style="width: 100px;
                                                 height: 100px;
                                                 border: 1px solid #c3c3c3;
                                                 padding: 11px 0px 0px 15px;
@@ -242,9 +252,21 @@
                                                 display: inline-block;
                                                 margin: 16px 0 0 0;
                                             ">
-                                            <img style="width: 70px;
+                                            <img ng-if="!model.lesson_dialog.learner.thumbnail_avatar"  
+                                                style="width: 70px;
                                                 height: 70px;" src="/assets/img/avatar_pupil.png">
+                                        
+                                            <div ng-if="model.lesson_dialog.learner.thumbnail_avatar" 
+                                                ng-style="{'background-image': 'url({{model.lesson_dialog.learner.thumbnail_avatar}})'}"
+                                                style="
+                                                    background-repeat: no-repeat;
+                                                    width: 70px;
+                                                    height: 70px;
+                                                    background-size: contain;">
+                                            </div>
+
                                         </div>
+
                                         <div style="font-size: 10px;text-align: center;width: 98px;margin: 7px 0 0 0;">{{model.lesson_dialog.learner.username | limitTo: 20 }}{{model.lesson_dialog.learner.username.length >= 20 ? '...' : ''}}</div>
                                     </div>
                                     <div class="flex-80">

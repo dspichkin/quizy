@@ -1,6 +1,9 @@
 'use strict';
-
-var ProfileCtrl = function($scope, $http, $location, $log,  $mdDialog) {
+/*
+globals
+$:false
+*/
+var ProfileCtrl = function($scope, $http, $location, $log,  $mdDialog, Upload) {
     if (!$scope.user || !$scope.user.is_authenticated) {
         $scope.main.reset_menu();
         $location.path('/');
@@ -10,14 +13,16 @@ var ProfileCtrl = function($scope, $http, $location, $log,  $mdDialog) {
     $scope.main.make_short_header();
     $scope.main.active_menu = 'profile';
 
+    $scope.progressUpload = 0;
 
-    $scope.model['profile'] = {
+    $scope.model.profile = {
         is_dirty_data: false,
         account_type: "Тип аккаунта",
         account_type_choice: ["Преподователь", "Студент"],
         show_pass_ok: false,
         error_msg: null,
-        user: $scope.user
+        user: $scope.user,
+        file: ""
     };
 
 
@@ -29,7 +34,7 @@ var ProfileCtrl = function($scope, $http, $location, $log,  $mdDialog) {
 
 
     $scope.changePass = function(callback) {
-        if (typeof $scope.model.profile.pass1 == 'undefined' || $scope.model.profile.pass2 == "") {
+        if (typeof $scope.model.profile.pass1 == 'undefined' || $scope.model.profile.pass2 === "") {
             $scope.model.profile.error_msg = 'Пароль не может быть пустым';
             return;
         }
@@ -82,11 +87,11 @@ var ProfileCtrl = function($scope, $http, $location, $log,  $mdDialog) {
                     };
                     $scope.submit = function($event) {
                         $event.preventDefault();
-                        $scope.changePass(function() {$mdDialog.hide()});
+                        $scope.changePass(function() {$mdDialog.hide();});
                     };
                 }
         });
-    }
+    };
 
     $scope.save_account_type = function() {
         var _at;
@@ -119,13 +124,34 @@ var ProfileCtrl = function($scope, $http, $location, $log,  $mdDialog) {
                 $log.error(error);
             }
         );
-    }
+    };
 
     $scope.make_data_dirty = function() {
         $scope.model.profile.is_dirty_data = true;
     };
 
 
+    // upload on file select or drop
+    $scope.upload = function ($files, $event) {
+        var file = $files[0];
+        if (file) {
+            // /, 'username': $scope.username
+            Upload.upload({
+                url: '/api/uploadavatar/',
+                file: file,
+            }).progress(function(evt) {
+                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                $scope.progressUpload = progressPercentage + '%';
+            }).success(function(data, status, headers, config) {
+                $scope.progressUpload = 0;
+                $scope.main.run();
+            }).error(function(data, status, headers, config) {
+                $log.error('Ошибка загрузки аватара: ' + status);
+                $scope.progressUpload = 0;                
+            });
+        }
+    };
+
 };
 
-module.exports = ['$scope', '$http', '$location', '$log', '$mdDialog', ProfileCtrl];
+module.exports = ['$scope', '$http', '$location', '$log', '$mdDialog', 'Upload', ProfileCtrl];

@@ -17,9 +17,10 @@ from quizy.views import (
     statistic,
     new_page, enroll_course_pupil,
     get_last_lessons,
-    page_picture_upload, get_tags)
+    page_picture_upload, get_tags,
+    get_avatar)
 
-from quizy.pupil import (public_play, start_lessons)
+from quizy.pupil import (public_play, start_lessons, upload_avatar)
 
 router = DefaultRouter()
 router.register('pages', PageViewSet)
@@ -30,8 +31,10 @@ urlpatterns = patterns(
     url(r'^api/', include(router.urls), name='api'),
 
     url(r'^api/pupils', pupils, name='pupils'),
+    url(r'^api/uploadavatar/?$', upload_avatar, name='upload_avatar'),
     url(r'^api/answers/(\d+)/$', answers, name='answers'),
     url(r'^api/get_mypupil/$', get_mypupil, name='get_mypupil'),
+    url(r'^api/get_avatar/$', get_avatar, name='get_avatar'),
     url(r'^api/create_pupil/$', create_pupil, name='create_pupil'),
     url(r'^api/enroll/(\d+)?/?$', enroll, name='enroll'),
     url(r'^api/enroll_teacher/(\d+)?/?$', enroll_teacher, name='enroll_teacher'),

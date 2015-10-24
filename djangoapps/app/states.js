@@ -55,7 +55,7 @@ var config = function($stateProvider, $urlRouterProvider, $locationProvider) {
             url: "/accounts/profile/",
             views: {
                 "main": {
-                    templateUrl: "/assets/partials/profile.html",
+                    templateUrl: "/assets/partials/accounts/profile.html",
                     controller: 'ProfileCtrl'
                 }
             }

@@ -5,9 +5,18 @@
         <div ng-click="main.go_home_page()" class="close_profile"><i class="material-icons" style="font-size: 35px;">close</i></div>
 
         <div class="avatar_panel">
-            <div class="avatar_image"></div>
-            <div class="shadow btn_change_avatar_image" ripple>
-                <i class="material-icons insert_photo">insert photo</i>
+            <div class="avatar_image" ng-if="!user.thumbnail_avatar"></div>
+            <div class="avatar_image" ng-if="user.thumbnail_avatar" style="background-image: initial;background-color: white;border-radius: 50%;border: 3px solid #4988c9;padding: 13px 0 0 0;">
+                <img ng-src="{{user.thumbnail_avatar}}" >
+            </div>
+            <div class="shadow btn_change_avatar_image">
+                <div ripple class="" accept="image/*" ngf-accept="'*.png,*.jpg'" ngf-select ngf-change="upload($files, $event)">
+                    <i class="material-icons insert_photo">insert photo</i>
+                    <p translate style="font-size: 10px;margin: 0px 0 0 0;color: black;">Load</p>
+                    <div style="height:2px;width:100%;background-color:red;"
+                             ng-style="{width: progressUpload}"></div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -38,7 +47,7 @@
         -->
         <div class="label_container">
             <md-input-container  style="text-align: left;">
-                <label>Укажите ваше имя</label>
+                <label>Ваше имя</label>
                 <input ng-model="model.profile.user.first_name" 
                 md-maxlength="100"
                 ng-change="make_data_dirty()"
@@ -49,7 +58,7 @@
 
         <div class="label_container">
             <md-input-container  style="text-align: left;">
-                <label>Укажите вашу фамилию</label>
+                <label>Ваша фамилию</label>
                 <input ng-model="model.profile.user.last_name"
                 md-maxlength="100"
                 ng-change="make_data_dirty()"
@@ -60,7 +69,7 @@
 
         <div class="label_container">
             <md-input-container  style="text-align: left;">
-                <label>Укажите ваше отчество</label>
+                <label>Ваше отчество</label>
                 <input ng-model="model.profile.user.middle_name"
                 md-maxlength="100"
                 ng-change="make_data_dirty()"

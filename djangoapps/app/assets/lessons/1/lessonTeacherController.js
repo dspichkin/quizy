@@ -4,7 +4,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
     $scope.model.lesson_dialog = $scope.model.outside.enroll;
     $scope.model.lesson_dialog.temptext = null;
     $scope.model.lesson_dialog.loading = false;
-
+    $scope.model.lesson_dialog.teacher_avatars = {};
     // Editor options.
     $scope.editorOptions = {
         language: 'en',
@@ -28,7 +28,27 @@ app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
         }
     }
 
-
+    for (var i = 0, len = $scope.model.lesson_dialog.data.steps.length; i < len; i++) {
+        if ($scope.model.lesson_dialog.data.steps[i].writed_by) {
+            $scope.model.lesson_dialog.teacher_avatars[$scope.model.lesson_dialog.data.steps[i].writed_by] = "";
+        }
+    }
+    
+    for (var email in $scope.model.lesson_dialog.teacher_avatars) {
+        $http({
+            url: '/api/get_avatar/', 
+            method: "GET",
+            params:  {'email': email}})
+        .then(
+            function(data) {
+                if (data.data) {
+                    $scope.model.lesson_dialog.teacher_avatars[email] = data.data;
+                }
+            }, function(error) {
+                $log.error(error);
+            }
+        );
+    }
 
     $scope.back_to_lessons = function() {
         $scope.main.go_courses_page($scope.model.outside.course_id);
@@ -154,7 +174,6 @@ app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
 
     function save() {
         var _data = $scope.model.lesson_dialog.data;
-        console.log($scope.model.lesson_dialog.data)
         $scope.model.lesson_dialog.loading = true;
         $http.put('/api/enroll_teacher/' + $scope.model.lesson_dialog.id + '/', JSON.stringify(_data))
             .then(function(result) {
@@ -273,6 +292,8 @@ app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
     };
 
 
+    
+   
     // Опеределяем тип медиа
     function detect_media_type() {
         var _filename = $scope.model.lesson_dialog.lesson.media;
@@ -304,5 +325,6 @@ app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
             }
         }
     }
+
 
 };

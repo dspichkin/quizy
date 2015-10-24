@@ -567,7 +567,6 @@ var EditCtrl = function($scope, $sce, $http, $stateParams, $log, $data, $locatio
             //console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
             $scope.progressUpload = progressPercentage + '%';
         }).success(function(data, status, headers, config) {
-            console.log("######", data)
             $scope.progressUpload = 0;
             $scope.reload_lesson(function() {
                 setTimeout(function() {

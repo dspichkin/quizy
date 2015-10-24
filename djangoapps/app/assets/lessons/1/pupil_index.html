@@ -97,7 +97,9 @@
                     <h2 translate>To start the lesson you need to login</h2>
                     <div class="md-actions" style="margin: 24px 0px 0px 0px;">
                         <button type="button" class="btn-secondary" style="font-size: 25px;" ng-click="main.login($event)"><span translate>Login</span></button>
+                        <!--
                         <button type="button" class="btn-secondary" style="font-size: 25px;" ng-click="main.reg($event)"><span translate>Registration</span></button>
+                        -->
                     </div>
                 </div>
                 <div ng-if="user.is_authenticated && model.lesson_dialog.type == 'lesson'" style="text-align: center;margin: 44px 0px 30px 0px;">
@@ -160,15 +162,24 @@
                                         <div style="width: 80px;
                                                 height: 80px;
                                                 border: 1px solid #c3c3c3;
-                                                padding: 11px 0px 0px 14px;
+                                                padding: 9px 0px 0px 10px;
                                                 border-radius: 50%;
                                                 display: inline-block;
                                             ">
-                                            <div style="background-image: url('/assets/img/avatar_pupil.png');
+                                            <div ng-if="!user.thumbnail_avatar" style="background-image: url('/assets/img/avatar_pupil.png');
                                                 background-repeat: no-repeat;
                                                 width: 50px;
                                                 height: 50px;
                                                 background-size: contain;"></div>
+
+                                            <div ng-if="user.thumbnail_avatar" 
+                                            ng-style="{'background-image': 'url({{user.thumbnail_avatar}})'}"
+                                            style="
+                                                background-repeat: no-repeat;
+                                                width: 60px;
+                                                height: 60px;
+                                                background-size: contain;">
+                                            </div>
                                         </div>
                                         <div style="font-size: 10px;text-align: center;width: 90px;margin: 0px 0 0 -4px;">
                                             {{model.lesson_dialog.learner.username | limitTo: 20 }}{{model.lesson_dialog.learner.username.length >= 20 ? '...' : ''}}
@@ -258,7 +269,7 @@
 
                             <div class="layout-row">
                                 <div class="flex-20" >
-                                    <div style="width: 80px;
+                                    <div ng-if="!model.lesson_dialog.lesson.thumbnail_avatar" style="width: 80px;
                                             height: 80px;
                                             border: 1px solid #c3c3c3;
                                             padding: 11px 0px 0px 15px;
@@ -268,6 +279,15 @@
                                         <img style="width: 50px;
                                             height: 50px;" src="/assets/img/avatar_teacher.png">
                                     </div>
+                                    <div ng-if="model.lesson_dialog.lesson.thumbnail_avatar" 
+                                            ng-style="{'background-image': 'url({{model.lesson_dialog.lesson.thumbnail_avatar}})'}"
+                                            style="
+                                                background-repeat: no-repeat;
+                                                width: 50px;
+                                                height: 50px;
+                                                background-size: contain;">
+                                    </div>
+
                                     <div style="font-size: 10px;text-align: center;width: 98px;margin: 7px 0 0 0;">
                                         {{step.writed_by | limitTo: 20 }}{{step.writed_by.length >= 20 ? '...' : ''}}
                                     </div>

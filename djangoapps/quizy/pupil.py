@@ -246,8 +246,28 @@ def start_lessons(request, lesson_pk=None):
     return Response(data, status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def upload_avatar(request):
+    if not request.user.is_authenticated():
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    if request.method == 'POST':
+        f = request.FILES.get('file')
+        if f and f._size < 30 * 1024 * 1024:
+            if request.user.avatar:
+                if os.path.exists(request.user.avatar.path):
+                    os.remove(request.user.avatar.path)
+                    request.user.avatar = None
 
+            request.user.avatar = f
+            request.user.save()
+            return Response("OK", status=status.HTTP_200_OK)
+        print request.POST
+        print request.FILES
+        files = request.FILES
+
+    return Response("OK", status=status.HTTP_200_OK)
 
 
 
