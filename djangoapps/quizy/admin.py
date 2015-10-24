@@ -67,7 +67,7 @@ class LessonForm(ModelForm):
         }
 
     teacher = forms.ModelMultipleChoiceField(label=u'Преподователь', queryset=Account.objects.filter(account_type=1), widget=FilteredSelectMultiple(u"Преподователи", is_stacked=False))
-    tag = forms.ModelMultipleChoiceField(label=u'Метки', queryset=Tag.objects.all(), widget=FilteredSelectMultiple(u"Метки", is_stacked=False))
+    tag = forms.ModelMultipleChoiceField(label=u'Метки', queryset=Tag.objects.all(), widget=FilteredSelectMultiple(u"Метки", is_stacked=False), required=False)
 
 
 class LessonAdmin(admin.ModelAdmin):
