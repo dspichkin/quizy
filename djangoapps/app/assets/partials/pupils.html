@@ -1,135 +1,144 @@
 <div class="lesson" style="min-height:450px;text-align:center">
-    <div class="shadow lesson_panel">
 
-                    
+    <!-- loading -->
+    <div ng-if="!model.loaded" style="width:90%;height:100%;position: absolute;">
+        <div style="margin: 0 auto;width: 50px;margin-top: 60px;">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+    </div>
 
-        <div class="col-md-12 lessons_header">
-            <div class="col-md-2 mylesson_title"><span translate>My pupils</span></div>
-            <div class="col-md-8 pull-left search_panel" style="padding: 0 12px;
-                height: 60px;
-                overflow: hidden;">
+    <div ng-if="model.loaded">
+        <div class="shadow lesson_panel">
+
+                        
+
+            <div class="col-md-12 lessons_header">
+                <div class="col-md-2 mylesson_title"><span translate>My pupils</span></div>
+                <div class="col-md-8 pull-left search_panel" style="padding: 0 12px;
+                    height: 60px;
+                    overflow: hidden;">
+                </div>
+            </div>
+
+            <div class="col-md-12" style="padding: 0;">
+                <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
+                    <thead style="background-color:#e3eaf1;height:60px">
+                        <th class="table_th" style="text-align:center;">
+                            <span translate>Pupil</span>
+                        </th>
+                        <th class="table_th" style="width: 400px;">
+                            <div style="width: 470px;float: left;">Enroll</div>
+                            <div style=""><span translate>Result/Attempts</span></div>
+                        </th>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="pupil in model.pupils">
+                            <td style="width: 150px;text-align: left;position:relative;padding: 10px 0 10px 20px;">
+                                <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 13px;
+                                     overflow: hidden;width: 150px;">
+                                     {{pupil.email}}
+                                </div>
+                            </td>
+                            <td style="text-align:left;">
+                                <div style="max-height: 200px;overflow-y: auto;">
+                                    <div style="font-weight:500;color: #00A2EA"><span translate>courses</span></div>
+                                    <div class="enroll_pupil" ng-repeat="enroll in pupil.course_enrolls" style="display:block;width:100%;">
+                                        <div style="margin: 0 0 0 0;
+                                                max-height: 50px;
+                                                overflow: hidden;">
+                                           
+                                            <div class="remove_enroll" ng-click="remove_course_enroll(enroll.id)" style="float: left;">
+                                                <i class="material-icons icon-remove-enroll" style="font-size:12px;">close</i>
+                                            </div>
+                                            <div class="enroll_email" style="overflow: auto;">
+                                                {{enroll.course.name | htmlToPlaintext | limitTo: 100 }}{{enroll.course.length > 100 ? '...' : ''}}
+
+                                            </div> 
+                                        </div>
+
+                                        <div class="remove_enroll" ng-click="remove_enroll(enroll.id)" style="float: left;margin: 0px 6px 0 0;">
+                                            <i class="material-icons icon-remove-enroll" style="font-size:12px;">mode_edit</i>
+                                        </div>
+                                        <div style="font-size: 12px;margin: 0 0 0 17px;">
+                                            <div ng-if="enroll.auto_enroll == true"><span translate>auto enroll lessons</span></div>
+                                            <div ng-if="enroll.auto_enroll == false"><span translate>custom enroll lesson</span></div>
+                                        </div> 
+                                    </div>
+
+
+                                    <div style="font-weight:500;color: #ff9e37"><span translate>lessons</span></div>
+                                    <div class="enroll_pupil" ng-repeat="enroll in pupil.lesson_enrolls" style="width:100%;">
+                                        <div style="margin: 0 0 0 0;
+                                                width: 500px;
+                                                float: left;
+                                                max-height: 50px;
+                                                overflow: hidden;">
+                                           
+                                            <div style="font-size: 10px;
+                                                margin: 0 0 0 20px;">
+                                                {{enroll.lesson.course.name | htmlToPlaintext | limitTo: 50 }}{{enroll.lesson.course.name.length > 50 ? '...' : ''}}
+                                            </div>
+                                            <div class="remove_enroll" ng-click="remove_enroll($event, enroll.id)" style="    float: left;">
+                                                <i class="material-icons icon-remove-enroll" style="font-size:12px;">close</i>
+                                            </div>
+
+
+                                            <!-- отображение название урока -->
+                                            <div ng-if="enroll.lesson.lesson_type == 'inside'"  class="enroll_email" style="overflow: auto;font-weight: 500;color: green;">
+                                                {{enroll.lesson.name | htmlToPlaintext | limitTo: 100 }}{{enroll.lesson.name.length > 100 ? '...' : ''}}
+
+                                            </div> 
+                                            <!-- если урок вненшний то ссылку на страницу назначения -->
+                                            <div ng-if="enroll.lesson.lesson_type == 'outside'" class="enroll_email"
+                                            ng-class="{'enroll_row_required_attention': enroll.required_attention_by_teacher == true}" style="color: blue; cursor:pointer;text-decoration:underline;width: 160px;overflow: auto;" ng-click="main.go_editor_outside_lesson(enroll.id)">{{enroll.lesson.name}}</div> 
+
+
+
+
+
+                                        </div>
+                                        <div class="enroll_result" style="width: 200px;margin: 8px 0 0 0;">
+                                                <div ng-class="{
+                                                    'enroll_success': enroll.success == true,
+                                                    'enroll_fail': enroll.success == false,
+                                                    'enroll_undone': enroll.success == null}"></div>
+                                                <div class="enroll_data">
+                                                    {{enroll.last_data | date:'yyyy-MM-dd'}} / {{enroll.number_of_attempt}}
+                                                </div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+
+        </div>
+
+        <div style="text-align: right;margin: 20px 60px 20px 20px;" ng-if="model.pupils.length > 0">
+            <div style="display: inline-flex;">
+            <div style="display: inline-block;
+            margin: 6px 7px 0 0;
+            font-size: 23px;font-weight: 300;">
+                <span ng-bind-html="model.page.from_page"></span>-<span ng-bind-html="model.page.to_page"></span> <span translate>from</span> <span ng-bind-html="model.page.count"></span>
+            </div>
+            <div ng-if="model.page.previous" ng-click="load_pupils(model.page.previous)" style="display: inline-block;border: 1px solid #c3c3c3;
+            padding: 4px 0 0 0;">
+                <i class="material-icons" style="font-size: 32px;">navigate_before</i>
+            </div>
+            <div ng-if="model.page.next" ng-click="load_pupils(model.page.next)" style="display: inline-block;border: 1px solid #c3c3c3;
+            padding: 4px 0 0 0;margin: 0 0px 0px 8px;">
+                <i class="material-icons" style="font-size: 32px;">navigate_next</i>
+            </div>
             </div>
         </div>
 
-        <div class="col-md-12" style="padding: 0;">
-            <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
-                <thead style="background-color:#e3eaf1;height:60px">
-                    <th class="table_th" style="text-align:center;">
-                        <span translate>Pupil</span>
-                    </th>
-                    <th class="table_th" style="width: 400px;">
-                        <div style="width: 470px;float: left;">Enroll</div>
-                        <div style=""><span translate>Result/Attempts</span></div>
-                    </th>
-                </thead>
-
-                <tbody>
-                    <tr ng-repeat="pupil in model.pupils">
-                        <td style="width: 150px;text-align: left;position:relative;padding: 10px 0 10px 20px;">
-                            <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 13px;
-                                 overflow: hidden;width: 150px;">
-                                 {{pupil.email}}
-                            </div>
-                        </td>
-                        <td style="text-align:left;">
-                            <div style="max-height: 200px;overflow-y: auto;">
-                                <div style="font-weight:500;color: #00A2EA"><span translate>courses</span></div>
-                                <div class="enroll_pupil" ng-repeat="enroll in pupil.course_enrolls" style="display:block;width:100%;">
-                                    <div style="margin: 0 0 0 0;
-                                            max-height: 50px;
-                                            overflow: hidden;">
-                                       
-                                        <div class="remove_enroll" ng-click="remove_course_enroll(enroll.id)" style="float: left;">
-                                            <i class="material-icons icon-remove-enroll" style="font-size:12px;">close</i>
-                                        </div>
-                                        <div class="enroll_email" style="overflow: auto;">
-                                            {{enroll.course.name | htmlToPlaintext | limitTo: 100 }}{{enroll.course.length > 100 ? '...' : ''}}
-
-                                        </div> 
-                                    </div>
-
-                                    <div class="remove_enroll" ng-click="remove_enroll(enroll.id)" style="float: left;margin: 0px 6px 0 0;">
-                                        <i class="material-icons icon-remove-enroll" style="font-size:12px;">mode_edit</i>
-                                    </div>
-                                    <div style="font-size: 12px;margin: 0 0 0 17px;">
-                                        <div ng-if="enroll.auto_enroll == true"><span translate>auto enroll lessons</span></div>
-                                        <div ng-if="enroll.auto_enroll == false"><span translate>custom enroll lesson</span></div>
-                                    </div> 
-                                </div>
-
-
-                                <div style="font-weight:500;color: #ff9e37"><span translate>lessons</span></div>
-                                <div class="enroll_pupil" ng-repeat="enroll in pupil.lesson_enrolls" style="width:100%;">
-                                    <div style="margin: 0 0 0 0;
-                                            width: 500px;
-                                            float: left;
-                                            max-height: 50px;
-                                            overflow: hidden;">
-                                       
-                                        <div style="font-size: 10px;
-                                            margin: 0 0 0 20px;">
-                                            {{enroll.lesson.course.name | htmlToPlaintext | limitTo: 50 }}{{enroll.lesson.course.name.length > 50 ? '...' : ''}}
-                                        </div>
-                                        <div class="remove_enroll" ng-click="remove_enroll($event, enroll.id)" style="    float: left;">
-                                            <i class="material-icons icon-remove-enroll" style="font-size:12px;">close</i>
-                                        </div>
-
-
-                                        <!-- отображение название урока -->
-                                        <div ng-if="enroll.lesson.lesson_type == 'inside'"  class="enroll_email" style="overflow: auto;font-weight: 500;color: green;">
-                                            {{enroll.lesson.name | htmlToPlaintext | limitTo: 100 }}{{enroll.lesson.name.length > 100 ? '...' : ''}}
-
-                                        </div> 
-                                        <!-- если урок вненшний то ссылку на страницу назначения -->
-                                        <div ng-if="enroll.lesson.lesson_type == 'outside'" class="enroll_email"
-                                        ng-class="{'enroll_row_required_attention': enroll.required_attention_by_teacher == true}" style="color: blue; cursor:pointer;text-decoration:underline;width: 160px;overflow: auto;" ng-click="main.go_editor_outside_lesson(enroll.id)">{{enroll.lesson.name}}</div> 
-
-
-
-
-
-                                    </div>
-                                    <div class="enroll_result" style="width: 200px;margin: 8px 0 0 0;">
-                                            <div ng-class="{
-                                                'enroll_success': enroll.success == true,
-                                                'enroll_fail': enroll.success == false,
-                                                'enroll_undone': enroll.success == null}"></div>
-                                            <div class="enroll_data">
-                                                {{enroll.last_data | date:'yyyy-MM-dd'}} / {{enroll.number_of_attempt}}
-                                            </div>
-                                    </div> 
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-
-
     </div>
-
-    <div style="text-align: right;margin: 20px 60px 20px 20px;" ng-if="model.pupils.length > 0">
-        <div style="display: inline-flex;">
-        <div style="display: inline-block;
-        margin: 6px 7px 0 0;
-        font-size: 23px;font-weight: 300;">
-            <span ng-bind-html="model.page.from_page"></span>-<span ng-bind-html="model.page.to_page"></span> <span translate>from</span> <span ng-bind-html="model.page.count"></span>
-        </div>
-        <div ng-if="model.page.previous" ng-click="load_pupils(model.page.previous)" style="display: inline-block;border: 1px solid #c3c3c3;
-        padding: 4px 0 0 0;">
-            <i class="material-icons" style="font-size: 32px;">navigate_before</i>
-        </div>
-        <div ng-if="model.page.next" ng-click="load_pupils(model.page.next)" style="display: inline-block;border: 1px solid #c3c3c3;
-        padding: 4px 0 0 0;margin: 0 0px 0px 8px;">
-            <i class="material-icons" style="font-size: 32px;">navigate_next</i>
-        </div>
-        </div>
-    </div>
-
-
 </div>

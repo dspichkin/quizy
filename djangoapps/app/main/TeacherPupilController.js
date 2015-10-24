@@ -1,4 +1,10 @@
 'use strict';
+/*
+globals
+require: false,
+$:false,
+module:false
+*/
 function getUrlVars(url)
 {
     var vars = [], hash;
@@ -18,7 +24,8 @@ var Pupil = require('../models/pupil');
 
 var TeacherPupilCtrl = function($scope, $mdDialog, $http, $data, $log, $location) {
     $scope.model = {
-        pupils: []
+        pupils: [],
+        loaded: false
     };
 
 
@@ -52,7 +59,7 @@ var TeacherPupilCtrl = function($scope, $mdDialog, $http, $data, $log, $location
         if ($scope.user.account_type == 1) {
             var _page;
             if (!url) {
-                var url = '/api/pupils/';
+                url = '/api/pupils/';
                 if (_page) {
                     url += '?page=' + _page;
                 }
@@ -84,6 +91,8 @@ var TeacherPupilCtrl = function($scope, $mdDialog, $http, $data, $log, $location
                     from_page: from_page,
                     to_page: to_page
                 };
+
+                $scope.model.loaded = true;
 
             }, function(error) {
                 $log.error('Ошибка получения курсов', error);
@@ -132,7 +141,7 @@ var TeacherPupilCtrl = function($scope, $mdDialog, $http, $data, $log, $location
     // =================================
     $scope.load_pupils();
 
-}
+};
 
 
 

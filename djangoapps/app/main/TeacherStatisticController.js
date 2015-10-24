@@ -1,9 +1,14 @@
 'use strict';
-
+/*
+globals
+window:false,
+module:false
+*/
 
 var TeacherStatisticCtrl = function($scope, $mdDialog, $http, $log, $location) {
     $scope.model = {
-        pupils: []
+        pupils: [],
+        loaded: false
     };
 
 
@@ -61,6 +66,7 @@ var TeacherStatisticCtrl = function($scope, $mdDialog, $http, $log, $location) {
                 to_page: to_page
             };
 
+            $scope.model.loaded = true;
         }, function(error) {
             $log.error('Ошибка получения статистики', error);
         });

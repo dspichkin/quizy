@@ -10,7 +10,8 @@ var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeo
         archive: [],
         show_user: true,
         inputed_address: "",
-        show_invite: false
+        show_invite: false,
+        loaded: false
     };
 
     if (!$scope.user || !$scope.user.is_authenticated) {
@@ -33,7 +34,7 @@ var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeo
         if ($scope.user.account_type == 1) {
             var _page;
             if (!url) {
-                var url = '/api/courses/';
+                url = '/api/courses/';
                 if (_page) {
                     url += '?page=' + _page;
                 }
@@ -66,6 +67,7 @@ var CoursesCtrl = function($scope, $stateParams, $mdDialog, $http, $data, $timeo
                     from_page: from_page,
                     to_page: to_page
                 };
+                $scope.model.loaded = true;
 
             }, function(error) {
                 $log.error('Ошибка получения курсов', error);
