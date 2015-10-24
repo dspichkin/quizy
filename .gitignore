@@ -15,5 +15,6 @@ settings_local*
 
 /compiler/node_modules/
 activate
+node_modules/
 .virtualenv/*
 /djangoapps/media/cache/
