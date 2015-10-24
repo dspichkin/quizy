@@ -223,7 +223,7 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
               targetEvent: $event,
               template:
                     '<md-dialog aria-label="List dialog">' +
-                    '  <md-dialog-content>' +
+                    '  <md-dialog-content style="padding:20px;">' +
                     '    <md-input-container>' +
                     '       <label>Секунд</label>' +
                     '       <input type="text" ng-model="timer" ng-change="changeTimer()" required >' +
@@ -232,10 +232,10 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
                     '  </md-dialog-content>' +
                     '  <div class="md-actions">' +
                     '    <md-button ng-click="closeDialog()" class="md-primary">' +
-                    '      Отмена' +
+                    '      <span translate>Отмена</span>' +
                     '    </md-button>' +
                     '    <md-button ng-click="submit($event)" class="btn-secondary">' +
-                    '      Подтвердить' +
+                    '      <span translate>Подтвердить</span>' +
                     '    </md-button>' +
                     '  </div>' +
                     '</md-dialog>',
