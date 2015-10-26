@@ -322,7 +322,6 @@ def get_avatar(request):
                 return Response("OK", status=status.HTTP_200_OK)
             if user:
                 data = UserSerializer(user).data
-                print "data",data.get('thumbnail_avatar')
                 return Response(data.get('thumbnail_avatar'), status=status.HTTP_200_OK)
         return Response("OK", status=status.HTTP_200_OK)
 
