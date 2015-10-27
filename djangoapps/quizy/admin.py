@@ -4,23 +4,24 @@ import os.path
 from django.contrib import admin
 # from django.db.models import Q
 from django.contrib.auth.models import Group
-from django.forms import ModelForm
-from django import forms
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.utils.text import smart_split, unescape_string_literal
-from django.core.urlresolvers import reverse
 
-from suit_redactor.widgets import RedactorWidget
+# from django import forms
+
+# from django.utils.text import smart_split, unescape_string_literal
+# from django.core.urlresolvers import reverse
+
+
 from sorl.thumbnail import get_thumbnail
 
 from quizy.models import (Course, Lesson, CourseEnroll, LessonEnroll, Page, Variant,
     Statistic, Tag)
-from users.account.models import Account
-# from quizy.forms import LessonForm
+# from users.account.models import Account
+from quizy.forms import (LessonForm, CourseForm)
 
 
 class CourseAdmin(admin.ModelAdmin):
     list_display = ['name', 'created_by', 'is_active', 'is_correct', 'get_teacher']
+    form = CourseForm
 
     class Media:
         css = {
@@ -58,16 +59,6 @@ class LessonEnrollAdmin(admin.ModelAdmin):
             'js/ace/ace.js',
             'js/run_ace.js',
         )
-
-
-class LessonForm(ModelForm):
-    class Meta:
-        widgets = {
-            'description': RedactorWidget(editor_options={'lang': 'ru'}),
-        }
-
-    teacher = forms.ModelMultipleChoiceField(label=u'Преподователь', queryset=Account.objects.filter(account_type=1), widget=FilteredSelectMultiple(u"Преподователи", is_stacked=False))
-    tag = forms.ModelMultipleChoiceField(label=u'Метки', queryset=Tag.objects.all(), widget=FilteredSelectMultiple(u"Метки", is_stacked=False), required=False)
 
 
 class LessonAdmin(admin.ModelAdmin):
@@ -176,4 +167,6 @@ admin.site.register(Tag, TagAdmin)
 admin.site.register(Page, PageAdmin)
 admin.site.register(Variant, VariantAdmin)
 admin.site.register(Statistic, StatisticAdmin)
+
+
 

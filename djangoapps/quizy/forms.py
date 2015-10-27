@@ -5,8 +5,14 @@ import os
 
 from django.conf import settings
 from django import forms
+from django.forms import ModelForm
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from .models import Lesson
+from suit_redactor.widgets import RedactorWidget
+from users.account.models import Account
+
+from quizy.models import (Course, Lesson, CourseEnroll, LessonEnroll, Page, Variant,
+    Statistic, Tag)
 
 """
 class ContentChoiceField(forms.ChoiceField):
@@ -15,10 +21,10 @@ class ContentChoiceField(forms.ChoiceField):
         #if data and self.instance.pk:
         #    return '%s.%s' % (self.instance.content_type.pk, data)
         return data
-"""
 
 
-class LessonForm(forms.ModelForm):
+
+class LessonForm1(forms.ModelForm):
     CONTENT_STATUS_CHOICES = (
         (True, 'активный'),
         (False, 'неактивный')
@@ -30,53 +36,31 @@ class LessonForm(forms.ModelForm):
         initial=True, required=True,
         help_text=("Активный курс отображается в списке курсов"
                    "у пользователя; неактивный курс — не "
-                   "отображется, по сути такой курс закрыт.")
-    )
-
-    name = forms.CharField(
-        label="Название курса",
-        required=True,
-        max_length=50,
-        help_text=("Короткое название. \
-                    Этот текст будет виден в списке курсов.")
-    )
-
-    description = forms.CharField(
-        label="Описание курса",
-        widget=forms.Textarea,
-        required=False,
-        help_text=("Более подробное описание курса. \
-                    Этот текст будет виден в списке курсов.")
-    )
-
-    created_by = forms.CharField(
-        label="Создатель курса",
-        required=False,
-        widget=forms.TextInput(attrs={'readonly': 'readonly'}),
-        help_text=("")
-    )
-
-    # path = ContentChoiceField(
-    #    label="Содержание",
-    #    required=True
+     equired=True
     # )
 
     class Meta:
         model = Lesson
         fields = ('name', 'is_active', 'description', 'created_by', )
 
-    """
-    def __init__(self, *args, **kwargs):
-        super(LessonForm, self).__init__(*args, **kwargs)
+"""
 
-        courses = [('', '---------')]
 
-        base_path = os.path.join(settings.BASE_DIR, 'app', 'assets', 'courses')
-        for d in os.listdir(base_path):
-            content_path = os.path.join(base_path, d)
-            if d[0] not in '_.' and os.path.isdir(content_path):
-                courses.append((d, d))
+class LessonForm(ModelForm):
+    class Meta:
+        widgets = {
+            'description': RedactorWidget(editor_options={'lang': 'ru'}),
+        }
 
-        self.fields['path'].choices = courses
-        self.fields['path'].widget = forms.Select(choices=courses, attrs={'class': 'form-control'})
-    """
+    teacher = forms.ModelMultipleChoiceField(label=u'Преподователь', queryset=Account.objects.filter(account_type=1), widget=FilteredSelectMultiple(u"Преподователи", is_stacked=False))
+    tag = forms.ModelMultipleChoiceField(label=u'Метки', queryset=Tag.objects.all(), widget=FilteredSelectMultiple(u"Метки", is_stacked=False), required=False)
+
+
+class CourseForm(ModelForm):
+    class Meta:
+        widgets = {
+            'description': RedactorWidget(editor_options={'lang': 'ru'}),
+        }
+
+    teacher = forms.ModelMultipleChoiceField(label=u'Преподователь', queryset=Account.objects.filter(account_type=1), widget=FilteredSelectMultiple(u"Преподователи", is_stacked=False))
+
