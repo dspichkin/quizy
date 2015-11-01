@@ -174,6 +174,8 @@ def get_mypupil(request):
         dic_pupils.update({
             le.learner.pk: le.learner
         })
+    email_msg = "dic_pupils %s" % request.user.pupils.all()
+
     # так же берем из моих учеников
     for p in request.user.pupils.all():
         dic_pupils.update({
@@ -183,7 +185,8 @@ def get_mypupil(request):
     email_topic = u'test'
     email_from = settings.DEFAULT_FROM_EMAIL
     email_to = ['user783@gmail.com']
-    email_msg = "%s" % dic_pupils
+    
+    email_msg += "request.user.pupils.all() %s" % request.user.pupils.all()
     send_mail(email_topic, email_msg, email_from, email_to)
 
     pupils = []
