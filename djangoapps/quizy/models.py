@@ -319,6 +319,8 @@ class LessonEnroll(BaseModel):
                                 verbose_name=_(u'обучаемый'))
     created_by = models.ForeignKey('account.Account', related_name='lesson_enrolls_created',
                                 verbose_name=_(u'кто создал назначение'))
+    teachers = models.ManyToManyField('account.Account', related_name='lesson_enrolls_teachers',
+                                 verbose_name=_(u'преподователь'), blank=True, null=True)
     # course = models.ForeignKey('CourseEnroll', related_name='lesson_enrolls',
     #                        verbose_name='курс', blank=True, null=True)
     lesson = models.ForeignKey('Lesson', related_name='enrolls',

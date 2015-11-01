@@ -109,6 +109,8 @@ class LessonEnrollSerializer(serializers.ModelSerializer):
 
 class EnrollForCourseSerializer (serializers.ModelSerializer):
     learner = UserSerializer(read_only=True)
+    created_by = UserSerializer(read_only=True)
+    teachers = UserSerializer(many=True, read_only=True)
 
     class Meta:
         model = LessonEnroll
@@ -118,6 +120,7 @@ class EnrollForCourseSerializer (serializers.ModelSerializer):
 class LessonForCourseSerializer(serializers.ModelSerializer):
     pages = PageSerializer(many=True, read_only=True)
     enrolls = EnrollForCourseSerializer(many=True, read_only=True)
+    teacher = UserSerializer(many=True, read_only=True)
     code_errors = JSONField()
 
     class Meta:

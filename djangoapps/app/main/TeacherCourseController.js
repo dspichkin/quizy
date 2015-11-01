@@ -218,6 +218,18 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
         }
     };
 
+    /*
+    проверяем если у текущего пользователя права на назначение
+    */
+    $scope.has_teacher = function(item) {
+        var _has_teacher = false;
+        for (var i = 0, len=item.teachers.length; i < len; i++) {
+            if (item.teachers[i].email == $scope.user.email) {
+                _has_teacher = true;
+            }
+        }
+        return _has_teacher;
+    };
 
     // =============================
     $scope.load_course();

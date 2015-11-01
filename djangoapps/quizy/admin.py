@@ -16,7 +16,7 @@ from sorl.thumbnail import get_thumbnail
 from quizy.models import (Course, Lesson, CourseEnroll, LessonEnroll, Page, Variant,
     Statistic, Tag)
 # from users.account.models import Account
-from quizy.forms import (LessonForm, CourseForm)
+from quizy.forms import (LessonForm, CourseForm, LessonEnrollForm)
 
 
 class CourseAdmin(admin.ModelAdmin):
@@ -43,6 +43,7 @@ class CourseEnrollAdmin(admin.ModelAdmin):
 
 
 class LessonEnrollAdmin(admin.ModelAdmin):
+    form = LessonEnrollForm
     list_display = ['learner', 'created_by', 'lesson', 'success', 'date_success']
     # list_editable = ['is_active']
     list_filter = ['lesson__name']
@@ -53,6 +54,7 @@ class LessonEnrollAdmin(admin.ModelAdmin):
         css = {
             'all': (
                 'css/run_ace.css',
+                'css/admin/course.css'
             )
         }
         js = (

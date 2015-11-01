@@ -64,3 +64,8 @@ class CourseForm(ModelForm):
 
     teacher = forms.ModelMultipleChoiceField(label=u'Преподователь', queryset=Account.objects.filter(account_type=1), widget=FilteredSelectMultiple(u"Преподователи", is_stacked=False))
 
+
+class LessonEnrollForm(ModelForm):
+
+    teachers = forms.ModelMultipleChoiceField(label=u'Преподователь', queryset=Account.objects.filter(account_type=1), widget=FilteredSelectMultiple(u"Преподователи", is_stacked=False))
+

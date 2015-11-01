@@ -17,7 +17,7 @@ from quizy.serializers.serializers import (LessonEnrollSerializer, CourseEnrollS
 from quizy.pagination import ListPagination
 from quizy.serializers.pupil import PupilSerializer
 from quizy.views import validateEmail
-from quizy.utils import is_enrolls_different
+from quizy.utils import is_enrolls_different, send_mail
 
 from users.account.models import Account
 
@@ -174,6 +174,27 @@ def enroll(request, enroll_pk):
                 enroll = LessonEnroll.objects.get(lesson=lesson, learner=pupil[0])
             except LessonEnroll.DoesNotExist:
                 enroll = LessonEnroll.objects.create(lesson=lesson, learner=pupil[0], created_by=request.user)
+                enroll.teachers.add(request.user)
+                if settings.MAIL is True:
+                    email_topic = u'from English with Experts Вам назначен урок'
+                    email_from = settings.DEFAULT_FROM_EMAIL
+                    email_to = [pupil[0].email]
+                    email_msg = u'Здравствуйте,\n'
+                    email_msg += u'Ваш преподаватель назначила Вам новое задание. '
+                    email_msg += u'Пожалуйста, пройдите по этой ссылке, чтобы выполнить это задание.\n'
+                    email_msg += u'Пишите, если у Вас будут вопросы. Желаем Вам прогресса в написании работ!\n\n'
+                    email_msg += u'Best wishes,\n'
+                    email_msg += u'English with Experts\n'
+                    send_mail(email_topic, email_msg, email_from, email_to)
+                elif settings.DEBUG is True:
+                    print [pupil[0].email]
+                    email_msg = u'Здравствуйте,\n'
+                    email_msg += u'Ваш преподаватель назначила Вам новое задание. '
+                    email_msg += u'Пожалуйста, пройдите по этой ссылке, чтобы выполнить это задание.\n'
+                    email_msg += u'Пишите, если у Вас будут вопросы. Желаем Вам прогресса в написании работ!\n\n'
+                    email_msg += u'Best wishes,\n'
+                    email_msg += u'English with Experts\n'
+                    print email_msg
 
                 # если урок внешний считываем деннаые по умолчанию и сохраняем их в назначение
                 if lesson.lesson_type == 'outside':

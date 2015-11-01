@@ -22,7 +22,7 @@ from quizy.serializers.serializers import (LessonEnrollSerializer, LessonForEnro
 from quizy.serializers.pupil import (MyStatisticSerializer, )
 from quizy.pagination import ListPagination
 # from quizy.utils import normalize
-from quizy.utils import is_enrolls_different
+from quizy.utils import is_enrolls_different, send_mail
 
 
 # назначеные на меня уроки
@@ -180,6 +180,26 @@ def enroll_pupil(request, enroll_pk):
             enroll.required_attention_by_teacher = True
             enroll.data = data
             enroll.data['mode'] = 'wait_teacher'
+            if settings.MAIL is True:
+                email_topic = u'from English with Experts'
+                email_from = settings.DEFAULT_FROM_EMAIL
+                email_to = [t.email for t in enroll.teachers]
+                email_msg = u'Dear ,\n'
+                email_msg += u'Please note that your student ' + request.user.email
+                email_msg += u'has finished the writing task that you’ve assigned them.\n'
+                email_msg += u'Please follow this link to see/mark their work.\n\n'
+                email_msg += u'Best wishes,\n'
+                email_msg += u'English with Experts\n'
+                send_mail(email_topic, email_msg, email_from, email_to)
+            elif settings.DEBUG is True:
+                print [t.email for t in enroll.teachers]
+                email_msg = u'Dear ,\n'
+                email_msg += u'Please note that your student ' + request.user.email
+                email_msg += u'has finished the writing task that you’ve assigned them.\n'
+                email_msg += u'Please follow this link to see/mark their work.\n\n'
+                email_msg += u'Best wishes,\n'
+                email_msg += u'English with Experts\n'
+                print email_msg
         else:
             enroll.data = data
 

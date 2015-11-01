@@ -181,8 +181,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'no-reply@inteduca.com'
 EMAIL_HOST_PASSWORD = 'inteduca8089'
 EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = 'no-reply@levellab.ru'
-SERVER_EMAIL = 'no-reply@levellab.ru'
+DEFAULT_FROM_EMAIL = 'no-reply@myquizy.ru'
+SERVER_EMAIL = 'no-reply@myquizy.ru'
+MAIL = False
 
 
 SITE_ID = 1
