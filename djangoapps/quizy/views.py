@@ -7,7 +7,7 @@ import os
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.conf import settings
+# from django.conf import settings
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,7 +20,7 @@ PageSerializer, StatisticSerializer, LessonForEnrollSerializer, TagSerializer)
 
 # from quizy.serializers.pupil import PupilSerializer
 from quizy.pagination import (ListPagination, LessonPagination)
-from quizy.utils import send_mail
+# from quizy.utils import send_mail
 
 from users.account.models import Account
 from users.account.serializers import UserSerializer, AdminSerializer
@@ -174,20 +174,12 @@ def get_mypupil(request):
         dic_pupils.update({
             le.learner.pk: le.learner
         })
-    email_msg = "dic_pupils %s" % request.user.pupils.all()
 
     # так же берем из моих учеников
     for p in request.user.pupils.all():
         dic_pupils.update({
             p.pk: p
         })
-
-    email_topic = u'test'
-    email_from = settings.DEFAULT_FROM_EMAIL
-    email_to = ['user783@gmail.com']
-    
-    email_msg += "request.user.pupils.all() %s" % request.user.pupils.all()
-    send_mail(email_topic, email_msg, email_from, email_to)
 
     pupils = []
     for key, value in dic_pupils.items():
