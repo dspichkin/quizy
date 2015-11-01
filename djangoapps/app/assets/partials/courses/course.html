@@ -7,93 +7,99 @@
         </div>
         -->
 
-
-
-
-        <div class="col-md-12 lessons_header">
-            <div class="col-md-4 mylesson_title">{{model.course.name}}</div>
-            <div class="col-md-8 pull-left search_panel" style="padding: 0 12px;
-    height: 60px;
-    overflow: hidden;">
-                {{model.course.description}}
+        <!-- loading -->
+        <div ng-if="!model.loaded" style="width:90%;height:100%;position: absolute;">
+            <div style="margin: 0 auto;width: 50px;margin-top: 20px;">
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
             </div>
         </div>
 
-        <div class="col-md-12" style="padding: 0;">
-            <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
-                <thead style="background-color:#e3eaf1;height:60px">
-                    <th class="table_th">
-                        <span translate>Action</span>
-                    </th>
-                    <th class="table_th">
-                        <span translate>Name</span>
-                    </th>
-                    <th class="table_th">
-                        <span translate>Description</span>
-                    </th>
-                    <th class="table_th" style="width: 400px;">
-                        <div style="width:200px;float:left;"><span translate>Assign</span></div>
-                        <div><span translate>Statistics</span></div>
-                    </th>
-                </thead>
+        <div ng-if="model.loaded">
 
-                <tbody>
-                    <tr ng-repeat="lesson in model.course.lessons">
-                        <td style="width: 170px;vertical-align: middle;position:relative;">
-                            <div class="lesson_incorrect" ng-if="lesson.is_correct==false"></div>
-                            <div class="lesson_correct" ng-if="lesson.is_correct==true"></div>
-                            <div class="shadow btn-round" ripple style="position: relative;" lesson-action lesson-id="lesson.id" edit-lesson="main.go_editor_lesson" enroll-lesson="lesson_enroll" play-lesson="main.go_test_play" edit-lesson="main.go_editor_lesson" get-lesson-type="get_lesson_type">
-                                <a class="icon-menu"  href="#"></a>
-                            </div>
-                        </td>
-                        <td style="width: 200px;text-align:left;">
-                            <div style="max-height:40px;overflow:hidden;">
-                            <span ng-if="lesson.name">{{lesson.number}}. {{lesson.name}}</span>
-                            <span ng-if="!lesson.name">{{lesson.number}}. No name</span>
-                            </div>
-                            <div ng-if="lesson.lesson_type=='inside'" style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
-                                 margin: 5px 0;" ng-click="main.go_editor_lesson(lesson.id)"><span translate>Edit lesson ...</span></div>
-                        </td>
-                        <td style="min-width: 200px;text-align:left">
-                            <span>{{lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>
-                        </td>
-                        <td class="td_enroll_stats" style="width:400px;text-align:left">
-                            <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
-                                 margin: 0;" ng-click="lesson_enroll($event, lesson.id)">+ <span translate>Add assign</span>...</div>
+            <div class="col-md-12 lessons_header">
+                <div class="col-md-4 mylesson_title">{{model.course.name}}</div>
+                <div class="col-md-8 pull-left search_panel" style="padding: 0 12px;
+        height: 60px;
+        overflow: hidden;">
+                    {{model.course.description}}
+                </div>
+            </div>
 
-                            <div style="max-height:100px;overflow: auto;">
-                                <div ng-repeat="enroll in lesson.enrolls" class="enroll_pupil" ng-class="{
-                                    'enroll_row_required_attention': enroll.required_attention_by_teacher == true
-                                }">
-                                    <div ng-if="has_teacher(enroll)" style="display: inline-flex;width:100%;">
-                                        <div style="margin: 6px 0 0 0;width:200px;float:left;">
-                                            <div class="remove_enroll" ng-click="remove_enroll($event, enroll.id)"><i class="material-icons icon-remove-enroll">close</i></div>
-                                            <div ng-if="lesson.lesson_type == 'inside'" class="enroll_email" style="width: 160px;overflow: auto;">{{enroll.learner.email}}</div> 
-                                            <div ng-if="lesson.lesson_type == 'outside'" class="enroll_email"
-                                            ng-class="{'enroll_row_required_attention': enroll.required_attention_by_teacher == true}" style="color:#ff9e37; cursor:pointer;text-decoration:underline;width: 160px;overflow: auto;" ng-click="main.go_editor_outside_lesson(enroll.id)">{{enroll.learner.email}}</div> 
-                                        </div>
-                                        <div class="enroll_result">
-                                            <div ng-class="{
-                                                'enroll_required_attention': enroll.required_attention_by_teacher == true,
-                                                'enroll_success': !enroll.required_attention_by_teacher && enroll.success == true,
-                                                'enroll_fail': enroll.success == false,
-                                                'enroll_undone': !enroll.required_attention_by_teacher && enroll.success == null}"></div>
-                                            <div class="enroll_data">{{enroll.last_data | date:'yyyy-MM-dd'}} / {{enroll.number_of_attempt}}</div>
+            <div class="col-md-12" style="padding: 0;">
+                <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
+                    <thead style="background-color:#e3eaf1;height:60px">
+                        <th class="table_th">
+                            <span translate>Action</span>
+                        </th>
+                        <th class="table_th">
+                            <span translate>Name</span>
+                        </th>
+                        <th class="table_th">
+                            <span translate>Description</span>
+                        </th>
+                        <th class="table_th" style="width: 400px;">
+                            <div style="width:200px;float:left;"><span translate>Assign</span></div>
+                            <div><span translate>Statistics</span></div>
+                        </th>
+                    </thead>
+
+                    <tbody>
+                        <tr ng-repeat="lesson in model.course.lessons">
+                            <td style="width: 170px;vertical-align: middle;position:relative;">
+                                <div class="lesson_incorrect" ng-if="lesson.is_correct==false"></div>
+                                <div class="lesson_correct" ng-if="lesson.is_correct==true"></div>
+                                <div class="shadow btn-round" ripple style="position: relative;" lesson-action lesson-id="lesson.id" edit-lesson="main.go_editor_lesson" enroll-lesson="lesson_enroll" play-lesson="main.go_test_play" edit-lesson="main.go_editor_lesson" get-lesson-type="get_lesson_type">
+                                    <a class="icon-menu"  href="#"></a>
+                                </div>
+                            </td>
+                            <td style="width: 200px;text-align:left;">
+                                <div style="max-height:40px;overflow:hidden;">
+                                <span ng-if="lesson.name">{{lesson.number}}. {{lesson.name}}</span>
+                                <span ng-if="!lesson.name">{{lesson.number}}. No name</span>
+                                </div>
+                                <div ng-if="lesson.lesson_type=='inside'" style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
+                                     margin: 5px 0;" ng-click="main.go_editor_lesson(lesson.id)"><span translate>Edit lesson ...</span></div>
+                            </td>
+                            <td style="min-width: 200px;text-align:left">
+                                <span>{{lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>
+                            </td>
+                            <td class="td_enroll_stats" style="width:400px;text-align:left">
+                                <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
+                                     margin: 0;" ng-click="lesson_enroll($event, lesson.id)">+ <span translate>Add assign</span>...</div>
+
+                                <div style="max-height:100px;overflow: auto;">
+                                    <div ng-repeat="enroll in lesson.enrolls" class="enroll_pupil" ng-class="{
+                                        'enroll_row_required_attention': enroll.required_attention_by_teacher == true
+                                    }">
+                                        <div ng-if="has_teacher(enroll)" style="display: inline-flex;width:100%;">
+                                            <div style="margin: 6px 0 0 0;width:200px;float:left;">
+                                                <div class="remove_enroll" ng-click="remove_enroll($event, enroll.id)"><i class="material-icons icon-remove-enroll">close</i></div>
+                                                <div ng-if="lesson.lesson_type == 'inside'" class="enroll_email" style="width: 160px;overflow: auto;">{{enroll.learner.email}}</div> 
+                                                <div ng-if="lesson.lesson_type == 'outside'" class="enroll_email"
+                                                ng-class="{'enroll_row_required_attention': enroll.required_attention_by_teacher == true}" style="color:#ff9e37; cursor:pointer;text-decoration:underline;width: 160px;overflow: auto;" ng-click="main.go_editor_outside_lesson(enroll.id)">{{enroll.learner.email}}</div> 
+                                            </div>
+                                            <div class="enroll_result">
+                                                <div ng-class="{
+                                                    'enroll_required_attention': enroll.required_attention_by_teacher == true,
+                                                    'enroll_success': !enroll.required_attention_by_teacher && enroll.success == true,
+                                                    'enroll_fail': enroll.success == false,
+                                                    'enroll_undone': !enroll.required_attention_by_teacher && enroll.success == null}"></div>
+                                                <div class="enroll_data">{{enroll.last_data | date:'yyyy-MM-dd'}} / {{enroll.number_of_attempt}}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
 
-                </tbody>
+                    </tbody>
 
 
-            </table>
+                </table>
+
+            </div>
 
         </div>
-
-
 
     </div>
 </div>

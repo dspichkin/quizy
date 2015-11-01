@@ -10,7 +10,7 @@ var Course = require('../models/course');
 
 var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParams) {
     $scope.model = {
-
+        loaded: false
     };
 
 
@@ -38,7 +38,7 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
         if ($stateParams.course_id) {
             $http.get('/api/courses/' + $stateParams.course_id + '/').then(function(data) {
                 $scope.model.course = new Course(data.data);
-
+                $scope.model.loaded = true;
                 //console.log("!",  $scope.model.course)
 
             }, function(error) {
@@ -82,6 +82,7 @@ var CourseCtrl = function($scope, $mdDialog, $http, $log, $location, $stateParam
                             $scope.model.modal_enroll.error_message = "Email is incorrect";
                             $scope.$digest();
                             $log.error(error);
+
                         });
                     };
 
