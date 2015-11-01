@@ -10,3 +10,5 @@ ALLOWED_HOSTS = [
     'myquizy.ru',
     'ieltswriting.englishwithexperts.com'
 ]
+
+MAIL = True
