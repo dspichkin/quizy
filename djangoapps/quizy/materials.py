@@ -25,8 +25,7 @@ def courses(request, course_pk=None):
     if request.method == 'GET' and request.user.is_authenticated():
         if not course_pk:
             # возвращаем список всех курсов и уроков
-            qs = Course.objects.filter(Q(created_by=request.user) | Q(teacher=request.user))
-
+            qs = Course.objects.filter(Q(created_by=request.user) | Q(teacher=request.user)).distinct()
             paginator = ListPagination()
             result_page = paginator.paginate_queryset(qs, request)
             serializer = CourseSerializer(result_page, many=True)
