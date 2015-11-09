@@ -23,7 +23,8 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
             }
         });
         return;
-    } else if ($scope.user.account_type != 2) {
+    } else if ($scope.user.account_type != 2 && $scope.user.account_type != 1) {
+        console.log('$scope.user.account_type', $scope.user.account_type)
         $scope.main.go_home_page();
         return;
     }
@@ -34,7 +35,7 @@ var PupilLessonsCtrl = function($scope, $mdDialog, $http, $data, $log, $location
 
 
     $scope.load_lessons = function(callback) {
-        if ($scope.user.account_type == 2) {
+        if ($scope.user.account_type == 2 || $scope.user.account_type == 1) {
             $http.get('/api/mylessons/').then(function(data) {
                 $scope.model.lessons = [];
                 if (data.data.length > 0) {

@@ -181,7 +181,8 @@ def enroll(request, enroll_pk):
                     email_to = [pupil[0].email]
                     email_msg = u'Здравствуйте,\n'
                     email_msg += u'Ваш преподаватель назначила Вам новое задание. '
-                    email_msg += u'Пожалуйста, пройдите по этой ссылке, чтобы выполнить это задание.\n'
+                    email_msg += u'Пожалуйста, пройдите по этой ссылке, чтобы выполнить это задание \n(Вам нужно быть зарегистрированым и авторизированым на сайте):\n'
+                    email_msg += u'ieltswriting.englishwithexperts.com/play/' + enroll.pk + '\n\n'
                     email_msg += u'Пишите, если у Вас будут вопросы. Желаем Вам прогресса в написании работ!\n\n'
                     email_msg += u'Best wishes,\n'
                     email_msg += u'English with Experts\n'
@@ -190,7 +191,8 @@ def enroll(request, enroll_pk):
                     print [pupil[0].email]
                     email_msg = u'Здравствуйте,\n'
                     email_msg += u'Ваш преподаватель назначила Вам новое задание. '
-                    email_msg += u'Пожалуйста, пройдите по этой ссылке, чтобы выполнить это задание.\n'
+                    email_msg += u'Пожалуйста, пройдите по этой ссылке, чтобы выполнить это задание \n(Вам нужно быть зарегистрированым и авторизированым на сайте):\n'
+                    email_msg += u'ieltswriting.englishwithexperts.com/play/' + enroll.pk + '\n\n'
                     email_msg += u'Пишите, если у Вас будут вопросы. Желаем Вам прогресса в написании работ!\n\n'
                     email_msg += u'Best wishes,\n'
                     email_msg += u'English with Experts\n'
