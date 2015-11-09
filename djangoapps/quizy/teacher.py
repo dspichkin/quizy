@@ -221,7 +221,10 @@ def enroll(request, enroll_pk):
             return Response({'code': 404}, status=status.HTTP_200_OK)
 
     if request.method == 'DELETE' and enroll_pk:
-        enroll = LessonEnroll.objects.filter(Q(lesson__created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user), pk=enroll_pk).distinct()
+        if request.user.is_superuser:
+            enroll = LessonEnroll.objects.filter(pk=enroll_pk).distinct()
+        else:
+            enroll = LessonEnroll.objects.filter(Q(lesson__created_by=request.user) | Q(lesson__teacher=request.user) | Q(lesson__course__teacher=request.user), pk=enroll_pk).distinct()
         if enroll:
             enroll = enroll[0]
             enroll.delete()

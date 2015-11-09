@@ -52,7 +52,7 @@ def lessons(request, lesson_pk=None):
         lessons = []
         if not lesson_pk:
             # возвращаем список всех курсов и уроков
-            qs = Lesson.objects.filter(Q(created_by=request.user) | Q(teacher=request.user))
+            qs = Lesson.objects.filter(Q(created_by=request.user) | Q(teacher=request.user)).distinct()
             lessons = LessonSerializer(qs, many=True).data
             return Response(lessons, status=status.HTTP_200_OK)
         else:
