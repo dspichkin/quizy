@@ -42,9 +42,11 @@
         
         <table ng-table="tableParams" show-filter="true" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
             <thead style="background-color:#e3eaf1;height:60px">
+                <!--
                 <th class="table_th">
                     <span translate>Course actions</span>
                 </th>
+                -->
                 <th class="table_th">
                     <span translate>Name of course</span>
                 </th>
@@ -58,6 +60,7 @@
 
             <tbody>
                 <tr ng-repeat="course in model.courses">
+                    <!--
                     <td style="width: 170px;vertical-align: middle;position:relative;">
                         <div class="lesson_incorrect" ng-if="course.is_correct==false"></div>
                         <div class="lesson_correct" ng-if="course.is_correct==true"></div>
@@ -65,10 +68,9 @@
                         <div class="shadow btn-round" ripple style="position: relative;" course-action course-id="course.id" enroll-course="course_enroll" edit-course="go_course_lessons">
                             <a class="icon-menu"  href="#"></a>
                         </div>
-                    
-
                     </td>
-                    <td style="width: 200px;text-align:left">
+                    -->
+                    <td style="width: 400px;text-align:left;padding-left: 30px;">
                         <span ng-if="course.name">{{course.name}}</span>
                         <span ng-if="!course.name"><span translate>no name</span></span>
                         <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;

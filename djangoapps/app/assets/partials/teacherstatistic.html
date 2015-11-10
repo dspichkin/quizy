@@ -11,7 +11,11 @@
     		<div ng-if="user && user.is_authenticated && user.account_type == 1" class="lessons_pupil" ng-style="model.lessons.length > 0 && {'min-height': '50px'}">
 
     			<div class="col-md-12" style="padding: 0;">
-                <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0">
+
+                <div ng-if="model.pupils.length == 0" style="padding: 30px;">
+                    У Вас пока нет данных
+                </div>
+                <table ng-table="tableParams" class="table lessons_list table ng-table-responsive" style="width:100%;margin:0" ng-if="model.pupils.length > 0">
                     <thead style="background-color:#e3eaf1;height:60px">
                         <th class="table_th" style="text-align:left;">
                             <span translate>Pupil</span>

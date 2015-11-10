@@ -253,15 +253,16 @@ def statistic(request, statistic_pk):
     if request.method == "GET":
         dic_pupils = {}
         for p in pupils:
-            if (p.learner.id in dic_pupils):
-                enrolls = dic_pupils[p.learner.id].get('enrolls', [])
-                enrolls.append(StatisticSerializer(p).data)
-                dic_pupils[p.learner.id]['enrolls'] = enrolls
-            else:
-                dic_pupils[p.learner.id] = {
-                    'learner': UserSerializer(p.learner).data,
-                    'enrolls': [StatisticSerializer(p).data]
-                }
+            if p.learner:
+                if p.learner.id in dic_pupils:
+                    enrolls = dic_pupils[p.learner.id].get('enrolls', [])
+                    enrolls.append(StatisticSerializer(p).data)
+                    dic_pupils[p.learner.id]['enrolls'] = enrolls
+                else:
+                    dic_pupils[p.learner.id] = {
+                        'learner': UserSerializer(p.learner).data,
+                        'enrolls': [StatisticSerializer(p).data]
+                    }
         a = []
         for key, value in dic_pupils.items():
             a.append(value)
