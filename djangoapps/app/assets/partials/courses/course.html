@@ -60,8 +60,9 @@
                                 <div ng-if="lesson.lesson_type=='inside'" style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
                                      margin: 5px 0;" ng-click="main.go_editor_lesson(lesson.id)"><span translate>Edit lesson ...</span></div>
                             </td>
-                            <td style="min-width: 200px;text-align:left">
-                                <span>{{lesson.description | htmlToPlaintext | limitTo: 25 }}{{page.text.length > 25 ? '...' : ''}}</span>
+                            <td style="min-width: 200px;text-align:left;font-size:12px;position: relative;" ng-mouseover="show_description=true" ng-mouseleave="show_description=false">
+                                <div>{{lesson.description | htmlToPlaintextSpace | limitTo: 150 }}{{lesson.description.length > 150 ? '...' : ''}}</div>
+                                <div class="shadow" ng-show="show_description==true && lesson.description.length > 150" style="background-color: #E7E9DF;position: absolute;width: 400px;top: -10px;left: -10px;cursor:pointer;padding:10px;z-index: 1;" >{{lesson.description | htmlToPlaintextSpace }}</div>
                             </td>
                             <td class="td_enroll_stats" style="width:400px;text-align:left">
                                 <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
