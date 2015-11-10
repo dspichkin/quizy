@@ -38,7 +38,6 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
 
 
 
-
     start();
 
 
@@ -64,16 +63,15 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
     function start_content(data) {
         $scope.model.play.lesson_type = data.data.lesson.lesson_type;
         $scope.model.play.course_id = data.data.lesson.course;
-
         if (data.data.lesson.lesson_type == 'outside') {
             $scope.model.play.path = data.data.lesson.content.path;
             $scope.model.play.template = $scope.model.play.path + data.data.lesson.content.template;
             $scope.model.play.controller = $scope.model.play.path + data.data.lesson.content.controller;
+            $scope.model.play.enroll = data.data;
             var jsLink = $("<script type='text/javascript' src='" + $scope.model.play.controller + "'>");
             $("head").append(jsLink);
             // Регистрация контроллера
             app.controllerProvider.register('ControllerName', app.ControllerName);
-
         }
         if (data.data.lesson.lesson_type == 'inside') {
             $scope.model.play.template = '/assets/partials/play/play.html';
@@ -82,12 +80,12 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
 
 
     function load_lesson(lesson_id, callback) {
+
         return $http.get('/api/demo/play/' + lesson_id + "/").then(function(data) {
                 if (!data.data.lesson.lesson_type) {
                     $log.error("Ошибка определения типа урока");
                 }
                 start_content(data);
-
             }, function(error) {
                 $log.error('Ошибка получения назначенния уроков', error);
             });
@@ -96,7 +94,6 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
     function load_public_lesson(public_lesson_id, callback) {
         return $http.get('/api/public/play/' + public_lesson_id + "/").then(function(data) {
             
-            console.log("load_public_lesson", data)
             if (!data.data.type) {
                 $log.error("Ошибка определения типа урока");
             }

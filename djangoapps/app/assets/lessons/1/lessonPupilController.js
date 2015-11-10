@@ -4,9 +4,16 @@ app:false
 
 */
 app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
+    if ($scope.model.play) {
+        $scope.model.lesson_dialog = $scope.model.play.enroll;
+    }
+    
+    if (!$scope.model.lesson_dialog) {
+        $scope.model.lesson_dialog = {};
+    }
 
-    $scope.model.lesson_dialog = $scope.model.play.enroll;
     $scope.model.lesson_dialog.temptext = null;
+
     $scope.model.lesson_dialog.loading = false;
     // Переменные таймера
     $scope.stop_timer = false;
@@ -287,6 +294,14 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
 
     // Опеределяем тип медиа
     function detect_media_type() {
+        if ($scope.model.lesson_dialog.lesson) {
+            if (!$scope.model.lesson_dialog.lesson.media) {
+                return;
+            }
+        } else {
+            return;
+        }
+
         var _filename = $scope.model.lesson_dialog.lesson.media;
         if (_filename) {
             var _ext = _filename.substr(_filename.length - 3);

@@ -192,7 +192,7 @@ def enroll_pupil(request, enroll_pk):
                 email_msg += u'English with Experts\n'
                 send_mail(email_topic, email_msg, email_from, email_to)
             elif settings.DEBUG is True:
-                print [t.email for t in enroll.teachers]
+                print [t.email for t in enroll.teachers.all()]
                 email_msg = u'Dear ,\n'
                 email_msg += u'Please note that your student ' + request.user.email
                 email_msg += u'has finished the writing task that you’ve assigned them.\n'

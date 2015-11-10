@@ -1,7 +1,14 @@
 'use strict';
 
 app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
-    $scope.model.lesson_dialog = $scope.model.outside.enroll;
+    if ($scope.model.outside) {
+        $scope.model.lesson_dialog = $scope.model.outside.enroll;
+    }
+    
+    if (!$scope.model.lesson_dialog) {
+        $scope.model.lesson_dialog = {};
+    }
+
     $scope.model.lesson_dialog.temptext = null;
     $scope.model.lesson_dialog.loading = false;
     $scope.model.lesson_dialog.teacher_avatars = {};
@@ -16,7 +23,6 @@ app.ControllerName = function($scope, $http, $log, $sce, $mdDialog) {
         extraPlugins: 'panelbutton,colorbutton,redbutton'
         
     };
-
 
     detect_media_type();
 
