@@ -169,10 +169,12 @@
                     <span translate>Enrolled students</span>
                     <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                 </div>
+                <!--
                 <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_statistic_page()">
                     <span translate>Statistics</span>
                     <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                 </div>
+                -->
                 <div ng-if="user && user.is_authenticated && user.account_type == 2" class="tab-item" ripple ng-click="main.go_statistic_page()">
                     <span translate>Archive</span>
                     <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
@@ -234,10 +236,12 @@
                                 <span translate>Enrolled students</span>
                                 <div ng-class="{'active_menu': main.active_menu=='pupils'}"></div>
                             </div>
+                            <!--
                             <div ng-if="user && user.is_authenticated && user.account_type == 1" class="tab-item" ripple ng-click="main.go_statistic_page()">
                                 <span translate>Statistics</span>
                                 <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
                             </div>
+                            -->
                             <div ng-if="user && user.is_authenticated && user.account_type == 2" class="tab-item" ripple ng-click="main.go_statistic_page()">
                                 <span translate>Archive</span>
                                 <div ng-class="{'active_menu': main.active_menu=='statistic'}"></div>
