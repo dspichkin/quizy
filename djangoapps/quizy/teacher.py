@@ -176,7 +176,7 @@ def enroll(request, enroll_pk):
                 enroll = LessonEnroll.objects.create(lesson=lesson, learner=pupil[0], created_by=request.user)
                 enroll.teachers.add(request.user)
                 if settings.MAIL is True:
-                    email_topic = u'from English with Experts Вам назначен урок'
+                    email_topic = u'English with Experts: Вам назначено письменное задание.'
                     email_from = settings.DEFAULT_FROM_EMAIL
                     email_to = [pupil[0].email]
                     email_msg = u'Здравствуйте,\n'
