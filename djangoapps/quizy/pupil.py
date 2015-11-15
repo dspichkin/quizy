@@ -183,7 +183,7 @@ def enroll_pupil(request, enroll_pk):
             if settings.MAIL is True:
                 email_topic = u'from English with Experts'
                 email_from = settings.DEFAULT_FROM_EMAIL
-                email_to = [t.email for t in enroll.teachers]
+                email_to = [t.email for t in enroll.teachers.all()]
                 email_msg = u'Dear ,\n'
                 email_msg += u'Please note that your student ' + request.user.email
                 email_msg += u'has finished the writing task that you’ve assigned them.\n'
