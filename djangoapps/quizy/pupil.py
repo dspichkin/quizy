@@ -228,10 +228,12 @@ def public_play(request, lesson_pk=None):
     """
     if request.user.is_authenticated():
         try:
-            enroll = LessonEnroll.objects.get(lesson=lesson_pk)
-            data = LessonEnrollSerializer(instance=enroll).data
-            data['type'] = 'enroll'
-            return Response(data, status=status.HTTP_200_OK)
+            raw_enroll = LessonEnroll.objects.filter(lesson=lesson_pk)[:1]
+            if raw_enroll:
+                enroll = raw_enroll[0]
+                data = LessonEnrollSerializer(instance=enroll).data
+                data['type'] = 'enroll'
+                return Response(data, status=status.HTTP_200_OK)
         except LessonEnroll.DoesNotExist:
             pass
     # если пользователь не авторизован или нет назначения на урок то возвращаем урок
