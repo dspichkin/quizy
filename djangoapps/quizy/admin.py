@@ -44,7 +44,7 @@ class CourseEnrollAdmin(admin.ModelAdmin):
 
 class LessonEnrollAdmin(admin.ModelAdmin):
     form = LessonEnrollForm
-    list_display = ['learner', 'created_by', 'lesson', 'success', 'date_success']
+    list_display = ['learner', 'created_by', 'lesson', 'success', 'updated_at']
     # list_editable = ['is_active']
     list_filter = ['lesson__name']
     search_fields = ('learner__username', 'learner__first_name', 'learner__last_name', 'learner__email')
