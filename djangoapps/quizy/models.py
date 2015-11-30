@@ -46,8 +46,8 @@ except AttributeError:
 class BaseModel(models.Model):
     uuid = models.UUIDField(max_length=36, unique=True, db_index=True, editable=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=u"Дата создания")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=u"Дата последнего обновления")
 
     class Meta:
         abstract = True
