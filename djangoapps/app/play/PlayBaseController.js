@@ -97,14 +97,14 @@ var PlayCtrl = function($scope, $stateParams, $http, $compile, $log) {
             if (!data.data.type) {
                 $log.error("Ошибка определения типа урока");
             }
-            //if (data.data.type == 'enroll') {
-            //    $scope.main.go_play(data.data.id);
-            //}
-            //if (data.data.type == 'lesson') {
+            if (data.data.type == 'enroll') {
+                $scope.main.go_play(data.data.id);
+            }
+            if (data.data.type == 'lesson') {
                 data.data.lesson = data.data;
                 $scope.model.play.enroll = data.data;
                 start_content(data);
-            //}
+            }
 
         }, function(error) {
             $log.error('Ошибка получения назначенния уроков', error);
