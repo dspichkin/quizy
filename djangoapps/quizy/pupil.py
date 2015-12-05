@@ -228,7 +228,7 @@ def public_play(request, lesson_pk=None):
     """
     if request.user.is_authenticated():
         try:
-            raw_enroll = LessonEnroll.objects.filter(lesson=lesson_pk)[:1]
+            raw_enroll = LessonEnroll.objects.filter(learner=request.user, lesson=lesson_pk)[:1]
             if raw_enroll:
                 enroll = raw_enroll[0]
                 data = LessonEnrollSerializer(instance=enroll).data
