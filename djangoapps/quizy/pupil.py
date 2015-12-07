@@ -298,7 +298,6 @@ def upload_avatar(request):
 
 
 def save_answers(request, enroll_id):
-    
 
     fd, filepath = tempfile.mkstemp(prefix='export_audio_answers_', dir=settings.TEMP_DIR)
     ofile = codecs.open(filepath, mode="wb")
@@ -335,13 +334,12 @@ def save_answers(request, enroll_id):
     ofile.write(unicode(result).encode("utf-8"))
     ofile.close()
 
-    # чиатем файл и конвертируем в кодировку 1251
+    # чиатем файл
     file_source = codecs.open(filepath, mode='rb')
     file_content = file_source.read()
-    # file_content_finished = file_content.decode('utf-8').encode('windows-1251')
 
     response = HttpResponse(file_content, content_type='application/html')
-    finlename = slugify(enroll.lesson.name, separator='_', to_lower=True, max_length=15) 
+    finlename = slugify(enroll.lesson.name, separator='_', to_lower=True, max_length=15)
     response['Content-Disposition'] = 'attachment; filename=%s.html' % finlename
     file_source.close()
     if (os.path.exists(filepath)):
