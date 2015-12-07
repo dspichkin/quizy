@@ -3,11 +3,16 @@
 import json
 import os
 from datetime import timedelta
+import tempfile
+import codecs
+from slugify import slugify
+
 # from HTMLParser import HTMLParser
 
 # from django.views.generic import TemplateView
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 # from django.db.models import Q
@@ -180,25 +185,25 @@ def enroll_pupil(request, enroll_pk):
             enroll.required_attention_by_teacher = True
             enroll.data = data
             enroll.data['mode'] = 'wait_teacher'
+
+            email_topic = u'from English with Experts'
+            email_from = settings.DEFAULT_FROM_EMAIL
+            email_to = [t.email for t in enroll.teachers.all()]
+
+            email_msg = u'Dear,\n'
+            email_msg += u'Please note that your student ' + request.user.email
+            email_msg += u' has finished the writing task that you’ve assigned them.\n'
+            email_msg += u'Please follow this link to see/mark their work '
+            email_msg += u'(You need to be registered and logged in).\n'
+            email_msg += u'http://ieltswriting.englishwithexperts.com/pupils/\n\n'
+            email_msg += u'Best wishes,\n'
+            email_msg += u'English with Experts\n'
+
             if settings.MAIL is True:
-                email_topic = u'from English with Experts'
-                email_from = settings.DEFAULT_FROM_EMAIL
-                email_to = [t.email for t in enroll.teachers.all()]
-                email_msg = u'Dear ,\n'
-                email_msg += u'Please note that your student ' + request.user.email
-                email_msg += u'has finished the writing task that you’ve assigned them.\n'
-                email_msg += u'Please follow this link to see/mark their work.\n\n'
-                email_msg += u'Best wishes,\n'
-                email_msg += u'English with Experts\n'
                 send_mail(email_topic, email_msg, email_from, email_to)
             elif settings.DEBUG is True:
+                print email_topic
                 print [t.email for t in enroll.teachers.all()]
-                email_msg = u'Dear ,\n'
-                email_msg += u'Please note that your student ' + request.user.email
-                email_msg += u'has finished the writing task that you’ve assigned them.\n'
-                email_msg += u'Please follow this link to see/mark their work.\n\n'
-                email_msg += u'Best wishes,\n'
-                email_msg += u'English with Experts\n'
                 print email_msg
         else:
             enroll.data = data
@@ -285,12 +290,63 @@ def upload_avatar(request):
             request.user.avatar = f
             request.user.save()
             return Response("OK", status=status.HTTP_200_OK)
-        print request.POST
-        print request.FILES
-        files = request.FILES
+        # print request.POST
+        # print request.FILES
+        # files = request.FILES
 
     return Response("OK", status=status.HTTP_200_OK)
 
+
+def save_answers(request, enroll_id):
+    
+
+    fd, filepath = tempfile.mkstemp(prefix='export_audio_answers_', dir=settings.TEMP_DIR)
+    ofile = codecs.open(filepath, mode="wb")
+    enroll = get_object_or_404(LessonEnroll, pk=enroll_id, learner=request.user)
+    data = enroll.data
+    result = '<html lang="ru" ><head> <meta charset="utf-8">'
+    result += '<title> %s </title>' % (enroll.lesson.name)
+    result += '</head><body style="padding:30px;">'
+    result += '<h2>%s</h2>' % (enroll.lesson.name)
+    result += '<h4>%s</h4>' % (enroll.lesson.description)
+    if data:
+        print data
+        steps = sorted(data.get('steps', []), key=lambda x: x.get('number'))
+
+        for step in steps:
+            if step.get('mode') == 'finish':
+                writeted_by = step.get('writed_by')
+                result += u"\n"
+                if step.get('type') == 'pupil':
+                    if writeted_by:
+                        result += u"<h4>Ученик (%s).</h4>" % (writeted_by)
+                    else:
+                        result += u"<h4>Ученик.</h4p>"
+                    result += u"<h4>Кол-во слов: %s</h4>" % str(step.get('number_words'))
+                elif step.get('type') == 'teacher':
+                    if writeted_by:
+                        result += u"<h4>Преподаватель (%s).</h4>" % (writeted_by)
+                    else:
+                        result += u"<h4>Преподаватель.</h4>"
+                result += u"%s\n" % step.get('text')
+    result += "</body></html>"
+    print result
+
+    ofile.write(unicode(result).encode("utf-8"))
+    ofile.close()
+
+    # чиатем файл и конвертируем в кодировку 1251
+    file_source = codecs.open(filepath, mode='rb')
+    file_content = file_source.read()
+    # file_content_finished = file_content.decode('utf-8').encode('windows-1251')
+
+    response = HttpResponse(file_content, content_type='application/html')
+    finlename = slugify(enroll.lesson.name, separator='_', to_lower=True, max_length=15) 
+    response['Content-Disposition'] = 'attachment; filename=%s.html' % finlename
+    file_source.close()
+    if (os.path.exists(filepath)):
+        os.remove(filepath)
+    return response
 
 
 

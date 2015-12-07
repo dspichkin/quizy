@@ -410,4 +410,5 @@ app.ControllerName = function($scope, $http, $log, $sce, $timeout, $mdDialog) {
             });
     };
 
+
 };

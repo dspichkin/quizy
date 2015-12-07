@@ -335,6 +335,11 @@
                 <div ng-if="model.lesson_dialog.lesson.lesson_type=='outside' && model.lesson_dialog.lesson.thumbnail_picture_big">
                     <img ng-src="{{model.lesson_dialog.lesson.thumbnail_picture_big}}" style="width: 100%;">
                 </div>
+
+                <div ng-if="model.lesson_dialog.lesson.lesson_type=='outside'">
+                    <a class="btn-secondary" href="/api/save_answers/{{model.lesson_dialog.id}}/" style="margin:20px 0;width: 100%;text-decoration: inherit;" target="_blank"><span translate>Save</span></a>
+                </div>
+
             </div>
 
 

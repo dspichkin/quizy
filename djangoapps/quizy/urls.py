@@ -20,7 +20,7 @@ from quizy.views import (
     page_picture_upload, get_tags,
     get_avatar)
 
-from quizy.pupil import (public_play, start_lessons, upload_avatar)
+from quizy.pupil import (public_play, start_lessons, upload_avatar, save_answers)
 
 router = DefaultRouter()
 router.register('pages', PageViewSet)
@@ -59,5 +59,7 @@ urlpatterns = patterns(
     url(r'^api/statistic/(\d+)?/?$', statistic, name='statistic'),
 
     url(r'^api/pages/(\d+)/upload/$', page_picture_upload, name='page_picture_upload'),
+
+    url(r'^api/save_answers/(\d+)/$', save_answers, name='save_answers'),
 
 )

@@ -27,6 +27,7 @@ def enroll_teacher(request, enroll_pk):
     """
     возвращает данные назначения для внешнего урока
     для учителя
+    сохраняет отзыа от учителя
     """
     if not request.user.is_authenticated():
         return Response([], status=status.HTTP_200_OK)
@@ -53,6 +54,30 @@ def enroll_teacher(request, enroll_pk):
 
         enroll.required_attention_by_teacher = False
         enroll.save()
+
+        if enroll.required_attention_by_pupil is True:
+
+            email_topic = u'English with Experts: Ваш преподаватель проверил Вашу письменную работу.'
+            email_from = settings.DEFAULT_FROM_EMAIL
+            email_to = [enroll.learner.email]
+
+            email_msg = u'Здравствуйте,\n'
+            email_msg += u'Рады сообщить, что Ваш преподаватель проверил Вашу письменную работу. '
+            email_msg += u'Чтобы посмотреть Ваши оценки по шкале IELTS и комментарии преподавателя \n'
+            email_msg += u'пожалуйста, пройдите по этой ссылке \n(Вам нужно быть зарегистрированым и авторизированым на сайте):\n'
+            email_msg += u'http://ieltswriting.englishwithexperts.com/play/' + str(enroll.pk) + '/\n\n'
+            email_msg += u'От себя хотим добавить, что IELTS Writing - это самая сложная часть для большинства сдающих (официальная статистика IELTS).'
+            email_msg += u'Поэтому не теряйте мотивацию. Чем больше работ Вы напишите до сдачи экзамена, тем лучше. Keep up your good work! Мы верим в Вас!\n\n'
+            email_msg += u'Пишите, если у Вас будут вопросы или пожелания к улучшению сервиса. Мы всегда рады конструктивным предложениям.\n\n'
+            email_msg += u'Best wishes,\n'
+            email_msg += u'English with Experts\n'
+
+            if settings.MAIL is True:
+                send_mail(email_topic, email_msg, email_from, email_to)
+            elif settings.DEBUG is True:
+                print email_topic
+                print [enroll.learner.email]
+                print email_msg
 
     enroll = LessonEnrollSerializer(instance=enroll).data
     return Response(enroll, status=status.HTTP_200_OK)
@@ -175,27 +200,23 @@ def enroll(request, enroll_pk):
             except LessonEnroll.DoesNotExist:
                 enroll = LessonEnroll.objects.create(lesson=lesson, learner=pupil[0], created_by=request.user)
                 enroll.teachers.add(request.user)
+
+                email_topic = u'English with Experts: Вам назначено письменное задание.'
+                email_from = settings.DEFAULT_FROM_EMAIL
+                email_to = [pupil[0].email]
+
+                email_msg = u'Здравствуйте,\n'
+                email_msg += u'Ваш преподаватель назначила Вам новое задание. '
+                email_msg += u'Пожалуйста, пройдите по этой ссылке, чтобы выполнить это задание \n(Вам нужно быть зарегистрированым и авторизированым на сайте):\n'
+                email_msg += u'http://ieltswriting.englishwithexperts.com/play/' + str(enroll.pk) + '/\n\n'
+                email_msg += u'Пишите, если у Вас будут вопросы. Желаем Вам прогресса в написании работ!\n\n'
+                email_msg += u'Best wishes,\n'
+                email_msg += u'English with Experts\n'
+
                 if settings.MAIL is True:
-                    email_topic = u'English with Experts: Вам назначено письменное задание.'
-                    email_from = settings.DEFAULT_FROM_EMAIL
-                    email_to = [pupil[0].email]
-                    email_msg = u'Здравствуйте,\n'
-                    email_msg += u'Ваш преподаватель назначила Вам новое задание. '
-                    email_msg += u'Пожалуйста, пройдите по этой ссылке, чтобы выполнить это задание \n(Вам нужно быть зарегистрированым и авторизированым на сайте):\n'
-                    email_msg += u'http://ieltswriting.englishwithexperts.com/play/' + str(enroll.pk) + '/\n\n'
-                    email_msg += u'Пишите, если у Вас будут вопросы. Желаем Вам прогресса в написании работ!\n\n'
-                    email_msg += u'Best wishes,\n'
-                    email_msg += u'English with Experts\n'
                     send_mail(email_topic, email_msg, email_from, email_to)
                 elif settings.DEBUG is True:
                     print [pupil[0].email]
-                    email_msg = u'Здравствуйте,\n'
-                    email_msg += u'Ваш преподаватель назначила Вам новое задание. '
-                    email_msg += u'Пожалуйста, пройдите по этой ссылке, чтобы выполнить это задание \n(Вам нужно быть зарегистрированым и авторизированым на сайте):\n'
-                    email_msg += u'http://ieltswriting.englishwithexperts.com/play/' + str(enroll.pk) + '/\n\n'
-                    email_msg += u'Пишите, если у Вас будут вопросы. Желаем Вам прогресса в написании работ!\n\n'
-                    email_msg += u'Best wishes,\n'
-                    email_msg += u'English with Experts\n'
                     print email_msg
 
                 # если урок внешний считываем деннаые по умолчанию и сохраняем их в назначение

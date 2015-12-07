@@ -259,6 +259,10 @@ LOGGING = {
     }
 }
 
+TEMP_DIR = os.path.join(BASE_DIR, 'temp')
+if not os.path.exists(TEMP_DIR):
+    os.mkdir(TEMP_DIR)
+
 try:
     from settings_local import *
 except ImportError:
