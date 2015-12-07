@@ -309,7 +309,6 @@ def save_answers(request, enroll_id):
     result += '<h2>%s</h2>' % (enroll.lesson.name)
     result += '<h4>%s</h4>' % (enroll.lesson.description)
     if data:
-        print data
         steps = sorted(data.get('steps', []), key=lambda x: x.get('number'))
 
         for step in steps:
@@ -318,18 +317,24 @@ def save_answers(request, enroll_id):
                 result += u"\n"
                 if step.get('type') == 'pupil':
                     if writeted_by:
-                        result += u"<h4>Ученик (%s).</h4>" % (writeted_by)
+                        result += u"<h3>Ученик (%s).</h3>" % (writeted_by)
                     else:
-                        result += u"<h4>Ученик.</h4p>"
+                        result += u"<h3>Ученик.</h3>"
+                    if step.get('estimate'):
+                        result += u"<h4>Оценка: TA %s / CC %s / LR %s / GA %s </h4>" % (
+                            step.get('estimate', {}).get('estimate_task'),
+                            step.get('estimate', {}).get('coherence_task'),
+                            step.get('estimate', {}).get('lexical_task'),
+                            step.get('estimate', {}).get('grammatical_task')
+                        )
                     result += u"<h4>Кол-во слов: %s</h4>" % str(step.get('number_words'))
                 elif step.get('type') == 'teacher':
                     if writeted_by:
-                        result += u"<h4>Преподаватель (%s).</h4>" % (writeted_by)
+                        result += u"<h3>Преподаватель (%s).</h3>" % (writeted_by)
                     else:
-                        result += u"<h4>Преподаватель.</h4>"
+                        result += u"<h3>Преподаватель.</h3>"
                 result += u"%s\n" % step.get('text')
     result += "</body></html>"
-    print result
 
     ofile.write(unicode(result).encode("utf-8"))
     ofile.close()
