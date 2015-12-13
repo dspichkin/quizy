@@ -54,8 +54,12 @@ class AccountAdmin(UserAdmin):
     def clean(self):
         #super(AccountAdmin, self).clean()
         # Validation goes here :)
-        print "username", self.cleaned_data
-
+        
+        data = self.cleaned_data
+        username = data['username']
+        email = data['email']
+        print "username", username
+        print "email", email
         raise forms.ValidationError("TEST EXCEPTION!")
 
 

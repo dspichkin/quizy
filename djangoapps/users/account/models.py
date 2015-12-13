@@ -219,12 +219,13 @@ class Account(AbstractUser):
         Sends an email to this User.
         """
         send_mail(subject, message, from_email, [self.email], **kwargs)
-    """
+
     def save(self, *args, **kwargs):
         print "!!! ", self.email
         print "xx ", self.username
         if not self.email and validateEmail(self.username) is True:
             self.email = self.username
+            super(Account, self).save(*args, **kwargs)
         else:
             from django.contrib import messages
             messages.error(self.request, "Something goes wrong sending transaction mail")
@@ -232,24 +233,24 @@ class Account(AbstractUser):
             #raise ValidationError("Username has to be equal valid email")
         #if not self.username:
         #    self.username = self.email
-        super(Account, self).save(*args, **kwargs)
-    """
-    """
-    # Пропишем организацию
-    if self.is_org:
-        if self.org is None:
-            try:
-                org = Organization.objects.get(slug=self.username)
-            except Organization.DoesNotExist:
-                org = Organization(slug=self.username)
-        else:
-            org = self.org
-        org.name = self.fio()
-        org.save()
-        self.org = org
-        super(Account, self).save(update_fields=['org'])
-        self.member_of.add(org)
-    """
+
+
+        """
+        # Пропишем организацию
+        if self.is_org:
+            if self.org is None:
+                try:
+                    org = Organization.objects.get(slug=self.username)
+                except Organization.DoesNotExist:
+                    org = Organization(slug=self.username)
+            else:
+                org = self.org
+            org.name = self.fio()
+            org.save()
+            self.org = org
+            super(Account, self).save(update_fields=['org'])
+            self.member_of.add(org)
+        """
 
     def fio(self):
         if self.first_name and self.last_name:
