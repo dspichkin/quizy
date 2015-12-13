@@ -15,6 +15,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.crypto import get_random_string
 from django.contrib.auth.models import (AbstractUser, BaseUserManager)
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from ..utils import build_absolute_uri
 # from .. import app_settings as users_app_settings
@@ -225,7 +226,7 @@ class Account(AbstractUser):
         if not self.email and validateEmail(self.username) is True:
             self.email = self.username
         else:
-            raise Exception("Email is incorrect")
+            raise ValidationError("Username has to be equal valid email")
         #if not self.username:
         #    self.username = self.email
         super(Account, self).save(*args, **kwargs)
