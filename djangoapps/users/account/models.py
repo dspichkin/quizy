@@ -225,6 +225,7 @@ class Account(AbstractUser):
             self.email = self.username
         if self.email and self.email != self.username:
             self.username = self.email
+        print "XXXx", self.email
         super(Account, self).save(*args, **kwargs)
 
     def fio(self):
