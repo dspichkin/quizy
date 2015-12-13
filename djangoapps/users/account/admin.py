@@ -36,7 +36,7 @@ from django import forms
 class EmployerAdminForm(forms.ModelForm):
     class Meta:
         model = Account
-
+        exclude = ('id',)
     def clean(self):
         cleaned_data = self.cleaned_data
         email = cleaned_data.get('email')
