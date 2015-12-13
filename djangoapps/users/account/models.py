@@ -211,6 +211,7 @@ class Account(AbstractUser):
 
     def save(self, *args, **kwargs):
         print "!!! ", self.email
+        print "xx ", self.username
         if not self.username:
             self.username = self.email
         super(Account, self).save(*args, **kwargs)
