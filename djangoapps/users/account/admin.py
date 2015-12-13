@@ -52,7 +52,7 @@ class AccountAdmin(UserAdmin):
     filter_horizontal = ('pupils', )
 
     def clean(self):
-        super(AccountAdmin, self).clean()
+        #super(AccountAdmin, self).clean()
         # Validation goes here :)
         print "username", self.cleaned_data
 
