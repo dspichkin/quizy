@@ -31,7 +31,7 @@ class EmailConfirmationAdmin(admin.ModelAdmin):
     list_display = ('user', 'created', 'sent', 'key')
     list_filter = ('sent',)
     # raw_id_fields = ('user__email',)
-
+from django import forms
 
 class AccountAdmin(UserAdmin):
     list_display = ('username', 'account_type', 'number_of_pupil', 'is_active', 'verified', 'is_superuser')
@@ -50,11 +50,15 @@ class AccountAdmin(UserAdmin):
     # fieldsets = (extra_fieldsets)
 
     filter_horizontal = ('pupils', )
-    """
+
     def clean(self):
+        super(AccountAdmin, self).clean()
         # Validation goes here :)
+        print "username", self.cleaned_data["username"] 
+        print "email", self.cleaned_data["email"] 
+
         raise forms.ValidationError("TEST EXCEPTION!")
-    """
+
 
 class SystemMessageAdmin(admin.ModelAdmin):
     pass

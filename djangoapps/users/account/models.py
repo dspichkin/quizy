@@ -219,7 +219,7 @@ class Account(AbstractUser):
         Sends an email to this User.
         """
         send_mail(subject, message, from_email, [self.email], **kwargs)
-
+    """
     def save(self, *args, **kwargs):
         print "!!! ", self.email
         print "xx ", self.username
@@ -233,6 +233,7 @@ class Account(AbstractUser):
         #if not self.username:
         #    self.username = self.email
         super(Account, self).save(*args, **kwargs)
+    """
         """
         # Пропишем организацию
         if self.is_org:
