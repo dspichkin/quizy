@@ -65,6 +65,9 @@ class AccountAdmin(UserAdmin):
 
     def save_model(self, request, obj, form, change):
         print "obj", obj
+        from django.contrib import messages
+        messages.error(request, "Something goes wrong sending transaction mail")
+        return
         raise forms.ValidationError({'username': ["error message"]})
 
 
