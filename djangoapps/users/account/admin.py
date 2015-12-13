@@ -33,10 +33,21 @@ class EmailConfirmationAdmin(admin.ModelAdmin):
     # raw_id_fields = ('user__email',)
 from django import forms
 
+class EmployerAdminForm(forms.ModelForm):
+    class Meta:
+        model = Account
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        email = cleaned_data.get('email')
+        username = cleaned_data.get('username')
+        raise forms.ValidationError(u"You haven't set a valid department. Do you want to continue?")
+        return cleaned_data
 
 class AccountAdmin(UserAdmin):
     list_display = ('username', 'account_type', 'number_of_pupil', 'is_active', 'verified', 'is_superuser')
     # fieldsets = UserAdmin.fieldsets
+    form = EmployerAdminForm
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (u'Персональная информация', {'fields': ('first_name', 'last_name', 'middle_name', 'email')}),
@@ -51,7 +62,7 @@ class AccountAdmin(UserAdmin):
     # fieldsets = (extra_fieldsets)
 
     filter_horizontal = ('pupils', )
-
+    """
     def clean(self):
         #super(AccountAdmin, self).clean()
         # Validation goes here :)
@@ -69,7 +80,7 @@ class AccountAdmin(UserAdmin):
         messages.error(request, "Something goes wrong sending transaction mail")
         return
         raise forms.ValidationError({'username': ["error message"]})
-
+    """
 
 class SystemMessageAdmin(admin.ModelAdmin):
     pass
