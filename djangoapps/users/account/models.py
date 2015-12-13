@@ -193,7 +193,7 @@ class Account(AbstractUser):
                                        related_query_name='account')
     verified = models.BooleanField(verbose_name=_('verified'), default=False)
     number_of_pupil = models.IntegerField(_(u'кол-во учеников'), default=0)
-    account_type = models.IntegerField(_(u'тип аккаунта'), default=1, choices=ACCOUNT_TYPES)
+    account_type = models.IntegerField(_(u'тип аккаунта'), default=2, choices=ACCOUNT_TYPES)
     pupils = models.ManyToManyField('self', _(u'ученики'), null=True, blank=True)
     language = models.CharField(_(u'выбранный язык интерфейса'), max_length="10", default='ru', choices=settings.LANGUAGES)
 
@@ -225,7 +225,6 @@ class Account(AbstractUser):
             self.email = self.username
         if self.email and self.email != self.username:
             self.username = self.email
-        print "XXXx", self.email
         super(Account, self).save(*args, **kwargs)
 
     def fio(self):
