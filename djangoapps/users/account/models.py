@@ -226,7 +226,10 @@ class Account(AbstractUser):
         if not self.email and validateEmail(self.username) is True:
             self.email = self.username
         else:
-            raise ValidationError("Username has to be equal valid email")
+            from django.contrib import messages
+            messages.error(self.request, "Something goes wrong sending transaction mail")
+            return
+            #raise ValidationError("Username has to be equal valid email")
         #if not self.username:
         #    self.username = self.email
         super(Account, self).save(*args, **kwargs)

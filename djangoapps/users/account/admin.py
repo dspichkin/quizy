@@ -50,7 +50,11 @@ class AccountAdmin(UserAdmin):
     # fieldsets = (extra_fieldsets)
 
     filter_horizontal = ('pupils', )
-
+    """
+    def clean(self):
+        # Validation goes here :)
+        raise forms.ValidationError("TEST EXCEPTION!")
+    """
 
 class SystemMessageAdmin(admin.ModelAdmin):
     pass
