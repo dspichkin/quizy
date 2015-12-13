@@ -210,10 +210,11 @@ class Account(AbstractUser):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def save(self, *args, **kwargs):
+        print "!!! ", self.email
         if not self.username:
             self.username = self.email
         super(Account, self).save(*args, **kwargs)
-
+        """
         # Пропишем организацию
         if self.is_org:
             if self.org is None:
@@ -228,6 +229,7 @@ class Account(AbstractUser):
             self.org = org
             super(Account, self).save(update_fields=['org'])
             self.member_of.add(org)
+        """
 
     def fio(self):
         if self.first_name and self.last_name:
