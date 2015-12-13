@@ -222,9 +222,12 @@ class Account(AbstractUser):
     def save(self, *args, **kwargs):
         print "!!! ", self.email
         print "xx ", self.username
-        raise Exception("You forgot to type in a password.")
-        if not self.username:
-            self.username = self.email
+        if not self.email and validateEmail(self.username) is True:
+            self.email = self.username
+        else:
+            raise Exception("Email is incorrect")
+        #if not self.username:
+        #    self.username = self.email
         super(Account, self).save(*args, **kwargs)
         """
         # Пропишем организацию
