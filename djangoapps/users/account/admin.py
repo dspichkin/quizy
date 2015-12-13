@@ -65,7 +65,7 @@ class AccountAdmin(UserAdmin):
 
     def save_model(self, request, obj, form, change):
         print "obj", obj
-        raise forms.ValidationError("TEST EXCEPTION!")
+        raise forms.ValidationError({'username': ["error message"]})
 
 
 class SystemMessageAdmin(admin.ModelAdmin):
