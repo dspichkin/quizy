@@ -221,6 +221,8 @@ class Account(AbstractUser):
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def save(self, *args, **kwargs):
+        if not self.username and self.email:
+            self.email = self.username
         if self.email and self.email != self.username:
             self.username = self.email
         super(Account, self).save(*args, **kwargs)
