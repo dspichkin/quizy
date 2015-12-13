@@ -227,8 +227,7 @@ class Account(AbstractUser):
             self.email = self.username
             super(Account, self).save(*args, **kwargs)
         else:
-            from django.contrib import messages
-            messages.error(self.request, "Something goes wrong sending transaction mail")
+            raise ValidationError('You have not met a constraint!')
             return
             #raise ValidationError("Username has to be equal valid email")
         #if not self.username:

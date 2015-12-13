@@ -33,6 +33,7 @@ class EmailConfirmationAdmin(admin.ModelAdmin):
     # raw_id_fields = ('user__email',)
 from django import forms
 
+
 class AccountAdmin(UserAdmin):
     list_display = ('username', 'account_type', 'number_of_pupil', 'is_active', 'verified', 'is_superuser')
     # fieldsets = UserAdmin.fieldsets
@@ -60,6 +61,10 @@ class AccountAdmin(UserAdmin):
         email = data['email']
         print "username", username
         print "email", email
+        raise forms.ValidationError("TEST EXCEPTION!")
+
+    def save_model(self, request, obj, form, change):
+        print "obj", obj
         raise forms.ValidationError("TEST EXCEPTION!")
 
 
