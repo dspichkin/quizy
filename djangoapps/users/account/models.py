@@ -234,22 +234,22 @@ class Account(AbstractUser):
         #    self.username = self.email
         super(Account, self).save(*args, **kwargs)
     """
-        """
-        # Пропишем организацию
-        if self.is_org:
-            if self.org is None:
-                try:
-                    org = Organization.objects.get(slug=self.username)
-                except Organization.DoesNotExist:
-                    org = Organization(slug=self.username)
-            else:
-                org = self.org
-            org.name = self.fio()
-            org.save()
-            self.org = org
-            super(Account, self).save(update_fields=['org'])
-            self.member_of.add(org)
-        """
+    """
+    # Пропишем организацию
+    if self.is_org:
+        if self.org is None:
+            try:
+                org = Organization.objects.get(slug=self.username)
+            except Organization.DoesNotExist:
+                org = Organization(slug=self.username)
+        else:
+            org = self.org
+        org.name = self.fio()
+        org.save()
+        self.org = org
+        super(Account, self).save(update_fields=['org'])
+        self.member_of.add(org)
+    """
 
     def fio(self):
         if self.first_name and self.last_name:
