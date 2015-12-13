@@ -169,6 +169,16 @@ ACCOUNT_TYPES = (
 )
 
 
+def validateEmail(email):
+    from django.core.validators import validate_email
+    from django.core.exceptions import ValidationError
+    try:
+        validate_email(email)
+        return True
+    except ValidationError:
+        return False
+
+
 class Account(AbstractUser):
 
     middle_name = models.CharField(_(u'отчество'), max_length=50, blank=True)
@@ -212,6 +222,7 @@ class Account(AbstractUser):
     def save(self, *args, **kwargs):
         print "!!! ", self.email
         print "xx ", self.username
+        raise Exception("You forgot to type in a password.")
         if not self.username:
             self.username = self.email
         super(Account, self).save(*args, **kwargs)
