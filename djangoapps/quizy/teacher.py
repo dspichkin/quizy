@@ -197,6 +197,13 @@ def enroll(request, enroll_pk):
 
         pupil = Account.objects.filter(email__iexact=email)[:1]
 
+        if pupil:
+            # проверяем являеться ли ученик учеников преподдователся
+            # если нет то назначаем его на преподователя
+            exists = request.user.pupils.filter(pk=pupil[0].pk).count()
+            if not exists:
+                request.user.pupils.add(pupil[0])
+
         if pupil and lesson:
             try:
                 enroll = LessonEnroll.objects.get(lesson=lesson, learner=pupil[0])
@@ -254,6 +261,7 @@ def enroll(request, enroll_pk):
         if enroll:
             enroll = enroll[0]
             enroll.delete()
+
         else:
             return Response("", status=status.HTTP_400_BAD_REQUEST)
         return Response("", status=status.HTTP_200_OK)

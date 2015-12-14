@@ -14,6 +14,7 @@ from rest_framework.decorators import api_view, permission_classes
 from quizy.models import Course, Lesson
 from quizy.serializers.serializers import (CourseSerializer, LessonSerializer)
 from quizy.pagination import ListPagination
+from users.account.serializers import UserSerializer
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
@@ -35,10 +36,51 @@ def courses(request, course_pk=None):
             course = Course.objects.filter(Q(created_by=request.user) | Q(teacher=request.user), pk=course_pk).distinct()
             if course:
                 course = course[0]
-                coursejson = CourseSerializer(course).data
+                lessons = []
+                for lesson in course.lesson_set.all():
+                    temp_lesson = {}
+                    temp_enrolls = []
+                    for enroll in lesson.enrolls.all():
+                        exist = request.user.pupils.filter(pk=enroll.learner.pk).count()
+                        if exist:
+                            temp_enroll = {}
+                            temp_enroll["learner"] = {
+                                "email": enroll.learner.email
+                            }
+                            temp_enroll["id"] = enroll.id
+                            temp_enroll["lesson"] = enroll.lesson.pk
+                            temp_enroll["required_attention_by_pupil"] = enroll.required_attention_by_pupil
+                            temp_enroll["required_attention_by_teacher"] = enroll.required_attention_by_teacher
+                            temp_enroll["number_of_attempt"] = enroll.number_of_attempt
+                            temp_enroll["updated_at"] = enroll.updated_at
+
+                            temp_enrolls.append(temp_enroll)
+
+                    temp_lesson["enrolls"] = temp_enrolls
+                    temp_lesson["id"] = lesson.pk
+                    temp_lesson["name"] = lesson.name
+                    temp_lesson["number"] = lesson.number
+                    temp_lesson["description"] = lesson.description
+                    #temp_lesson["picture"] = lesson.picture
+                    temp_lesson["full_lesson_type"] = lesson.full_lesson_type
+                    temp_lesson["lesson_type"] = lesson.lesson_type
+                    temp_lesson["path_content"] = lesson.path_content
+                    #temp_lesson["media"] = lesson.media.
+                    temp_lesson["timer"] = lesson.timer
+                    temp_lesson["created_by"] = lesson.created_by.pk
+                    temp_lesson["course"] = lesson.course.pk
+                    lessons.append(temp_lesson)
+
+                data = {
+                    "lessons": lessons,
+                    "name": course.name,
+                    "description": course.description,
+                    "is_correct": course.is_correct,
+                }
+                # coursejson = CourseSerializer(course).data
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            return Response(coursejson, status=status.HTTP_200_OK)
+            return Response(data, status=status.HTTP_200_OK)
 
 
 @csrf_exempt

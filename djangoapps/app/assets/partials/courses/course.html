@@ -72,7 +72,7 @@
                                     <div ng-repeat="enroll in lesson.enrolls" class="enroll_pupil" ng-class="{
                                         'enroll_row_required_attention': enroll.required_attention_by_teacher == true
                                     }">
-                                        <div ng-if="has_teacher(enroll)" style="display: inline-flex;width:100%;">
+                                        <div style="display: inline-flex;width:100%;">
                                             <div style="margin: 6px 0 0 0;width:200px;float:left;">
                                                 <div class="remove_enroll" ng-click="remove_enroll($event, enroll.id)"><i class="material-icons icon-remove-enroll">close</i></div>
                                                 <div ng-if="lesson.lesson_type == 'inside'" class="enroll_email" style="width: 160px;overflow: auto;">{{enroll.learner.email}}</div> 
