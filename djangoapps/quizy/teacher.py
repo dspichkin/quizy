@@ -143,8 +143,10 @@ def pupils(request):
     """
     if not request.user.is_authenticated():
         return Response([], status=status.HTTP_200_OK)
+    """
     # проходим по всем назначенным курсам и урока ищем учеников
     dic_pupils = {}
+
     for ce in CourseEnroll.objects.filter(Q(created_by=request.user) | Q(course__teacher=request.user)):
         dic_pupils.update({
             ce.learner.pk: ce.learner
@@ -158,9 +160,10 @@ def pupils(request):
     pupils = []
     for key, value in dic_pupils.items():
         pupils.append(value)
+    """
 
     paginator = ListPagination()
-    result_page = paginator.paginate_queryset(pupils, request)
+    result_page = paginator.paginate_queryset(request.user.pupils.all(), request)
     serializer = PupilSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 

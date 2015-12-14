@@ -194,7 +194,7 @@ class Account(AbstractUser):
     verified = models.BooleanField(verbose_name=_('verified'), default=False)
     number_of_pupil = models.IntegerField(_(u'кол-во учеников'), default=0)
     account_type = models.IntegerField(_(u'тип аккаунта'), default=2, choices=ACCOUNT_TYPES)
-    pupils = models.ManyToManyField('self', _(u'ученики'), null=True, blank=True)
+    pupils = models.ManyToManyField('self', verbose_name=_(u"мои ученики"), null=True, blank=True)
     language = models.CharField(_(u'выбранный язык интерфейса'), max_length="10", default='ru', choices=settings.LANGUAGES)
 
     objects = AccountManager()
