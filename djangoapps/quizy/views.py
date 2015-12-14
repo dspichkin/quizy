@@ -18,9 +18,7 @@ from quizy.models import (Lesson, Page, CourseEnroll, LessonEnroll, Statistic, T
 from quizy.serializers.serializers import (LessonEnrollSerializer, LessonSerializer,
 PageSerializer, StatisticSerializer, LessonForEnrollSerializer, TagSerializer)
 
-# from quizy.serializers.pupil import PupilSerializer
 from quizy.pagination import (ListPagination, LessonPagination)
-# from quizy.utils import send_mail
 
 from users.account.models import Account
 from users.account.serializers import UserSerializer, AdminSerializer
