@@ -53,9 +53,11 @@
                 <th class="table_th">
                     <span translate>Description</span>
                 </th>
+                <!--
                 <th class="table_th" style="width: 200px;">
                     <div style="width:200px;float:left;"><span translate>Number of assigned students</span></div>
                 </th>
+                -->
             </thead>
 
             <tbody>
@@ -79,15 +81,14 @@
                     <td style="min-width: 200px;text-align:left">
                         <span>{{course.description | htmlToPlaintext | limitTo: 100 }}{{course.description.length > 100 ? '...' : ''}}</span>
                     </td>
+                    <!--
                     <td class="td_enroll_stats" style="width:200px;text-align:center">
                         <div style="max-height:100px;overflow: auto;">
                             <div class="enroll_email">{{course.enroll_number.number}}</div>
-                            <!--
-                            <div style="cursor:pointer;font-weight:400;color:#00A2EA;font-size: 12px;
-                            margin: 5px 0;">Назначения курса</div>
-                            -->
+                            
                         </div>
                     </td>
+                    -->
                 </tr>
             </tbody>
         </table>
