@@ -7,7 +7,7 @@ prefix=quizy
 socket=/tmp/$prefix-$name.sock 
 pidfile=$ROOT/logs/run/$name.pid 
 errlog=$ROOT/logs/$name.error.log
-python=/home/ubuntu/Envs/test/bin/python
+python=$WORKON_HOME/$prefix/bin/python
 
 cd $ROOT
 case "$1" in
@@ -16,7 +16,7 @@ case "$1" in
             --env DJANGO_SETTINGS_MODULE=root.settings_prod \
             --master --pidfile=$pidfile \
             --socket=$socket --processes=5 --harakiri=120 --post-buffering=1 \
-            --max-requests=4000 --vacuum --home=/home/ubuntu/Envs/test \
+            --max-requests=4000 --vacuum --home=$WORKON_HOME/$prefix \
             --daemonize=$errlog
         chmod o+w $socket
         ;;
