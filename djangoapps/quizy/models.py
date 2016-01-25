@@ -159,7 +159,7 @@ class Lesson(BaseModel):
 
     picture = ImageField(_(u'картинка урока'), upload_to=lesson_picture_upload, blank=True, null=True)
 
-    lesson_type = models.CharField(_(u'тип урока'), max_length=10, default='inside', choices=LESSON_TYPE_CHOICES)
+    lesson_type = models.CharField(_(u'тип урока'), max_length=10, default='inside', choices=LESSON_TYPE_CHOICES, blank=True, null=True)
     full_lesson_type = models.IntegerField(_(u'тип урока'), choices=LESSON_FULL_TYPE_CHOICES)
 
     path_content = models.CharField(_(u'путь к контенту'), max_length=255, blank=True, null=True)
