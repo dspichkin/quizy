@@ -1,4 +1,3 @@
-https://docs.google.com/document/d/1RVM1S8pDxpLMCRZIu9HLxjqNnqT13JyfFcSLbmfQvgA/edit
 
 
 - Типы вопросов без обратной связи 
